@@ -1,0 +1,54 @@
+{
+	"languageserver": {
+		//"lua":{
+			//	"command": "~/sumneko.lua-2.5.1/server/bin/Linux/lua-language-server",
+			//	"args": ["-E", "~/sumneko.lua-2.5.1/server/main.lua"],
+			//	"rootPatterns": [".git","main.lua"],
+			//	"filetypes": ["lua"]
+			//}
+	},
+	"suggest.completionItemKindLabels": {
+		"method": "  ",
+		"function": "  ",
+		"variable": "[]",
+		"field": "  ",
+		"typeParameter": "<>",
+		"constant": "  ",
+		"class": " פּ ",
+		"interface": " 蘒",
+		"struct": "  ",
+		"event": "  ",
+		"operator": "  ",
+		"module": "  ",
+		"property": "  ",
+		"enum": " 練",
+		"reference": "  ",
+		"keyword": "  ",
+		"file": "  ",
+		"folder": " ﱮ ",
+		"color": "  ",
+		"unit": " 塞 ",
+		"snippet": "  ",
+		"text": "  ",
+		"constructor": "  ",
+		"value": "  ",
+		"enumMember": "  "
+	},
+	"sumneko-lua.enableNvimLuaDev": true,
+	"Lua.semantic.enable": true,
+	"Lua.semantic.keyword": false,
+	"Lua.semantic.variable": true,
+	"Lua.diagnostics.disable": [
+		"lowercase-global"
+	],
+	"semanticTokens.filetypes": ["*"],
+
+	"suggest.autoTrigger": "always",
+	"coc.source.file.triggerCharacters": [
+		"/",
+		"\\"
+	],
+  "coc.source.neco.enable": true,
+  "Lua.telemetry.enable": true
+
+}
