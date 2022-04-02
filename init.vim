@@ -16,8 +16,8 @@ call plug#begin()
 Plug 'Konfekt/vim-alias' 
 "Plug 'jiangmiao/auto-pairs' 
 
-"Plug 'Yggdroot/indentLine'
-Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'Yggdroot/indentLine'
+"Plug 'lukas-reineke/indent-blankline.nvim'
 
 Plug 'folke/lua-dev.nvim'
 "Plug 'neovim/nvim-lspconfig' 
@@ -55,7 +55,7 @@ lua << EOF
 
 --require "ozay/cmp" 
 require "ozay/autopairs" 
-require "ozay/indentLine"
+--require "ozay/indentLine"
 --require "ozay/treesitter" 
 
 function _G.put(...) 
@@ -88,7 +88,7 @@ colorscheme sonokai
 hi link vimEnvvar PurpleItalic 
 hi link luaFuncArgName Identifier 
 hi luaField guifg=#afaf87 
-hi Normal  guibg=#191a14 
+hi Normal  guibg=#10120e 
 hi EndOfBuffer guibg=#191a14 
 autocmd FileType json syntax match Comment +\/\/.\+$+
 
@@ -96,6 +96,7 @@ hi clear CursorLine
 
 
 hi CocSemDocumentationComment guifg=#AB9DF2
+hi CocSemDocumentationKeyword guifg=#AB9DF2
 hi link CocSemParameter Identifier
 hi CocSemStaticVariable guifg=#8a4dab
 hi link CocSemDefinitionVariable BlueItalic 
