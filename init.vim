@@ -1,3 +1,4 @@
+let mapleader = ' '
 "finish 
 set langmenu=en_US 
 let $LANG = 'en_US' 
@@ -152,8 +153,8 @@ set mouse=a
 set cursorline 
 set autoindent 
 set noexpandtab 
-set tabstop=3 
-set shiftwidth=3 
+set tabstop=2 
+set shiftwidth=2 
 set smartindent 
 
 set nowrap 
@@ -272,22 +273,22 @@ command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.org
 " provide custom statusline: lightline.vim, vim-airline.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-au BufRead,BufNewFile *.tic set filetype=lua  
+au BufRead,BufNewFile *.tic set filetype=lua
 "set t_Co=256 
 "set termguicolors 
 
 
 
-lua vim.diagnostic.config{signs=false} 
+lua vim.diagnostic.config{signs=false}
 
-let $SCRIPT = $HOME."/internalStorage/Script" 
-let $CONFIG = $HOME."/.config/nvim" 
-let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle 
+let $SCRIPT = $HOME."/internalStorage/Script"
+let $CONFIG = $HOME."/.config/nvim"
+let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
 
 
-"set completeopt+=menuone 
-"set completeopt+=noinsert 
-set completeopt=menu,menuone,noselect 
+"set completeopt+=menuone
+"set completeopt+=noinsert
+set completeopt=menu,menuone,noselect
 
 
 "set shortmess+=c   " Shut off completion messages 
@@ -295,46 +296,29 @@ set completeopt=menu,menuone,noselect
 
 "let g:mucomplete#enable_auto_at_startup = 1 
 
-
-let g:rainbow_conf = { 
-			\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'], 
-			\	'ctermfgs': ['cyan', 'yellow', 'magenta', 'white'], 
-			\	'guis': [''], 
-			\	'cterms': [''], 
-			\	'operators': '_,_', 
-			\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'], 
-			\ 
-			\  "separately":{ 
-			\    "lua":{ 
-			\      'parentheses_options': 'containedin=luaFunc,luaIfThen,luaElseifThen,luaThenEnd,luaLoopBlock,luaBlock,luaLoop',  
-			\		}, 
-			\  } 
-			\} 
-
-function! SynGroup()                 
+function! SynGroup()
 	let l:y = col('.')
-	let l:s = synID(line('.'), col('.'), 1)                                        
-	echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name').l:y 
-endfun 
+	let l:s = synID(line('.'), col('.'), 1)
+	echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name').l:y
+endfun
 
 "smart indent when entering insert mode with i on empty lines 
-function! IndentWithI() 
-	if len(getline('.')) == 0 
-		return "\"_cc" 
-	else 
-		return "i" 
-	endif 
-endfunction 
-noremap <expr> i IndentWithI() 
+function! IndentWithI()
+	if len(getline('.')) == 0
+		return "\"_cc"
+	else
+		return "i"
+	endif
+endfunction
+noremap <expr> i IndentWithI()
 
-if &wildoptions =~ "pum" 
-	cnoremap <expr> <up> pumvisible() ? "<C-p>" : "<up>" 
-	cnoremap <expr> <down> pumvisible() ? "<C-n>": "<down>" 
-endif 
-let mapleader = ' ' 
+if &wildoptions =~ "pum"
+	cnoremap <expr> <up> pumvisible() ? "<C-p>" : "<up>"
+	cnoremap <expr> <down> pumvisible() ? "<C-n>": "<down>"
+endif
 nnoremap  :w 
-nnoremap <expr> <leader>j SynGroup() 
-nnoremap <SPACE> <Nop> 
+nnoremap <expr> <leader>j SynGroup()
+nnoremap <SPACE> <Nop>
 
-nnoremap  <leader>o o<Up> 
-nnoremap  <leader>p O<Down> 
+nnoremap  <leader>o o<Up>
+nnoremap  <leader>p O<Down>
