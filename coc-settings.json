@@ -1,11 +1,17 @@
 {
 	"languageserver": {
-		//"lua":{
-			//	"command": "~/sumneko.lua-2.5.1/server/bin/Linux/lua-language-server",
-			//	"args": ["-E", "~/sumneko.lua-2.5.1/server/main.lua"],
-			//	"rootPatterns": [".git","main.lua"],
-			//	"filetypes": ["lua"]
-			//}
+		"lua":{
+				"command": "lua-language-server",
+				"args": ["-E", "-e", "LANG=en", "--configpath=~/.sumneko.json"],
+				"rootPatterns": [".git","main.lua","init.lua"],
+				"filetypes": ["lua"]
+			}
+		//"emmy":{
+		//	"command":"java",
+		//	"args": ["-cp", "~/EmmyLua-LS-all.jar", "com.tang.vscode.MainKt"],
+		//	"rootPatterns": [".git","main.lua","init.lua"],
+		//	"filetypes": ["lua"]
+		//}
 	},
 	"suggest.completionItemKindLabels": {
 		"method": "  ",
@@ -41,6 +47,7 @@
 	"Lua.diagnostics.disable": [
 		"lowercase-global"
 	],
+	"Lua.telemetry.enable": true,
 	"semanticTokens.filetypes": ["*"],
 
 	"suggest.autoTrigger": "always",
@@ -48,7 +55,7 @@
 		"/",
 		"\\"
 	],
-  "coc.source.neco.enable": true,
-  "Lua.telemetry.enable": true
-
+	"coc.source.neco.enable": true,
+	"coc.preferences.jumpCommand": "tab drop",
+	"suggest.defaultSortMethod": "none"
 }
