@@ -76,6 +76,7 @@ function _G.put(...)
 end 
 
 EOF 
+
 source $CONFIG/init/coc.vim
 source $CONFIG/init/colorscheme.vim
 
