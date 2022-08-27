@@ -4,8 +4,13 @@ endif
 
 let g:sonokai_style = 'shusia' 
 "unlet g:sonokai_style 
-let g:sonokai_enable_italic = 0 
-let g:sonokai_disable_italic_comment = 1 
+if has("win32")
+	let g:sonokai_enable_italic = 1 
+	let g:sonokai_disable_italic_comment = 0
+else
+	let g:sonokai_enable_italic = 0
+	let g:sonokai_disable_italic_comment = 1 
+endif
 let g:airline_theme = 'sonokai' 
 "let g:lightline.colorscheme = 'sonokai' 
 colorscheme sonokai 

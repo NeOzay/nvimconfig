@@ -1,41 +1,41 @@
 let mapleader = ' '
-"finish 
-set langmenu=en_US 
-let $LANG = 'en_US' 
-source $VIMRUNTIME/delmenu.vim 
-source $VIMRUNTIME/menu.vim 
+"finish
+set langmenu=en_US
+let $LANG = 'en_US'
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
 
-filetype plugin on 
-syntax on 
+filetype plugin on
+syntax on
 
-scriptencoding utf-8 
+scriptencoding utf-8
 
-call plug#begin() 
-"Plug 'lifepillar/vim-mucomplete' 
-"Plug 'luochen1990/rainbow' 
-Plug 'Konfekt/vim-alias' 
-"Plug 'jiangmiao/auto-pairs' 
+call plug#begin()
+"Plug 'lifepillar/vim-mucomplete'
+"Plug 'luochen1990/rainbow'
+Plug 'Konfekt/vim-alias'
+"Plug 'jiangmiao/auto-pairs'
 
 Plug 'Yggdroot/indentLine'
 "Plug 'lukas-reineke/indent-blankline.nvim'
 
 Plug 'folke/lua-dev.nvim'
-"Plug 'neovim/nvim-lspconfig' 
+"Plug 'neovim/nvim-lspconfig'
 
-"Plug 'hrsh7th/cmp-nvim-lsp' 
-"Plug 'hrsh7th/cmp-buffer' 
-"Plug 'hrsh7th/cmp-path' 
-"Plug 'hrsh7th/cmp-cmdline' 
-"Plug 'hrsh7th/nvim-cmp' 
-"Plug 'neovim/nvim-lspconfig' 
+"Plug 'hrsh7th/cmp-nvim-lsp'
+"Plug 'hrsh7th/cmp-buffer'
+"Plug 'hrsh7th/cmp-path'
+"Plug 'hrsh7th/cmp-cmdline'
+"Plug 'hrsh7th/nvim-cmp'
+"Plug 'neovim/nvim-lspconfig'
 "Plug 'neoclide/jsonc.vim'
 
-" For vsnip users. 
-"Plug 'hrsh7th/cmp-vsnip' 
-"Plug 'hrsh7th/vim-vsnip' 
+" For vsnip users.
+"Plug 'hrsh7th/cmp-vsnip'
+"Plug 'hrsh7th/vim-vsnip'
 
-"Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' } 
-"Plug 'nvim-treesitter/playground' 
+"Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+"Plug 'nvim-treesitter/playground'
 
 " Use release branch (recommend)
 
@@ -44,38 +44,38 @@ Plug 'neoclide/coc-neco'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'vim-airline/vim-airline' 
+Plug 'vim-airline/vim-airline'
 
-Plug 'windwp/nvim-autopairs' 
+Plug 'windwp/nvim-autopairs'
 
-Plug 'sainnhe/sonokai' 
+Plug 'sainnhe/sonokai'
 
 Plug 'alec-gibson/nvim-tetris'
 Plug 'aserowy/tmux.nvim'
 Plug 'mroavi/vim-pasta'
-call plug#end() 
+call plug#end()
 
-let $CONFIG = $HOME."/.config/nvim"
+let $CONFIG = stdpath('config')
 
-lua << EOF 
+lua << EOF
 
---require "ozay/cmp" 
-require "ozay/autopairs" 
+--require "ozay/cmp"
+require "ozay/autopairs"
 --require "ozay/indentLine"
---require "ozay/treesitter" 
+--require "ozay/treesitter"
 require "ozay/tmux"
-function _G.put(...) 
-	local objects = {} 
-	for i = 1, select('#', ...) do 
-		local v = select(i, ...) 
-		table.insert(objects, vim.inspect(v)) 
-	end 
+function _G.put(...)
+	local objects = {}
+	for i = 1, select('#', ...) do
+		local v = select(i, ...)
+		table.insert(objects, vim.inspect(v))
+	end
 
-	print(table.concat(objects, '\n')) 
-	return ... 
-end 
+	print(table.concat(objects, '\n'))
+	return ...
+end
 
-EOF 
+EOF
 
 source $CONFIG/init/coc.vim
 source $CONFIG/init/colorscheme.vim
@@ -91,10 +91,10 @@ set cmdheight=1
 set shortmess+=c
 
 
-set fileformats=unix,dos,mac 
+set fileformats=unix,dos,mac
 
-" TextEdit might fail if hidden is not set. 
-set hidden 
+" TextEdit might fail if hidden is not set.
+set hidden
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
@@ -106,38 +106,38 @@ else
 endif
 
 
-set virtualedit=block 
-set whichwrap=b,s,[,],<,> 
+set virtualedit=block
+set whichwrap=b,s,[,],<,>
 
-set ignorecase 
-set smartcase 
-set formatoptions+=mMj 
+set ignorecase
+set smartcase
+set formatoptions+=mMj
 
-set number 
+set number
 set rnu
-"set omnifunc=syntaxcomplete#Complete 
+"set omnifunc=syntaxcomplete#Complete
 
-set mouse=a 
+set mouse=a
 
-set cursorline 
-set autoindent 
-set noexpandtab 
-set tabstop=2 
-set shiftwidth=2 
-set smartindent 
+set cursorline
+set autoindent
+set noexpandtab
+set tabstop=2
+set shiftwidth=2
+set smartindent
 
-set nowrap 
-set scrolloff=2 
-set sidescrolloff=15 
+set nowrap
+set scrolloff=2
+set sidescrolloff=15
 
 set foldmethod=indent
 set foldlevelstart=20
 
-let g:vimsyn_embed = 'l' 
+let g:vimsyn_embed = 'l'
 
 au BufRead,BufNewFile *.tic set filetype=lua
-"set t_Co=256 
-"set termguicolors 
+"set t_Co=256
+"set termguicolors
 
 lua vim.diagnostic.config{signs=false}
 
@@ -150,10 +150,10 @@ let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowTo
 set completeopt=menu,menuone,noselect
 
 
-"set shortmess+=c   " Shut off completion messages 
-"set belloff+=ctrlg " Add only if Vim beeps during completion 
+"set shortmess+=c   " Shut off completion messages
+"set belloff+=ctrlg " Add only if Vim beeps during completion
 
-"let g:mucomplete#enable_auto_at_startup = 1 
+"let g:mucomplete#enable_auto_at_startup = 1
 
 function! SynGroup()
 	let l:y = col('.')
@@ -161,7 +161,7 @@ function! SynGroup()
 	echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name').l:y
 endfun
 
-"smart indent when entering insert mode with i on empty lines 
+"smart indent when entering insert mode with i on empty lines
 function! IndentWithI()
 	if len(getline('.')) == 0
 		return "\"_cc"
@@ -171,11 +171,42 @@ function! IndentWithI()
 endfunction
 noremap <expr> i IndentWithI()
 
+"" Open explorer where current file is located
+"" Only for win for now.
+func! File_manager() abort
+		" Windows only for now
+		if has("win32")
+				if exists("b:netrw_curdir")
+						let path = substitute(b:netrw_curdir, "/", "\\", "g")
+				elseif expand("%:p") == ""
+						let path = expand("%:p:h")
+				else
+						let path = expand("%:p")
+				endif
+				silent exe '!start explorer.exe /select,' .. path
+		else
+				echomsg "Not yet implemented!"
+		endif
+endfunc
+
+command -nargs=0 OpenFileManager :call File_manager()
+nnoremap <silent> gof :call File_manager()<CR>
+
+" Function to trim extra whitespace in whole file
+function! Trim()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+endfun
+
+command! -nargs=0 Trim call Trim()
+
 if &wildoptions =~ "pum"
 	cnoremap <expr> <up> pumvisible() ? "<C-p>" : "<up>"
 	cnoremap <expr> <down> pumvisible() ? "<C-n>": "<down>"
 endif
-nnoremap  :w 
+
+nnoremap  :w
 nnoremap <expr> <leader>j SynGroup()
 nnoremap <SPACE> <Nop>
 
