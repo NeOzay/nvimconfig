@@ -1,17 +1,33 @@
 {
 	"languageserver": {
 		"lua":{
-				"command": "lua-language-server",
-				"args": ["-E", "-e", "LANG=en", "--configpath=~/.sumneko.json"],
-				"rootPatterns": [".git","main.lua","init.lua"],
-				"filetypes": ["lua"]
-			}
-		//"emmy":{
-		//	"command":"java",
-		//	"args": ["-cp", "~/EmmyLua-LS-all.jar", "com.tang.vscode.MainKt"],
-		//	"rootPatterns": [".git","main.lua","init.lua"],
-		//	"filetypes": ["lua"]
+			"command": "lua-language-server",
+			"args": ["-E", "-e", "LANG=en", "--configpath=~/.sumneko.json"],
+			"rootPatterns": [".git","main.lua","init.lua"],
+			"filetypes": ["lua"]
+		},
+		//"pylance": {
+		//	"enable": true,
+		//	"filetypes": ["python"],
+		//	"command": "node",
+		//	"args": ["~/pylance/extension/dist/server.bundle.js", "--stdio"],
+		//	"initializationOptions": {},
+		//	"settings": {
+		//		"python.analysis.typeCheckingMode": "basic",
+		//		"python.analysis.diagnosticMode": "openFilesOnly",
+		//		"python.analysis.stubPath": "./typings",
+		//		"python.analysis.autoSearchPaths": true,
+		//		"python.analysis.extraPaths": [],
+		//		"python.analysis.diagnosticSeverityOverrides": {},
+		//		"python.analysis.useLibraryCodeForTypes": true
+		//	}
 		//}
+		//"emmy":{
+			//	"command":"java",
+			//	"args": ["-cp", "~/EmmyLua-LS-all.jar", "com.tang.vscode.MainKt"],
+			//	"rootPatterns": [".git","main.lua","init.lua"],
+			//	"filetypes": ["lua"]
+			//}
 	},
 	"suggest.completionItemKindLabels": {
 		"method": "  ",
@@ -57,5 +73,8 @@
 	],
 	"coc.source.neco.enable": true,
 	"coc.preferences.jumpCommand": "tab drop",
-	"suggest.defaultSortMethod": "none"
+	"suggest.defaultSortMethod": "none",
+	"java.imports.gradle.wrapper.checksums":[
+		{"sha256": "0a9345d7fb4b6a08d45cf64713009560ff423fa1080fc94c124436c975a83e14", "allowed": true}
+	]
 }
