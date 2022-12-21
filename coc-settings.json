@@ -1,0 +1,64 @@
+{
+	"languageserver": {
+		//"lua":{
+		//	"command": "/home/ozay/lua-language-server/bin/lua-language-server",
+		//	"args": ["-E", "-e", "LANG=en", "--configpath=~/.sumneko.json"],
+		//	"rootPatterns": [".git","main.lua","init.lua"],
+		//	"filetypes": ["lua"]
+		//}
+	},
+	"suggest.completionItemKindLabels": {
+		"method": "  ",
+		"function": "  ",
+		"variable": "[]",
+		"field": "  ",
+		"typeParameter": "<>",
+		"constant": "  ",
+		"class": " פּ ",
+		"interface": " 蘒",
+		"struct": "  ",
+		"event": "  ",
+		"operator": "  ",
+		"module": "  ",
+		"property": "  ",
+		"enum": " 練",
+		"reference": "  ",
+		"keyword": "  ",
+		"file": "  ",
+		"folder": " ﱮ ",
+		"color": "  ",
+		"unit": " 塞 ",
+		"snippet": "  ",
+		"text": "  ",
+		"constructor": "  ",
+		"value": "  ",
+		"enumMember": "  "
+	},
+	"sumneko-lua.enableNvimLuaDev": true,
+	"Lua.semantic.enable": true,
+	"Lua.semantic.keyword": false,
+	"Lua.semantic.variable": true,
+	"Lua.diagnostics.disable": [
+		"lowercase-global"
+	],
+	"Lua.format.defaultConfig": {
+		"indent_style":"tab",
+		"tab_width":"1",
+		"continuation_indent_size":"2"
+	},
+	"sumneko-lua.serverDir": "/home/ozay/lua-language-server/",
+	"Lua.telemetry.enable": true,
+	"semanticTokens.enable": true,
+
+	"suggest.autoTrigger": "always",
+	"coc.source.file.triggerCharacters": [
+		"/",
+		"\\"
+	],
+	"coc.source.neco.enable": true,
+	"coc.preferences.jumpCommand": "tab drop",
+	"suggest.defaultSortMethod": "none",
+	"java.imports.gradle.wrapper.checksums":[
+		{"sha256": "0a9345d7fb4b6a08d45cf64713009560ff423fa1080fc94c124436c975a83e14", "allowed": true}
+	]
+}
