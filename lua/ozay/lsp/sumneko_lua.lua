@@ -9,7 +9,7 @@ local sumneko = {
     Lua = {
       runtime = {
         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
+        --version = 'LuaJIT',
       },
       diagnostics = {
         -- Get the language server to recognize the `vim` global
@@ -17,7 +17,7 @@ local sumneko = {
       },
       workspace = {
         -- Make the server aware of Neovim runtime files
-        library = checkConfigDir()
+        --library = checkConfigDir()
       },
       -- Do not send telemetry data containing a randomized but unique identifier
       telemetry = {
@@ -25,7 +25,7 @@ local sumneko = {
       },
     },
   },
-  cmd = {"/home/ozay/lua-language-server/bin/lua-language-server"}
+  cmd = {vim.fn.expand("$HOME/lua-language-server/bin/lua-language-server")}
 }
 
 return sumneko

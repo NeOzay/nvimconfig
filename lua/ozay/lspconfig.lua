@@ -48,5 +48,5 @@ local function addOption(t)
 end
 
 require("neodev").setup({})
-lspconfig.sumneko_lua.setup(addOption())
+lspconfig.sumneko_lua.setup(addOption(require("ozay.lsp.sumneko_lua")))
 lspconfig.jsonls.setup(addOption())
