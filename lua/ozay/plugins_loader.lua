@@ -45,13 +45,14 @@ return packer.startup(function(use)
   --use 'https://gitlab.com/__tpb/monokai-pro.nvim'
   --use{"sainnhe/sonokai"}
   use 'folke/tokyonight.nvim'
-  use "folke/lua-dev.nvim"
+  use "folke/neodev.nvim"
   --use "vim-airline/vim-airline"
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true },
     config = function ()
-      --require"lualine".setup()
+      require("ozay.evil_lualine")
+      --require"lualine".setup{option = {theme = "evil_lualine"}}
     end
   }
   use { "windwp/nvim-autopairs", config = function() --[[require"ozay/autopairs"]] end }

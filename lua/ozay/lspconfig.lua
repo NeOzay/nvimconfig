@@ -41,11 +41,12 @@ local lsp_flags = {
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local function addOption(t)
+  t = t or {}
   t.on_attach = on_attach
   t.capabilities = capabilities
   return t
 end
 
-
-lspconfig.sumneko_lua.setup(addOption(require"ozay.lsp.sumneko_lua"))
-
+require("neodev").setup({})
+lspconfig.sumneko_lua.setup(addOption())
+lspconfig.jsonls.setup(addOption())
