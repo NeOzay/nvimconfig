@@ -31,13 +31,13 @@ for _, punct in pairs { ",", ";" } do
 end
 
 
-npairs.add_rules {
-	Rule("%-?%-%-$", "", "lua")
-		:use_regex(true)
-		:with_pair(none())
-		:with_cr(none())
-		:with_move(none())
-}
+--npairs.add_rules {
+--	Rule("%-?%-%-$", "", "lua")
+--		:use_regex(true)
+--		:with_pair(none())
+--		:with_cr(none())
+--		:with_move(none())
+--}
 
 npairs.add_rules {
 	Rule("", "", "lua")
@@ -91,5 +91,15 @@ MUtils.completion_confirm = function()
 		return npairs.autopairs_cr()
 	end
 end
+local cmp = require"cmp"
+--remap('i', '<CR>', 'v:lua.MUtils.completion_confirm()', { expr = true, noremap = true })
+vim.keymap.set("i", "<CR>", function ()
+  if cmp.visible() then
+    cmp.confirm()
+  else
+    return npairs.autopairs_cr()
+  end
+end, {expr = true})
 
-remap('i', '<CR>', 'v:lua.MUtils.completion_confirm()', { expr = true, noremap = true })
+
+

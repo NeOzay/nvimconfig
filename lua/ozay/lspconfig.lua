@@ -1,5 +1,4 @@
 local lspconfig = require"lspconfig"
-local cmp = require("ozay.cmp")
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
@@ -47,6 +46,5 @@ local function addOption(t)
   return t
 end
 
-require("neodev").setup({})
 lspconfig.sumneko_lua.setup(addOption(require("ozay.lsp.sumneko_lua")))
 lspconfig.jsonls.setup(addOption())

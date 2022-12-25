@@ -63,30 +63,19 @@ return packer.startup(function(use)
   --use "vim-airline/vim-airline"
   use {
     'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
-    config = function()
-      --require("ozay.evil_lualine")
-      require "lualine".setup {}
-    end
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
-  use { "windwp/nvim-autopairs", config = function() --[[require"ozay/autopairs"]] end }
+  use { "windwp/nvim-autopairs" }
   use "mroavi/vim-pasta"
 
-  use { "neovim/nvim-lspconfig", config = function() require "ozay/lspconfig" end }
+  use { "neovim/nvim-lspconfig" }
 
   use "onsails/lspkind.nvim"
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
   use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  use { 'j-hui/fidget.nvim', config = function() require "fidget".setup
-    {
-      window = {
-        blend = 0,
-        border = "rounded"
-      }
-    }
-  end }
+  use { 'j-hui/fidget.nvim'}
   if packer_bootstrap then
     packer.sync()
   end

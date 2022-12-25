@@ -1,5 +1,5 @@
 require "ozay.plugins_loader"
-
+require "ozay.plugins"
 vim.g.mapleader = " "
 
 local function T(...)
