@@ -145,13 +145,15 @@ vim.lsp.handlers["textDocument/definition"] = goto_definition('tabnew')
 
 api.nvim_create_autocmd("CursorHold", {
   callback = function()
-    local cursor = api.nvim_win_get_cursor(0)
-    local diagnostics = vim.diagnostic.get(0, {lnum = cursor[1]})
-    for index, value in ipairs(diagnostics) do
-      
+    if require "ozay.util".popupIsVisible() then
+      return
     end
-    if not require "ozay.util".popupIsVisible() then
-      vim.diagnostic.open_float(nil, { focus = false })
+    local cursor = api.nvim_win_get_cursor(0)
+    local diagnostics = vim.diagnostic.get(0, {lnum = cursor[1]-1})
+    for index, diagnostic in ipairs(diagnostics) do
+     if diagnostic.col < cursor[2] and diagnostic.end_col > cursor[2] then
+        vim.diagnostic.open_float(nil, { focus = false })
+     end
     end
   end
 })
