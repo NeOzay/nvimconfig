@@ -40,7 +40,6 @@ vim.opt.completeopt = T("menu", "menuone", "noselect")
 
 vim.g.vimsyn_embed = 'l'
 
-vim.diagnostic.config { signs = false }
 local fn = vim.fn
 local api = vim.api
 
@@ -143,17 +142,23 @@ local function goto_definition(split_cmd)
 end
 
 vim.lsp.handlers["textDocument/definition"] = goto_definition('tabnew')
---vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
 api.nvim_create_autocmd("CursorHold", {
   callback = function()
-    local util = require "ozay.util"
-    if not util.popupIsVisible() then
+    local cursor = api.nvim_win_get_cursor(0)
+    local diagnostics = vim.diagnostic.get(0, {lnum = cursor[1]})
+    for index, value in ipairs(diagnostics) do
+      
+    end
+    if not require "ozay.util".popupIsVisible() then
       vim.diagnostic.open_float(nil, { focus = false })
     end
   end
 })
+
 vim.diagnostic.config {
-float = { border = "rounded" },
+  float = { border = "rounded" },
+  signs = false
 }
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
             vim.lsp.handlers.signature_help, {
@@ -167,3 +172,5 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
                 border = 'rounded',
     }
 )
+api.nvim_create_user_command("Format", "lua vim.lsp.buf.format()", {})
+

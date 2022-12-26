@@ -37,16 +37,6 @@ packer.init({
 }
 )
 
-local function one_monokai()
-  require "one_monokai".setup {
-    transparent = true,
-    colors = {},
-    themes = function(colors)
-      return {}
-    end,
-  }
-end
-
 -- Install your plugins here
 return packer.startup(function(use)
   -- Only required if you have packer configured as `opt`
@@ -63,7 +53,7 @@ return packer.startup(function(use)
   --use "vim-airline/vim-airline"
   use {
     'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    requires = { 'kyazdani42/nvim-web-devicons' }
   }
   use { "windwp/nvim-autopairs" }
   use "mroavi/vim-pasta"
@@ -75,7 +65,15 @@ return packer.startup(function(use)
   use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
   use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  use { 'j-hui/fidget.nvim'}
+  use { 'j-hui/fidget.nvim' }
+  use {
+    "SmiteshP/nvim-navic",
+    requires = "neovim/nvim-lspconfig"
+  }
+  use {
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+  }
   if packer_bootstrap then
     packer.sync()
   end
