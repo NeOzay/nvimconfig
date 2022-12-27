@@ -17,3 +17,4 @@ require "colorizer".setup{
   }
 }
 require "trouble".setup{}
+require "ozay.autocommand"

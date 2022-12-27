@@ -20,9 +20,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.formatoptions:append(T('m', "M", "j"))
 vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.mouse = "a"
-vim.opt.cursorline = true
+vim.opt.relativenumber = true vim.opt.mouse = "a" vim.opt.cursorline = true
 vim.opt.autoindent = true
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
@@ -44,10 +42,15 @@ local fn = vim.fn
 local api = vim.api
 
 function SynGroup()
-  local pos = api.nvim_win_get_cursor(0)
-  local s = fn.synID(pos[1], pos[2] + 1, 1)
-  local t = fn.synIDattr(s, 'name') .. " -> " .. fn.synIDattr(fn.synIDtrans(s), "name")
-  print(t)
+  local token = vim.lsp.semantic_tokens.get_at_pos()
+  if token then
+    print(token)
+  else
+    local pos = api.nvim_win_get_cursor(0)
+    local s = fn.synID(pos[1], pos[2] + 1, 1)
+    local t = fn.synIDattr(s, 'name') .. " -> " .. fn.synIDattr(fn.synIDtrans(s), "name")
+    print(t)
+  end
 end
 
 api.nvim_create_user_command("Trim", function()
@@ -143,20 +146,6 @@ end
 
 vim.lsp.handlers["textDocument/definition"] = goto_definition('tabnew')
 
-api.nvim_create_autocmd("CursorHold", {
-  callback = function()
-    if require "ozay.util".popupIsVisible() then
-      return
-    end
-    local cursor = api.nvim_win_get_cursor(0)
-    local diagnostics = vim.diagnostic.get(0, {lnum = cursor[1]-1})
-    for index, diagnostic in ipairs(diagnostics) do
-     if diagnostic.col < cursor[2] and diagnostic.end_col > cursor[2] then
-        vim.diagnostic.open_float(nil, { focus = false })
-     end
-    end
-  end
-})
 
 vim.diagnostic.config {
   float = { border = "rounded" },

@@ -40,8 +40,8 @@ local setting = {
     --lualine_z = { 'tabs' }
   },
   winbar = {
-    lualine_a = {{navic.get_location, cond = navic.is_available }},
-    lualine_z = { "diagnostics" }
+    lualine_c = {{navic.get_location, cond = navic.is_available }},
+    lualine_y = { "diagnostics" }
   },
   inactive_winbar = {},
   extensions = {}
