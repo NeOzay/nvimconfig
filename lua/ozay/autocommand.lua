@@ -2,7 +2,7 @@ local api = vim.api
 local autocommand = api.nvim_create_autocmd
 local group = api.nvim_create_augroup("Ozay", {clear = true})
 
-local log = require("plenary.log")
+--local log = require("plenary.log")
 
 autocommand("CursorHold", {
     group = group,
@@ -13,7 +13,7 @@ autocommand("CursorHold", {
     local cursor = api.nvim_win_get_cursor(0)
     local diagnostics = vim.diagnostic.get(0, {lnum = cursor[1]-1})
     for _, diagnostic in ipairs(diagnostics) do
-     if diagnostic.col < cursor[2] and diagnostic.end_col > cursor[2] then
+     if diagnostic.col < cursor[2] + 1 and diagnostic.end_col > cursor[2] then
         vim.diagnostic.open_float(nil, { focus = false })
      end
     end
@@ -24,10 +24,14 @@ autocommand("OptionSet", {
     group = group,
     pattern = "winbar",
     callback = function (opt)
-      --api.nvim_echo({{vim.inspect(opt)}}, true, {})
-      print(vim.v.option_type)
-      log.info(vim.v.option_old)
-      log.info(vim.v.option_new)
-      log.info("")
+      local option_old = vim.v.option_old
+      local option_new = vim.v.option_new
+      if option_old == "" and option_new ~= "" then
+        return
+        vim.cmd[[normal ]]
+      elseif option_new == "" and option_old ~= "" then
+        vim.cmd[[normal ]]
+      end
+      return opt
   end
   })
