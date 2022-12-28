@@ -20,18 +20,32 @@ autocommand("CursorHold", {
   end
 })
 
+--autocommand("OptionSet", {
+--    group = group,
+--    pattern = "winbar",
+--    callback = function ()
+--      local option_old = vim.v.option_old
+--      local option_new = vim.v.option_new
+--      local wininfo = vim.fn.getwininfo(vim.fn.win_getid())[1]
+--      local cursor = api.nvim_win_get_cursor(0)
+--      print(cursor[1],wininfo.topline, cursor[1] - wininfo.topline)
+--      if cursor[1] - wininfo.topline > 2 and  wininfo.botline - cursor[1] > 2 then
+--        if option_old == "" and option_new ~= "" then
+--          --vim.cmd[[normal ]]
+--        elseif option_new == "" and option_old ~= "" then
+--          --vim.cmd[[normal ]]
+--          pairs(wininfo)
+--        end
+--      end
+--  end
+--  })
 autocommand("OptionSet", {
     group = group,
     pattern = "winbar",
-    callback = function (opt)
-      local option_old = vim.v.option_old
-      local option_new = vim.v.option_new
-      if option_old == "" and option_new ~= "" then
-        return
-        vim.cmd[[normal ]]
-      elseif option_new == "" and option_old ~= "" then
-        vim.cmd[[normal ]]
+    callback = function ()
+      local option = vim.v.option_new
+      if option == "" then
+        vim.opt.winbar = ">"
       end
-      return opt
-  end
+    end
   })

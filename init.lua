@@ -42,9 +42,10 @@ local fn = vim.fn
 local api = vim.api
 
 function SynGroup()
-  local token = vim.lsp.semantic_tokens.get_at_pos()
+  local token = vim.lsp.semantic_tokens.get_at_pos()[1]
   if token then
-    print(token)
+    local info = ("%s@%s"):format(token.type, table.concat(token.modifiers, ","))
+    print(info)
   else
     local pos = api.nvim_win_get_cursor(0)
     local s = fn.synID(pos[1], pos[2] + 1, 1)
