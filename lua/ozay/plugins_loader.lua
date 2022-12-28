@@ -75,6 +75,10 @@ return packer.startup(function(use)
     requires = "kyazdani42/nvim-web-devicons",
   }
   use 'NvChad/nvim-colorizer.lua'
+  use {
+    "glepnir/lspsaga.nvim",
+    branch = "main",
+  }
   if packer_bootstrap then
     packer.sync()
   end
