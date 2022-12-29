@@ -45,7 +45,7 @@ local lsp_flags = {
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local function addOption(t)
   t = t or {}
-  t.on_attach = on_attach
+  --t.on_attach = on_attach
   t.capabilities = capabilities
   return t
 end

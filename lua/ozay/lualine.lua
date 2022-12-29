@@ -4,7 +4,7 @@ local navic = require "nvim-navic"
 local setting = {
   options = {
     icons_enabled = true,
-    theme = 'auto',
+    theme = 'tokyonight',
     component_separators = { left = '', right = '' },
     section_separators = { left = '', right = '' },
     disabled_filetypes = {

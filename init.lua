@@ -1,6 +1,6 @@
+vim.g.mapleader = " "
 require "ozay.plugins_loader"
 require "ozay.plugins"
-vim.g.mapleader = " "
 
 local function T(...)
   local t = {}
@@ -42,7 +42,8 @@ local fn = vim.fn
 local api = vim.api
 
 function SynGroup()
-  local token = vim.lsp.semantic_tokens.get_at_pos()[1]
+  local token = vim.lsp.semantic_tokens.get_at_pos()
+  token = token and token[1]
   if token then
     local info = ("%s@%s"):format(token.type, table.concat(token.modifiers, ","))
     print(info)

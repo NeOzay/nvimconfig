@@ -1,4 +1,4 @@
-require "tokyonight".setup{}
+require "ozay.tokyonight"
 require "neodev".setup{}
 require "ozay.cmp"
 require "nvim-navic".setup{highlight = true}
@@ -18,3 +18,4 @@ require "colorizer".setup{
 }
 require "trouble".setup{}
 require "ozay.autocommand"
+require "ozay.lspsaga"
