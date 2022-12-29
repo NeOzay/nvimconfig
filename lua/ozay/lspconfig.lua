@@ -33,7 +33,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
   if client.server_capabilities.documentSymbolProvider then
-    navic.attach(client, bufnr)
+   -- navic.attach(client, bufnr)
   end
 end
 

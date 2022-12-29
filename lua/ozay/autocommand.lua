@@ -49,3 +49,14 @@ autocommand("OptionSet", {
       end
     end
   })
+
+autocommand("WinEnter", {
+    group = group,
+    pattern = "*.*",
+    callback = function ()
+      if true then
+        vim.cmd [[normal i x]]
+      end
+    end
+  })
+
