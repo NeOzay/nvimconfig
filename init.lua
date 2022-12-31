@@ -98,6 +98,21 @@ if &wildoptions =~ "pum"
   cnoremap <expr> <down> pumvisible() ? "<C-n>": "<down>"
 endif
 ]]
+vim.cmd[[
+set clipboard+=unnamedplus
+let g:clipboard = {
+          \   'name': 'win32yank-wsl',
+          \   'copy': {
+          \      '+': 'win32yank.exe -i --crlf',
+          \      '*': 'win32yank.exe -i --crlf',
+          \    },
+          \   'paste': {
+          \      '+': 'win32yank.exe -o --lf',
+          \      '*': 'win32yank.exe -o --lf',
+          \   },
+          \   'cache_enabled': 0,
+          \ }
+]]
 
 --vim.cmd("colorscheme one_monokai")
 --vim.g.monokaipro_filter = "spectrum"
