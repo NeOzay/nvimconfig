@@ -1,7 +1,7 @@
 require "ozay.tokyonight"
 require "neodev".setup{}
 require "ozay.cmp"
-require "nvim-navic".setup{highlight = true}
+--require "nvim-navic".setup{highlight = true}
 require "ozay.lspconfig"
 require "ozay.lualine"
 require "ozay.autopairs"

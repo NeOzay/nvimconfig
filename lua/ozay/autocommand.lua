@@ -50,13 +50,14 @@ autocommand("OptionSet", {
     end
   })
 
-autocommand("WinEnter", {
+autocommand("BufEnter", {
     group = group,
     pattern = "*.*",
     callback = function ()
       if true then
-        vim.cmd [[normal i x]]
+        vim.cmd [[normal i "_x]]
       end
     end
   })
+
 
