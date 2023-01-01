@@ -1,5 +1,5 @@
 require "ozay.tokyonight"
---require "neodev".setup{}
+require "neodev".setup{}
 require "ozay.cmp"
 --require "nvim-navic".setup{highlight = true}
 require "ozay.lspconfig"

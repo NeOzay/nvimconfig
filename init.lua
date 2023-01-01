@@ -98,6 +98,7 @@ if &wildoptions =~ "pum"
   cnoremap <expr> <down> pumvisible() ? "<C-n>": "<down>"
 endif
 ]]
+if fn.filereadable"~/win32yank.exe" == 1 then
 vim.cmd[[
 set clipboard+=unnamedplus
 let g:clipboard = {
@@ -113,6 +114,7 @@ let g:clipboard = {
           \   'cache_enabled': 0,
           \ }
 ]]
+end
 
 --vim.cmd("colorscheme one_monokai")
 --vim.g.monokaipro_filter = "spectrum"

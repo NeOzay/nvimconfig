@@ -17,7 +17,7 @@ local sumneko = {
       },
       workspace = {
         -- Make the server aware of Neovim runtime files
-        --library = checkConfigDir()
+        --library = checkConfigDir(),
         checkThirdParty = false
       },
       -- Do not send telemetry data containing a randomized but unique identifier
@@ -31,7 +31,7 @@ local sumneko = {
       }
     },
   },
-  cmd = {vim.fn.expand("$HOME/lua-language-server/bin/lua-language-server")}
+  cmd = { vim.fn.expand("$HOME/lua-language-server/bin/lua-language-server") }
 }
 
 return sumneko
