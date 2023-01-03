@@ -57,7 +57,7 @@ autocommand("BufEnter", {
       if false then
         vim.cmd [[normal i "_x]]
       end
-      print(api.nvim_buf_get_name(0))
+      --print(api.nvim_buf_get_name(0))
     end
   })
 

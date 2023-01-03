@@ -139,6 +139,11 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-navic",
     url = "https://github.com/SmiteshP/nvim-navic"
   },
+  ["nvim-neoclip.lua"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-neoclip.lua",
+    url = "https://github.com/AckslD/nvim-neoclip.lua"
+  },
   ["nvim-web-devicons"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
@@ -153,6 +158,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
+  },
+  ["telescope.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/telescope.nvim",
+    url = "https://github.com/nvim-telescope/telescope.nvim"
   },
   ["tokyonight.nvim"] = {
     loaded = true,
