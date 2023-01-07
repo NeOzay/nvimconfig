@@ -19,3 +19,5 @@ require "colorizer".setup{
 require "trouble".setup{}
 require "ozay.autocommand"
 require "ozay.lspsaga"
+require "ozay.telescope"
+require "neoclip".setup()

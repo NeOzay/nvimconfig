@@ -128,8 +128,8 @@ syntax keyword luaStatement break return
 syntax match  luaStringSpecial contained #\\[\\abfnrtvz'"]\|\\x[[:xdigit:]]\{2}\|\\[[:digit:]]\{,3}#
 call s:FoldableRegion('string', 'luaStringLong',
       \ 'matchgroup=luaStringLongTag start="\[\z(=*\)\[" end="\]\z1\]" contains=@Spell')
-syntax region luaString  start=+'+ end=+'+ skip=+\\\\\|\\'+ contains=luaStringSpecial,@Spell
-syntax region luaString  start=+"+ end=+"+ skip=+\\\\\|\\"+ contains=luaStringSpecial,@Spell
+syntax region luaString matchgroup=luaNoise start=+'+ end=+'+ skip=+\\\\\|\\'+ contains=luaStringSpecial,@Spell
+syntax region luaString matchgroup=luaNoise start=+"+ end=+"+ skip=+\\\\\|\\"+ contains=luaStringSpecial,@Spell
 
 " Decimal constant
 syntax match luaNumber "\<\d\+\>"

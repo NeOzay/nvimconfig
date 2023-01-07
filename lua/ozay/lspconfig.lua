@@ -52,3 +52,4 @@ end
 
 lspconfig.sumneko_lua.setup(addOption(require("ozay.lsp.sumneko_lua")))
 lspconfig.jsonls.setup(addOption())
+lspconfig.vimls.setup{}

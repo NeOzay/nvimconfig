@@ -34,16 +34,27 @@ end
 
 tokyonight.setup {
   on_colors = function(colors)
-
+    --colors.orange = sonokaiPalette.orange
+    --colors.green = sonokaiPalette.green
   end,
   on_highlights = function(highlights, colors)
-    highlights["@function"] = { fg = colors.green}
-    highlights["String"] = {fg = colors.cyan}
-    highlights["Statement"] = {fg = colors.red}
-    highlights["Type"] = { fg = colors.red}
-    highlights["@type"] = { fg = colors.blue1}
-    highlights["@method"] = { fg = colors.green}
+    highlights["String"] = { fg = sonokaiPalette.yellow }
+    highlights["Statement"] = { fg = colors.red }
+    highlights["Type"] = { fg = colors.red }
+    highlights["Constant"] = { fg = colors.magenta }
+    --highlights["Special"] = { fg = colors.magenta }
+
+    highlights["@type"] = { fg = colors.blue5, style = {italic = true} }
+    highlights["@method"] = { fg = colors.green }
+    highlights["@function"] = { fg = colors.green }
+    --highlights["@property"] = { fg = sonokaiPalette.purple }
     highlights["@property"] = { fg = "#afaf87" }
-    highlights["luaBraces"] = {fg = colors.blue1}
-  end
+    highlights["@parameter"] = { fg = colors.orange }
+    highlights["@class"] = { fg = colors.blue2 }
+
+    highlights["luaBraces"] = { fg = colors.blue1 }
+  end,
+  styles = {
+    ["comments"] = { italic = false },
+  }
 }
