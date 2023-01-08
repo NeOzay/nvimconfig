@@ -44,7 +44,7 @@ tokyonight.setup {
     highlights["Type"] = { fg = colors.red }
     highlights["Constant"] = { fg = colors.magenta }
     --highlights["Special"] = { fg = colors.magenta }
-    highlights["LuaNoise"] = { fg = colors.comment }
+    highlights["LuaNoise"] = { fg = colors.dark5 }
 
     highlights["@type"] = { fg = colors.blue5, style = {italic = true} }
     highlights["@method"] = { fg = colors.green }
