@@ -3,7 +3,7 @@ local tokyonight = require "tokyonight"
 
 
 local sonokaiPalette = {
-  black = '#1a181a',
+  black       = '#1a181a',
   bg_dim      = '#211f21',
   bg0         = '#2d2a2e',
   bg1         = '#37343a',
@@ -44,9 +44,9 @@ tokyonight.setup {
     highlights["Type"] = { fg = colors.red }
     highlights["Constant"] = { fg = colors.magenta }
     --highlights["Special"] = { fg = colors.magenta }
-    highlights["LuaNoise"] = { fg = colors.dark5 }
+    highlights["Noise"] = { fg = colors.blue1 }
 
-    highlights["@type"] = { fg = colors.blue5, style = {italic = true} }
+    highlights["@type"] = { fg = colors.blue5, style = { italic = true } }
     highlights["@method"] = { fg = colors.green }
     highlights["@function"] = { fg = colors.green }
     --highlights["@property"] = { fg = sonokaiPalette.purple }
@@ -54,6 +54,7 @@ tokyonight.setup {
     highlights["@parameter"] = { fg = colors.orange }
     highlights["@class"] = { fg = colors.blue2 }
 
+    highlights["LuaNoise"] = { fg = colors.dark5 }
     highlights["luaBraces"] = { fg = colors.blue1 }
   end,
   styles = {
