@@ -20,7 +20,9 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.formatoptions:append(T('m', "M", "j"))
 vim.opt.number = true
-vim.opt.relativenumber = true vim.opt.mouse = "a" vim.opt.cursorline = true
+vim.opt.relativenumber = true
+vim.opt.mouse = "a"
+vim.opt.cursorline = true
 vim.opt.autoindent = true
 vim.opt.expandtab = true
 vim.opt.tabstop = 2

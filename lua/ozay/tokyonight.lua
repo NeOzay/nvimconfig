@@ -2,7 +2,8 @@ local palette = require "tokyonight.colors"
 local tokyonight = require "tokyonight"
 
 
-local sonokaiPalette = { black = '#1a181a',
+local sonokaiPalette = {
+  black = '#1a181a',
   bg_dim      = '#211f21',
   bg0         = '#2d2a2e',
   bg1         = '#37343a',
@@ -43,6 +44,7 @@ tokyonight.setup {
     highlights["Type"] = { fg = colors.red }
     highlights["Constant"] = { fg = colors.magenta }
     --highlights["Special"] = { fg = colors.magenta }
+    highlights["LuaNoise"] = { fg = colors.comment }
 
     highlights["@type"] = { fg = colors.blue5, style = {italic = true} }
     highlights["@method"] = { fg = colors.green }
