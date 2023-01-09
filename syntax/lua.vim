@@ -28,7 +28,7 @@ function! s:FoldableRegion(tag, name, expr)
 endfunction
 
 " Clusters
-syntax cluster luaBase contains=luaComment,luaCommentLong,luaConstant,luaNumber,luaString,luaStringLong,luaBuiltIn
+syntax cluster luaBase contains=luaComment,luaCommentLong,luaConstant,luaNumber,luaString,luaStringLong,luaBuiltIn,luaNoise
 syntax cluster luaExpr contains=@luaBase,luaTable,luaParen,luaBracket,luaSpecialTable,luaSpecialValue,luaOperator,luaSymbolOperator,luaEllipsis,luaComma,luaFunc,luaField,luaFuncCall,luaError
 syntax cluster luaStat
       \ contains=@luaExpr,luaIfThen,luaBlock,luaLoop,luaGoto,luaLabel,luaLocal,luaStatement,luaSemiCol,luaErrHand
