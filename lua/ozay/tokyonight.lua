@@ -55,6 +55,8 @@ tokyonight.setup {
     highlights["@class"] = { fg = colors.blue2 }
 
     highlights["LuaNoise"] = { fg = colors.dark5 }
+    highlights["luaFuncParens"] = { fg = "#B48EAD" }
+    highlights["luaParens"] = { fg = "#B48EAD" }
     highlights["luaBraces"] = { fg = colors.blue1 }
   end,
   styles = {
