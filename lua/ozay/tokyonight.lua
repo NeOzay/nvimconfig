@@ -58,6 +58,7 @@ tokyonight.setup {
     highlights["luaFuncParens"] = { fg = "#B48EAD" }
     highlights["luaParens"] = { fg = "#B48EAD" }
     highlights["luaBraces"] = { fg = colors.blue1 }
+    highlights["luaFuncKeyword"] = { fg = colors.red, style = {italic = true} }
   end,
   styles = {
     ["comments"] = { italic = false },

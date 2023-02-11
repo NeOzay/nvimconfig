@@ -47,7 +47,7 @@ return packer.startup(function(use)
   --use "EdenEast/nightfox.nvim"
   --use{"cpea2506/one_monokai.nvim", config = one_monokai}
   --use 'https://gitlab.com/__tpb/monokai-pro.nvim'
-  use{"sainnhe/sonokai"}
+  use { "sainnhe/sonokai" }
   use 'folke/tokyonight.nvim'
   use "folke/neodev.nvim"
   --use "vim-airline/vim-airline"
@@ -75,21 +75,28 @@ return packer.startup(function(use)
     requires = "kyazdani42/nvim-web-devicons",
   }
   use 'NvChad/nvim-colorizer.lua'
-  use {
+  use({
     "glepnir/lspsaga.nvim",
     branch = "main",
-  }
+    requires = { { "nvim-tree/nvim-web-devicons" } }
+  })
   use {
     'nvim-telescope/telescope.nvim', branch = '0.1.x',
-    -- or                            , branch = '0.1.x',
+    -- or                          , branch = '0.1.x',
     requires = { { 'nvim-lua/plenary.nvim' } }
   }
   use {
     'nvim-telescope/telescope-fzf-native.nvim',
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
-  use { "AckslD/nvim-neoclip.lua",
-  require = "nvim-telescope/telescope.nvim"}
+  use {
+    "AckslD/nvim-neoclip.lua",
+    require = "nvim-telescope/telescope.nvim"
+  }
+  use{
+    "nvim-treesitter/nvim-treesitter"
+  }
+
   if packer_bootstrap then
     packer.sync()
   end
