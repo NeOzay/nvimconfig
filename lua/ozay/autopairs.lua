@@ -93,6 +93,7 @@ MUtils.completion_confirm = function()
 end
 local cmp = require"cmp"
 --remap('i', '<CR>', 'v:lua.MUtils.completion_confirm()', { expr = true, noremap = true })
+
 vim.keymap.set("i", "<CR>", function ()
   if cmp.visible() then
     cmp.confirm()

@@ -43,9 +43,9 @@ local setting = {
   winbar = {
     --lualine_c = {{navic.get_location, cond = navic.is_available }},
     lualine_c = {{function ()
-      return winbar:get_winbar()
+      return winbar:get_winbar() or ""
     end }},
-    --lualine_y = { "diagnostics" }
+    lualine_y = { "diagnostics" }
   },
   inactive_winbar = {},
   extensions = {}

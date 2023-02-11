@@ -4,7 +4,7 @@ local saga = require('lspsaga').setup{
     enable = false,
     separator = " ",
     hide_keyword = true,
-    show_file = true,
+    show_file = false,
     folder_level = 2,
     respect_root = false,
     color_mode = true,
@@ -78,7 +78,7 @@ keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>")
 -- Note that if you use hover with ++keep, pressing this key again will
 -- close the hover window. If you want to jump to the hover window
 -- you should use the wincmd command "<C-w>w"
-keymap("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>")
+--keymap("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>")
 
 -- Call hierarchy
 keymap("n", "<Leader>ci", "<cmd>Lspsaga incoming_calls<CR>")

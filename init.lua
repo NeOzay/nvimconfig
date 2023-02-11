@@ -100,8 +100,8 @@ if &wildoptions =~ "pum"
   cnoremap <expr> <down> pumvisible() ? "<C-n>": "<down>"
 endif
 ]]
-if fn.filereadable"~/win32yank.exe" == 1 then
-vim.cmd[[
+if fn.filereadable "~/win32yank.exe" == 1 then
+  vim.cmd [[
 set clipboard+=unnamedplus
 let g:clipboard = {
           \   'name': 'win32yank-wsl',
@@ -138,16 +138,16 @@ vim.diagnostic.config {
   signs = false
 }
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-            vim.lsp.handlers.signature_help, {
-                border = 'rounded',
-                close_events = {"BufHidden", "InsertLeave"},
-    }
+  vim.lsp.handlers.signature_help, {
+  border = 'rounded',
+  close_events = { "BufHidden", "InsertLeave" },
+}
 )
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-            vim.lsp.handlers.hover, {
-                border = 'rounded',
-    }
+  vim.lsp.handlers.hover, {
+  border = 'rounded',
+}
 )
 api.nvim_create_user_command("Format", "lua vim.lsp.buf.format()", {})
 api.nvim_create_user_command("Luarc", "!cp /home/ozay/.config/nvim/.luarc.json .", {})
