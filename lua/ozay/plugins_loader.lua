@@ -66,10 +66,10 @@ return packer.startup(function(use)
   use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use { 'j-hui/fidget.nvim' }
-  use {
-    "SmiteshP/nvim-navic",
-    requires = "neovim/nvim-lspconfig"
-  }
+  --use {
+  --  "SmiteshP/nvim-navic",
+  --  requires = "neovim/nvim-lspconfig"
+  --}
   use {
     "folke/trouble.nvim",
     requires = "kyazdani42/nvim-web-devicons",

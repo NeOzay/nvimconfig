@@ -48,6 +48,7 @@ tokyonight.setup {
 
     highlights["@type"] = { fg = colors.blue5, style = { italic = true } }
     highlights["@method"] = { fg = colors.green }
+    highlights["@member"] = { fg = colors.green }
     highlights["@function"] = { fg = colors.green }
     --highlights["@property"] = { fg = sonokaiPalette.purple }
     highlights["@property"] = { fg = "#afaf87" }

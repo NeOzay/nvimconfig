@@ -1,14 +1,22 @@
 local keymap = vim.keymap.set
-local saga = require('lspsaga').setup{
-  symbol_in_winbar = {
-    enable = false,
-    separator = " ",
-    hide_keyword = true,
-    show_file = false,
-    folder_level = 2,
-    respect_root = false,
-    color_mode = true,
-  },
+local saga = require('lspsaga').setup {
+    symbol_in_winbar = {
+        enable = false,
+        separator = " ",
+        hide_keyword = true,
+        show_file = false,
+        folder_level = 2,
+        respect_root = false,
+        color_mode = true,
+    },
+    definition = {
+        edit = "<C-o>",
+        vsplit = "<C-v>",
+        split = "<C-i>",
+        tabe = "<C-t>",
+        quit = "q",
+        close = "<Esc>",
+    }
 }
 
 
@@ -19,7 +27,7 @@ local saga = require('lspsaga').setup{
 keymap("n", "gh", "<cmd>Lspsaga lsp_finder<CR>")
 
 -- Code action
-keymap({"n","v"}, "<leader>ca", "<cmd>Lspsaga code_action<CR>")
+keymap({ "n", "v" }, "<leader>a", "<cmd>Lspsaga code_action<CR>")
 
 -- Rename all occurrences of the hovered word for the entire file
 keymap("n", "gr", "<cmd>Lspsaga rename<CR>")
@@ -63,7 +71,7 @@ keymap("n", "]E", function()
 end)
 
 -- Toggle outline
-keymap("n","<leader>o", "<cmd>Lspsaga outline<CR>")
+keymap("n", "<leader>o", "<cmd>Lspsaga outline<CR>")
 
 -- Hover Doc
 -- If there is no hover doc,
@@ -85,4 +93,4 @@ keymap("n", "<Leader>ci", "<cmd>Lspsaga incoming_calls<CR>")
 keymap("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>")
 
 -- Floating terminal
-keymap({"n", "t"}, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")
+keymap({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")

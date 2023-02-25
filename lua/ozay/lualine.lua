@@ -1,5 +1,4 @@
 local lualine = require "lualine"
-local navic = require "nvim-navic"
 local winbar = require('lspsaga.symbolwinbar')
 
 local setting = {
@@ -41,7 +40,6 @@ local setting = {
     --lualine_z = { 'tabs' }
   },
   winbar = {
-    --lualine_c = {{navic.get_location, cond = navic.is_available }},
     lualine_c = {{function ()
       return winbar:get_winbar() or ""
     end }},

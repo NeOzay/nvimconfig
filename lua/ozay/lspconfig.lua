@@ -1,4 +1,4 @@
-local navic = require "nvim-navic"
+--local navic = require "nvim-navic"
 local lspconfig = require"lspconfig"
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -50,6 +50,17 @@ local function addOption(t)
   return t
 end
 
-lspconfig.sumneko_lua.setup(addOption(require("ozay.lsp.sumneko_lua")))
+lspconfig.lua_ls.setup(addOption(require("ozay.lsp.sumneko_lua")))
 lspconfig.jsonls.setup(addOption())
 lspconfig.vimls.setup{}
+local eslintconf = {
+  on_attach = function(client, bufnr)
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      buffer = bufnr,
+      command = "EslintFixAll",
+    })
+  end,
+}
+
+lspconfig.eslint.setup(addOption(eslintconf))
+require'lspconfig'.tsserver.setup{}
