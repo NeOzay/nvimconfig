@@ -29,11 +29,11 @@ end
 
 -- Have packer use a popup window
 packer.init({
-  display = {
-    open_fn = function()
-      return require('packer.util').float({ border = 'single' })
-    end
-  }
+    display = {
+        open_fn = function()
+          return require('packer.util').float({ border = 'single' })
+        end
+    }
 }
 )
 
@@ -52,8 +52,8 @@ return packer.startup(function(use)
   use "folke/neodev.nvim"
   --use "vim-airline/vim-airline"
   use {
-    'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons' }
+      'nvim-lualine/lualine.nvim',
+      requires = { 'kyazdani42/nvim-web-devicons' }
   }
   use { "windwp/nvim-autopairs" }
   use "mroavi/vim-pasta"
@@ -71,32 +71,32 @@ return packer.startup(function(use)
   --  requires = "neovim/nvim-lspconfig"
   --}
   use {
-    "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
+      "folke/trouble.nvim",
+      requires = "kyazdani42/nvim-web-devicons",
   }
   use 'NvChad/nvim-colorizer.lua'
   use({
-    "glepnir/lspsaga.nvim",
-    branch = "main",
-    requires = { { "nvim-tree/nvim-web-devicons" } }
+      "glepnir/lspsaga.nvim",
+      branch = "main",
+      requires = { { "nvim-tree/nvim-web-devicons" } }
   })
   use {
-    'nvim-telescope/telescope.nvim', branch = '0.1.x',
-    -- or                          , branch = '0.1.x',
-    requires = { { 'nvim-lua/plenary.nvim' } }
+      'nvim-telescope/telescope.nvim', branch = '0.1.x',
+      -- or                          , branch = '0.1.x',
+      requires = { { 'nvim-lua/plenary.nvim' } }
   }
   use {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+      'nvim-telescope/telescope-fzf-native.nvim',
+      run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
   use {
-    "AckslD/nvim-neoclip.lua",
-    require = "nvim-telescope/telescope.nvim"
+      "AckslD/nvim-neoclip.lua",
+      require = "nvim-telescope/telescope.nvim"
   }
-  use{
-    "nvim-treesitter/nvim-treesitter"
-  }
+  use {"nvim-treesitter/nvim-treesitter"}
+  use {"nvim-telescope/telescope-file-browser.nvim"}
 
+  --use {"leafgarland/typescript-vim"}
   if packer_bootstrap then
     packer.sync()
   end

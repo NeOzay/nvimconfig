@@ -1,7 +1,11 @@
 local palette = require "tokyonight.colors"
 local tokyonight = require "tokyonight"
 
+local M = {}
 
+function M.test()
+  
+end
 local sonokaiPalette = {
   black       = '#1a181a',
   bg_dim      = '#211f21',
@@ -60,6 +64,8 @@ tokyonight.setup {
     highlights["luaParens"] = { fg = "#B48EAD" }
     highlights["luaBraces"] = { fg = colors.blue1 }
     highlights["luaFuncKeyword"] = { fg = colors.red, style = {italic = true} }
+
+    vim.api.nvim_set_hl(0, "typescriptStorageClass", {link = "Identifier"})
   end,
   styles = {
     ["comments"] = { italic = false },
