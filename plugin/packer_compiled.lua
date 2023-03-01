@@ -139,6 +139,11 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-neoclip.lua",
     url = "https://github.com/AckslD/nvim-neoclip.lua"
   },
+  ["nvim-textmate"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-textmate",
+    url = "https://github.com/icedman/nvim-textmate"
+  },
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-treesitter",

@@ -96,6 +96,7 @@ return packer.startup(function(use)
   use {"nvim-treesitter/nvim-treesitter"}
   use {"nvim-telescope/telescope-file-browser.nvim"}
 
+  use "icedman/nvim-textmate"
   --use {"leafgarland/typescript-vim"}
   if packer_bootstrap then
     packer.sync()
