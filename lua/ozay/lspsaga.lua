@@ -45,6 +45,8 @@ keymap("n", "gd", "<cmd>Lspsaga peek_definition<CR>")
 -- Go to definition
 --keymap("n","gd", "<cmd>Lspsaga goto_definition<CR>")
 
+keymap("n", "gt", "<cmd>Lspsaga peek_type_definition<CR>")
+
 -- Show line diagnostics
 -- You can pass argument ++unfocus to
 -- unfocus the show_line_diagnostics floating window

@@ -93,6 +93,9 @@ nnoremap("<leader>c", "ciw", { nowait = true })
 --nnoremap("<leader>h", "<cmd>tab help <C-R><C-W><cr>")
 nnoremap("<leader>h", ":tab help <C-R><C-W><cr>")
 nnoremap(":", ": <BS>")
+nnoremap("<leader>d", function()
+  vim.diagnostic.open_float(nil, { focus = false })
+end)
 
 vim.cmd [[
 if &wildoptions =~ "pum"
@@ -125,28 +128,28 @@ vim.g.sonokai_style = 'shusia'
 vim.cmd [[colorscheme tokyonight-night]]
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-  underline = true,
-  virtual_text = false,
-  signs = true,
-  update_in_insert = false,
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = true,
+    virtual_text = false,
+    signs = true,
+    update_in_insert = false,
 }
 )
 
 vim.diagnostic.config {
-  float = { border = "rounded" },
-  signs = false
+    float = { border = "rounded" },
+    signs = false
 }
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-  vim.lsp.handlers.signature_help, {
-  border = 'rounded',
-  close_events = { "BufHidden", "InsertLeave" },
+    vim.lsp.handlers.signature_help, {
+    border = 'rounded',
+    close_events = { "BufHidden", "InsertLeave" },
 }
 )
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-  vim.lsp.handlers.hover, {
-  border = 'rounded',
+    vim.lsp.handlers.hover, {
+    border = 'rounded',
 }
 )
 api.nvim_create_user_command("Format", "lua vim.lsp.buf.format()", {})
