@@ -123,7 +123,7 @@ end
 
 --vim.cmd("colorscheme one_monokai")
 --vim.g.monokaipro_filter = "spectrum"
-vim.g.sonokai_style = 'shusia'
+--vim.g.sonokai_style = 'shusia'
 --vim.g.sonokai_style = 'atlantis'
 vim.cmd [[colorscheme tokyonight-night]]
 

@@ -12,11 +12,12 @@ require "fidget".setup{
     border = "rounded"
   }
 }
-require "colorizer".setup{
-  user_default_options = {
-    names = false
-  }
-}
+--require "colorizer".setup{
+--  user_default_options = {
+--    names = false
+--  }
+--}
+require('nvim-highlight-colors').setup {}
 require "trouble".setup{}
 require "ozay.autocommand"
 require "ozay.telescope"

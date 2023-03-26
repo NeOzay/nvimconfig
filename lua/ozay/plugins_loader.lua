@@ -74,7 +74,8 @@ return packer.startup(function(use)
       "folke/trouble.nvim",
       requires = "kyazdani42/nvim-web-devicons",
   }
-  use 'NvChad/nvim-colorizer.lua'
+  --use 'NvChad/nvim-colorizer.lua'
+  use 'brenoprata10/nvim-highlight-colors'
   use({
       "glepnir/lspsaga.nvim",
       branch = "main",
