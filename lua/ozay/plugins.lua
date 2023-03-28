@@ -23,5 +23,6 @@ require "ozay.autocommand"
 require "ozay.telescope"
 require "neoclip".setup()
 require "ozay.treesitter"
-
+require('guess-indent').setup{}
+require("ozay.neo-tree")
 -- init.lua

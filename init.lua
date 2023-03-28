@@ -67,7 +67,7 @@ local keymap = vim.keymap.set
 
 local function newMapType(char)
   ---@param lhs string
-  ---@param rhs string|fun():string
+  ---@param rhs string|fun():string?
   ---@param opts table|nil
   return function(lhs, rhs, opts)
     keymap(char, lhs, rhs, opts)

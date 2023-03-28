@@ -1,4 +1,11 @@
 local keymap = vim.keymap.set
+--require('lspsaga.lspkind')
+local kind = {
+  Object = "@property",
+  Array = "@property",
+  Function = "@function",
+  Method = "@function",
+}
 local saga = require('lspsaga').setup {
     symbol_in_winbar = {
         enable = false,
@@ -16,7 +23,11 @@ local saga = require('lspsaga').setup {
         tabe = "<C-t>",
         quit = "q",
         close = "<Esc>",
-    }
+    },
+  ui = {
+    kind = kind
+  }
+
 }
 
 

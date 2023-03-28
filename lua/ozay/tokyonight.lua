@@ -38,38 +38,54 @@ tokyonight.setup {
     ---@class ColorScheme
     local _colors = colors
     _colors.neutralGreen = "#afaf87"
+    _colors.londonHue = "#B48EAD"
+    _colors.pp = "#8A5DAB"
 
   end,
   on_highlights = function(highlights, colors)
+    do
+      --return
+    end
     highlights["String"] = { fg = sonokaiPalette.yellow }
-    highlights["Statement"] = { fg = colors.red }
-    highlights["Type"] = { fg = colors.red }
     highlights["Constant"] = { fg = colors.magenta }
-    --highlights["Special"] = { fg = colors.magenta }
-    highlights["Noise"] = { fg = colors.blue1 }
+    highlights["@lsp.mod.readonly"] = { fg = colors.londonHue }
 
-    highlights["@type"] = { fg = colors.blue5, style = { italic = true } }
     highlights["@method"] = { fg = colors.green }
-    highlights["@member"] = { fg = colors.green }
-    highlights["@lsp.type.function"] = { fg = colors.green }
     highlights["@lsp.type.method"] = { fg = colors.green }
-    highlights["@lsp.typemod.function.defaultLibrary"] = { fg = colors.green, style = { italic = true } }
+
     highlights["@function"] = { fg = colors.green }
     highlights["@function.builtin"] = highlights["@lsp.typemod.function.defaultLibrary"]
+    highlights["@lsp.type.function"] = { fg = colors.green }
+    highlights["@lsp.typemod.function.defaultLibrary"] = { fg = colors.green, style = { italic = true } }
+    highlights["@lsp.typemod.function.global"] = { fg = colors.green, style = { italic = true } }
 
-    --highlights["@property"] = { fg = sonokaiPalette.purple }
+    highlights["@lsp.typemod.variable.global"] = { fg = colors.red}
+    
     highlights["@property"] = { fg = colors.neutralGreen }
     highlights["@field"] = { fg = colors.neutralGreen }
+    highlights["@member"] = { fg = colors.green }
     highlights["@parameter"] = { fg = colors.orange }
+
+    highlights["Type"] = { fg = colors.blue2, style = { italic = true } }
+    highlights["@type"] = { fg = colors.blue2, style = { italic = true } }
     highlights["@class"] = { fg = colors.blue2 }
-    highlights["Type"] = { fg = colors.blue2 }
-    highlights["@lsp.typemod.class.declaration"] = { fg = colors.blue2, style = { bold = true } }
+    highlights["@lsp.type.enum"] = { fg = colors.red }
 
     highlights["@punctuation.delimiter"] = { fg = colors.dark5 }
+    --highlights["@punctuation.special"] = { fg = colors.dark5 }
+    highlights["@keyword.function"] = { fg = colors.magenta, style = { italic = true } }
+    highlights["@boolean"] = { fg = colors.blue2 }
 
+
+    highlights["@lsp.typemod.class.declaration"] = { style = { bold = true } }
+    highlights["@lsp.typemod.interface.declaration"] = { style = {bold = true, italic = false} }
+    highlights["@lsp.typemod.enum.declaration"] = { style = {bold = true} }
+    highlights["@lsp.typemod.type.declaration"] = { style = {bold = true} }
+
+    highlights["Noise"] = { fg = colors.blue1 }
     highlights["LuaNoise"] = { fg = colors.dark5 }
-    highlights["luaFuncParens"] = { fg = "#B48EAD" }
-    highlights["luaParens"] = { fg = "#B48EAD" }
+    highlights["luaFuncParens"] = { fg = colors.londonHue }
+    highlights["luaParens"] = { fg = colors.londonHue }
     highlights["luaBraces"] = { fg = colors.blue1 }
     highlights["luaFuncKeyword"] = { fg = colors.red, style = { italic = true } }
 

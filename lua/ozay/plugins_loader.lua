@@ -94,8 +94,19 @@ return packer.startup(function(use)
       "AckslD/nvim-neoclip.lua",
       require = "nvim-telescope/telescope.nvim"
   }
-  use {"nvim-treesitter/nvim-treesitter"}
-  use {"nvim-telescope/telescope-file-browser.nvim"}
+  use { "nvim-treesitter/nvim-treesitter" }
+  --use { "nvim-telescope/telescope-file-browser.nvim" }
+
+  use {
+      "nvim-neo-tree/neo-tree.nvim",
+      branch = "v2.x",
+      requires = {
+          "nvim-lua/plenary.nvim",
+          "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+          "MunifTanjim/nui.nvim",
+      }
+  }
+  use "nmac427/guess-indent.nvim"
 
   if packer_bootstrap then
     packer.sync()

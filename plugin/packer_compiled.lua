@@ -94,6 +94,11 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/fidget.nvim",
     url = "https://github.com/j-hui/fidget.nvim"
   },
+  ["guess-indent.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/guess-indent.nvim",
+    url = "https://github.com/nmac427/guess-indent.nvim"
+  },
   ["lspkind.nvim"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/lspkind.nvim",
@@ -109,10 +114,20 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
+  ["neo-tree.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/neo-tree.nvim",
+    url = "https://github.com/nvim-neo-tree/neo-tree.nvim"
+  },
   ["neodev.nvim"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/neodev.nvim",
     url = "https://github.com/folke/neodev.nvim"
+  },
+  ["nui.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nui.nvim",
+    url = "https://github.com/MunifTanjim/nui.nvim"
   },
   ["nvim-autopairs"] = {
     loaded = true,
@@ -163,11 +178,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/sonokai",
     url = "https://github.com/sainnhe/sonokai"
-  },
-  ["telescope-file-browser.nvim"] = {
-    loaded = true,
-    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/telescope-file-browser.nvim",
-    url = "https://github.com/nvim-telescope/telescope-file-browser.nvim"
   },
   ["telescope-fzf-native.nvim"] = {
     loaded = true,
