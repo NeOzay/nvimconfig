@@ -1,3 +1,5 @@
+local fn = vim.fn
+
 local M = {}
 function M.popupIsVisible()
   for _, window_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -9,4 +11,12 @@ function M.popupIsVisible()
     end
     return false
 end
+
+function M.getRGBHighlightGroup(group)
+  return {
+    bg = fn.synIDattr(fn.hlID(group), "bg#"),
+    fg = fn.synIDattr(fn.hlID(group), "fg#")
+  }
+end
+
 return M

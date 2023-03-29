@@ -6,7 +6,7 @@ local kind = {
   Function = "@function",
   Method = "@function",
 }
-require('lspsaga.lspkind')
+--require('lspsaga.lspkind')
 local saga = require('lspsaga').setup {
     symbol_in_winbar = {
         enable = false,
