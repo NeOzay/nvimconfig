@@ -129,27 +129,30 @@ end
 vim.cmd [[colorscheme tokyonight-night]]
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
+  vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = true,
     virtual_text = false,
     signs = true,
     update_in_insert = false,
-})
+  }
+)
 
 vim.diagnostic.config {
-    float = { border = "rounded" },
-    signs = false
+  float = { border = "rounded" },
+  signs = false
 }
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-    vim.lsp.handlers.signature_help, {
+  vim.lsp.handlers.signature_help, {
     border = 'rounded',
     close_events = { "BufHidden", "InsertLeave" },
-})
+  }
+)
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-    vim.lsp.handlers.hover, {
+  vim.lsp.handlers.hover, {
     border = 'rounded',
-})
+  }
+)
 
 api.nvim_create_user_command("Format", "lua vim.lsp.buf.format()", {})
 api.nvim_create_user_command("Luarc", "!cp /home/ozay/.config/nvim/.luarc.json .", {})

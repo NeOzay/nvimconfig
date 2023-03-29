@@ -5,7 +5,8 @@ local cursorHi ---@type {fg:string, bg:string}
 require("neo-tree").setup({
   filesystem = {
     window = {
-      popup = { -- settings that apply to float position only
+      popup = {
+                -- settings that apply to float position only
         size = {
           height = "80%",
           width = "80%",
@@ -15,22 +16,27 @@ require("neo-tree").setup({
     }
   },
   event_handlers = {
-      {
-        event = "neo_tree_buffer_enter",
-        handler = function()
-          cursorHi = getRGBH("Cursor")
-          -- This effectively hides the cursor
-          vim.cmd 'highlight! Cursor blend=100'
-        end
-      },
-      {
-        event = "neo_tree_buffer_leave",
-        handler = function()
-          -- Make this whatever your current Cursor highlight group is.
-          vim.cmd (('highlight! Cursor guibg=%s blend=0'):format(cursorHi.bg))
-        end
-      }
+    {
+      event = "neo_tree_buffer_enter",
+      handler = function()
+        cursorHi = getRGBH("Cursor")
+        -- This effectively hides the cursor
+        vim.cmd 'highlight! Cursor blend=100'
+      end
     },
+    {
+      event = "neo_tree_buffer_leave",
+      handler = function()
+        -- Make this whatever your current Cursor highlight group is.
+        vim.cmd(('highlight Cursor blend=0'):format(cursorHi.bg))
+      end
+    }
+  },
+  window = {
+    mappings = {
+      ["<Right>"] = "toggle_node"
+    }
+  }
 })
 
 vim.api.nvim_set_keymap(
