@@ -1,12 +1,8 @@
-local getRGBH = require("ozay.util").getRGBHighlightGroup
-
-local cursorHi ---@type {fg:string, bg:string}
-
 require("neo-tree").setup({
   filesystem = {
     window = {
       popup = {
-                -- settings that apply to float position only
+        -- settings that apply to float position only
         size = {
           height = "80%",
           width = "80%",
@@ -19,7 +15,6 @@ require("neo-tree").setup({
     {
       event = "neo_tree_buffer_enter",
       handler = function()
-        cursorHi = getRGBH("Cursor")
         -- This effectively hides the cursor
         vim.cmd 'highlight! Cursor blend=100'
       end
@@ -28,7 +23,8 @@ require("neo-tree").setup({
       event = "neo_tree_buffer_leave",
       handler = function()
         -- Make this whatever your current Cursor highlight group is.
-        vim.cmd(('highlight Cursor blend=0'):format(cursorHi.bg))
+        --vim.notify("leave", vim.log.levels.ERROR)
+        --vim.cmd 'highlight Cursor blend=0'
       end
     }
   },
@@ -45,3 +41,9 @@ vim.api.nvim_set_keymap(
   ":NeoTreeFloatToggle<CR>",
   { noremap = true }
 )
+vim.cmd[[
+augroup ozay_neo_tree
+autocmd!
+autocmd BufLeave neo-tree* hi Cursor blend=0
+augroup END
+]]

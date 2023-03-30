@@ -1,6 +1,18 @@
 -- luasnip setup
 local luasnip = require 'luasnip'
-local lspkind = require'lspkind'
+local lspkind = require 'lspkind'
+
+lspkind.init(
+  {
+    symbol_map = {
+      Interface = "",
+      TypeParameter = "",
+      Snippet = "",
+      Unit = "",
+      Class = ""
+    }
+  }
+)
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
@@ -45,7 +57,7 @@ cmp.setup {
   },
 
   view = {
-    entries = {name = 'custom', selection_order = 'near_cursor'}
+    entries = { name = 'custom', selection_order = 'near_cursor' }
   },
 
   window = {

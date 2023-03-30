@@ -5,7 +5,6 @@ require('telescope').setup {
         mappings = {
             i = {
                 ["<esc>"] = require("telescope.actions").close
-        
             }
         }
     },

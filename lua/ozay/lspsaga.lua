@@ -1,30 +1,48 @@
+local lspkind = require "lspkind"
+local symbol_map = lspkind.symbol_map
 local keymap = vim.keymap.set
 --require('lspsaga.lspkind')
 local kind = {
   Object = "@property",
   Array = "@property",
-  Function = "@function",
-  Method = "@function",
+  Function = { symbol_map.Function, "@function" },
+  Method = { symbol_map.Method, "@function" },
+  Class = { "ﴯ", "@class" },
+  Package = { symbol_map.Module, "Label" },
+  Module = { symbol_map.Module, "Exception" },
+  Field = { symbol_map.Field, "@field" },
+  Enum = { symbol_map.Enum, "@lsp.type.enum" },
+  Interface = { symbol_map.Interface, "Identifier" },
+  Variable = { symbol_map.Variable, "@variable" },
+  Constant = { symbol_map.Constant, "@lsp.type.readonly" },
+  Struct = { symbol_map.Struct, "Type" },
+  Event = { symbol_map.Event, "Constant" },
 }
---require('lspsaga.lspkind')
+
+for key, value in pairs(kind) do
+  if type(value) == "table" then
+  value[1] = value[1].." "
+  end
+end
+
 local saga = require('lspsaga').setup {
-    symbol_in_winbar = {
-        enable = false,
-        separator = " ",
-        hide_keyword = true,
-        show_file = false,
-        folder_level = 2,
-        respect_root = false,
-        color_mode = true,
-    },
-    definition = {
-        edit = "<C-o>",
-        vsplit = "<C-v>",
-        split = "<C-i>",
-        tabe = "<C-t>",
-        quit = "q",
-        close = "<Esc>",
-    },
+  symbol_in_winbar = {
+    enable = false,
+    separator = " ",
+    hide_keyword = true,
+    show_file = false,
+    folder_level = 2,
+    respect_root = false,
+    color_mode = true,
+  },
+  definition = {
+    edit = "<C-o>",
+    vsplit = "<C-v>",
+    split = "<C-i>",
+    tabe = "<C-t>",
+    quit = "q",
+    close = "<Esc>",
+  },
   ui = {
     kind = kind
   }

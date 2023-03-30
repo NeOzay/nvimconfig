@@ -39,6 +39,7 @@ tokyonight.setup {
     local _colors = colors
     _colors.neutralGreen = "#afaf87"
     _colors.londonHue = "#B48EAD"
+    _colors.londonHue2 = "#e0d1de"
     _colors.pp = "#8A5DAB"
 
   end,
@@ -48,18 +49,19 @@ tokyonight.setup {
     end
     highlights["String"] = { fg = sonokaiPalette.yellow }
     highlights["Constant"] = { fg = colors.magenta }
-    highlights["@lsp.mod.readonly"] = { fg = colors.londonHue }
+    highlights["@lsp.mod.readonly"] = { fg = colors.londonHue2 }
 
     highlights["@method"] = { fg = colors.green }
     highlights["@lsp.type.method"] = { fg = colors.green }
 
-    highlights["@function"] = { fg = colors.green }
-    highlights["@function.builtin"] = highlights["@lsp.typemod.function.defaultLibrary"]
+    highlights["Function"] = { fg = colors.green }
+    highlights["@function"] = highlights["Function"]
+    highlights["@function.builtin"] = highlights["Function"]
     highlights["@lsp.type.function"] = { fg = colors.green }
     highlights["@lsp.typemod.function.defaultLibrary"] = { fg = colors.green, style = { italic = true } }
     highlights["@lsp.typemod.function.global"] = { fg = colors.green, style = { italic = true } }
 
-    highlights["@lsp.typemod.variable.global"] = { fg = colors.red}
+    highlights["@lsp.typemod.variable.global"] = { style = { italic = true} }
     
     highlights["@property"] = { fg = colors.neutralGreen }
     highlights["@field"] = { fg = colors.neutralGreen }
@@ -88,6 +90,16 @@ tokyonight.setup {
     highlights["luaParens"] = { fg = colors.londonHue }
     highlights["luaBraces"] = { fg = colors.blue1 }
     highlights["luaFuncKeyword"] = { fg = colors.red, style = { italic = true } }
+
+
+    highlights["CmpItemKindFunction"] = highlights["Function"]
+    highlights["CmpItemKindProperty"] = highlights["@property"]
+    highlights["CmpItemKindField"] = highlights["@property"]
+    highlights["CmpItemKindClass"] = highlights["@class"]
+    highlights["CmpItemKindInterface"] = highlights["@lsp.type.interface"]
+    highlights["CmpItemKindEnum"] = highlights["@lsp.type.enum"]
+    highlights["CmpItemKindVariable"] = highlights["@variable"]
+    highlights["CmpItemKindConstant"] = highlights["@lsp.mod.readonly"]
 
   end,
   styles = {
