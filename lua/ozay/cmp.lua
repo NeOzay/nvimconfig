@@ -1,7 +1,7 @@
 -- luasnip setup
 local luasnip = require 'luasnip'
 local lspkind = require 'lspkind'
-
+--  
 lspkind.init(
   {
     symbol_map = {
@@ -9,7 +9,9 @@ lspkind.init(
       TypeParameter = "",
       Snippet = "",
       Unit = "",
-      Class = ""
+      Class = "󰠱",
+      Field = "󰜢",
+      Property = "󰜢"
     }
   }
 )

@@ -39,16 +39,17 @@ autocommand("CursorHold", {
 --      end
 --  end
 --  })
-autocommand("OptionSet", {
-    group = group,
-    pattern = "winbar",
-    callback = function ()
-      local option = vim.v.option_new
-      if option == "" then
-        vim.opt.winbar = ">"
-      end
-    end
-  })
+
+--autocommand("OptionSet", {
+--    group = group,
+--    pattern = "winbar",
+--    callback = function ()
+--      local option = vim.v.option_new
+--      if option == "" then
+--        vim.opt.winbar = ">"
+--      end
+--    end
+--  })
 
 autocommand("BufEnter", {
     group = group,

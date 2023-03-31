@@ -1,5 +1,6 @@
 local palette = require "tokyonight.colors"
 local tokyonight = require "tokyonight"
+local getRGBGroup = require "ozay.util".getRGBHighlightGroup
 
 local sonokaiPalette = {
   black       = '#1a181a',
@@ -29,8 +30,9 @@ local sonokaiPalette = {
 }
 ---@param colors ColorScheme
 local function sonokai(colors)
-
-
+  return {
+    1
+  }
 end
 
 tokyonight.setup {
@@ -41,12 +43,20 @@ tokyonight.setup {
     _colors.londonHue = "#B48EAD"
     _colors.londonHue2 = "#e0d1de"
     _colors.pp = "#8A5DAB"
-
   end,
-  on_highlights = function(highlights, colors)
-    do
-      --return
-    end
+  on_highlights = function(h, colors)
+    local highlights = {}
+    setmetatable(highlights, {
+      __newindex = function(t, k, v)
+        if type(v) == "table" then
+          h[k] = v
+        else
+          h[k] = h[v] or getRGBGroup(v)
+        end
+      end,
+      __index = h
+    })
+
     highlights["String"] = { fg = sonokaiPalette.yellow }
     highlights["Constant"] = { fg = colors.magenta }
     highlights["@lsp.mod.readonly"] = { fg = colors.londonHue2 }
@@ -55,14 +65,14 @@ tokyonight.setup {
     highlights["@lsp.type.method"] = { fg = colors.green }
 
     highlights["Function"] = { fg = colors.green }
-    highlights["@function"] = highlights["Function"]
-    highlights["@function.builtin"] = highlights["Function"]
+    highlights["@function"] = "Function"
+    highlights["@function.builtin"] = "Function"
     highlights["@lsp.type.function"] = { fg = colors.green }
     highlights["@lsp.typemod.function.defaultLibrary"] = { fg = colors.green, style = { italic = true } }
     highlights["@lsp.typemod.function.global"] = { fg = colors.green, style = { italic = true } }
 
-    highlights["@lsp.typemod.variable.global"] = { style = { italic = true} }
-    
+    highlights["@lsp.typemod.variable.global"] = { style = { italic = true } }
+
     highlights["@property"] = { fg = colors.neutralGreen }
     highlights["@field"] = { fg = colors.neutralGreen }
     highlights["@member"] = { fg = colors.green }
@@ -72,6 +82,7 @@ tokyonight.setup {
     highlights["@type"] = { fg = colors.blue2, style = { italic = true } }
     highlights["@class"] = { fg = colors.blue2 }
     highlights["@lsp.type.enum"] = { fg = colors.red }
+    highlights["@constructor"] = "@method"
 
     highlights["@punctuation.delimiter"] = { fg = colors.dark5 }
     --highlights["@punctuation.special"] = { fg = colors.dark5 }
@@ -80,9 +91,9 @@ tokyonight.setup {
 
 
     highlights["@lsp.typemod.class.declaration"] = { style = { bold = true } }
-    highlights["@lsp.typemod.interface.declaration"] = { style = {bold = true, italic = false} }
-    highlights["@lsp.typemod.enum.declaration"] = { style = {bold = true} }
-    highlights["@lsp.typemod.type.declaration"] = { style = {bold = true} }
+    highlights["@lsp.typemod.interface.declaration"] = { style = { bold = true, italic = false } }
+    highlights["@lsp.typemod.enum.declaration"] = { style = { bold = true } }
+    highlights["@lsp.typemod.type.declaration"] = { style = { bold = true } }
 
     highlights["Noise"] = { fg = colors.blue1 }
     highlights["LuaNoise"] = { fg = colors.dark5 }
@@ -92,15 +103,44 @@ tokyonight.setup {
     highlights["luaFuncKeyword"] = { fg = colors.red, style = { italic = true } }
 
 
-    highlights["CmpItemKindFunction"] = highlights["Function"]
-    highlights["CmpItemKindProperty"] = highlights["@property"]
-    highlights["CmpItemKindField"] = highlights["@property"]
-    highlights["CmpItemKindClass"] = highlights["@class"]
-    highlights["CmpItemKindInterface"] = highlights["@lsp.type.interface"]
-    highlights["CmpItemKindEnum"] = highlights["@lsp.type.enum"]
-    highlights["CmpItemKindVariable"] = highlights["@variable"]
-    highlights["CmpItemKindConstant"] = highlights["@lsp.mod.readonly"]
+    highlights["CmpItemKindFunction"] = "Function"
+    highlights["CmpItemKindProperty"] = "@property"
+    highlights["CmpItemKindField"] = "@property"
+    highlights["CmpItemKindClass"] = "@class"
+    highlights["CmpItemKindInterface"] = "@lsp.type.interface"
+    highlights["CmpItemKindEnum"] = "@lsp.type.enum"
+    highlights["CmpItemKindVariable"] = "@variable"
+    highlights["CmpItemKindConstant"] = "@lsp.mod.readonly"
+    highlights["CmpItemKindKeyword"] = "@keyword"
 
+    --highlights["NavicIconsFile"] = {}
+    --highlights["NavicIconsModule"] = {}
+    --highlights["NavicIconsNamespace"] = {}
+    highlights["NavicIconsPackage"] = "Statement"
+    highlights["NavicIconsClass"] = "@class"
+    highlights["NavicIconsMethod"] = "@method"
+    highlights["NavicIconsProperty"] = "@property"
+    highlights["NavicIconsField"] = "@field"
+    highlights["NavicIconsConstructor"] = "@constructor"
+    highlights["NavicIconsEnum"] = "@enum"
+    highlights["NavicIconsInterface"] = "@lsp.type.interface"
+    highlights["NavicIconsFunction"] = "@function"
+    highlights["NavicIconsVariable"] = "@variable"
+    highlights["NavicIconsConstant"] = "@lsp.mod.readonly"
+    highlights["NavicIconsString"] = "String"
+    highlights["NavicIconsNumber"] = "Number"
+    highlights["NavicIconsBoolean"] = "@boolean"
+    highlights["NavicIconsArray"] = "@property"
+    highlights["NavicIconsObject"] = "@property"
+    --highlights["NavicIconsKey"] = ""
+    --highlights["NavicIconsNull"] = {}
+    highlights["NavicIconsEnumMember"] = "@enum"
+    highlights["NavicIconsStruct"] = "Structure"
+    highlights["NavicIconsEvent"] = "CmpItemKindEvent"
+    highlights["NavicIconsOperator"] = "@operator"
+    --highlights["NavicIconsTypeParameter"] = {}
+    highlights["NavicText"] = { bg = colors.black }
+    highlights["NavicSeparator"] = { fg = colors.red1 }
   end,
   styles = {
     ["comments"] = { italic = false },

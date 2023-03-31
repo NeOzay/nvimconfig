@@ -1,5 +1,6 @@
 local lualine = require "lualine"
 local winbar = require('lspsaga.symbolwinbar')
+local navic = require "nvim-navic"
 
 local setting = {
   options = {
@@ -40,9 +41,18 @@ local setting = {
     --lualine_z = { 'tabs' }
   },
   winbar = {
-    lualine_c = {{function ()
-      return winbar:get_winbar() or ""
-    end }},
+    lualine_c = { {
+      --function()
+      --  return winbar:get_winbar() or ""
+      --end
+      function()
+        local location = navic.is_available() and navic.get_location() or ">"
+        return location ~= "" and location or ">"
+      end,
+      cond = function()
+        return navic.is_available() or true
+      end
+    } },
     lualine_y = { "diagnostics" }
   },
   inactive_winbar = {},
