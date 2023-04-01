@@ -1,7 +1,7 @@
 -- luasnip setup
 local luasnip = require 'luasnip'
 local lspkind = require 'lspkind'
---  
+-- 
 lspkind.init(
   {
     symbol_map = {
@@ -56,6 +56,15 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    {
+      name = 'buffer',
+      option = {
+        get_bufnrs = function()
+          return vim.api.nvim_list_bufs()
+        end
+      }
+    };
+    { name = 'async_path'}
   },
 
   view = {

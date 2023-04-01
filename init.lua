@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 require "ozay.plugins_loader"
 require "ozay.plugins"
 
+
 local function T(...)
   local t = {}
   for _, v in ipairs({ ... }) do

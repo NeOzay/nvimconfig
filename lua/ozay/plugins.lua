@@ -1,4 +1,3 @@
-require "ozay.tokyonight"
 require "neodev".setup{}
 require "ozay.cmp"
 require "ozay.navic"
@@ -25,4 +24,5 @@ require "neoclip".setup()
 require "ozay.treesitter"
 require('guess-indent').setup{}
 require("ozay.neo-tree")
+require "ozay.tokyonight"
 -- init.lua
