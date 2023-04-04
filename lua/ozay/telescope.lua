@@ -1,6 +1,7 @@
 -- You dont need to set any of these options. These are the default ones. Only
 -- the loading is important
-require('telescope').setup {
+local telescope = require('telescope')
+telescope.setup {
     defaults = {
         mappings = {
             i = {
@@ -24,7 +25,11 @@ require('telescope').setup {
 }
 -- To get fzf loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
-require('telescope').load_extension('fzf')
+local ok = pcall(telescope.load_extension, 'fzf')
+if not ok then
+    vim.notify("Error could no load Telescope extension 'fzf'")
+end
+
 require('telescope').load_extension('neoclip')
 --require("telescope").load_extension "file_browser"
 

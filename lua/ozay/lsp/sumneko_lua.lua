@@ -4,42 +4,51 @@ local function checkConfigDir()
   end
 end
 
-local sumneko = {
-    settings = {
-        Lua = {
-            runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                --version = 'LuaJIT',
-            },
-            diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                --globals = {'vim'},
-            },
-            workspace = {
-                -- Make the server aware of Neovim runtime files
-                --library = checkConfigDir(),
-                checkThirdParty = false
-            },
-            -- Do not send telemetry data containing a randomized but unique identifier
-            telemetry = {
-                enable = false,
-            },
+local function findServer()
+  local exe = vim.fn.expand("$HOME/lua-language-server/bin/lua-language-server")
+  if vim.fn.filereadable(exe) == 1 then
+    return exe
+  else
+    return "lua-language-server"
+  end
+end
 
-            completion = {
-                autoRequire = false
-            },
-        },
-        format = {
-            enable = false,
-            indent_size = "2",
-            -- Put format options here
-            -- NOTE: the value should be STRING!!
-            defaultConfig = {
-                indent_style = "space",
-                indent_size = "2",
-            } }
+local sumneko = {
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        --version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        --globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        --library = checkConfigDir(),
+        checkThirdParty = false
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+      completion = {
+        autoRequire = false
+      },
     },
-    cmd = { vim.fn.expand("$HOME/lua-language-server/bin/lua-language-server") }
+    format = {
+      enable = false,
+      indent_size = "2",
+      -- Put format options here
+      -- NOTE: the value should be STRING!!
+      defaultConfig = {
+        indent_style = "space",
+        indent_size = "2",
+      }
+    }
+  },
+  cmd = { findServer() }
 }
 
 return sumneko
