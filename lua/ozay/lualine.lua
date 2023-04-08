@@ -38,8 +38,8 @@ local setting = {
     lualine_z = {}
   },
   tabline = {
-    --lualine_z = { 'tabs' }
   },
+
   winbar = {
     lualine_c = { {
       --function()
@@ -47,10 +47,15 @@ local setting = {
       --end
       function()
         local location = navic.is_available() and navic.get_location() or ">"
-        return location ~= "" and location or ">"
+        local bar = location ~= "" and location or ">"
+        --vim.notify(bar)
+        return bar
       end,
       cond = function()
-        return navic.is_available() or true
+        return navic.is_available()
+      end,
+      fmt = function (str)
+        return str.."%<%#lualine_c_normal#"
       end
     } },
     lualine_y = { "diagnostics" }

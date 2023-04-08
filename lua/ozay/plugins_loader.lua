@@ -110,7 +110,7 @@ return packer.startup(function(use)
       }
   }
   use "nmac427/guess-indent.nvim"
-
+  use "akinsho/bufferline.nvim"
   if packer_bootstrap then
     packer.sync()
   end

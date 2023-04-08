@@ -25,4 +25,5 @@ require "ozay.treesitter"
 require('guess-indent').setup{}
 require("ozay.neo-tree")
 require "ozay.tokyonight"
+--require "ozay.bufferline"
 -- init.lua

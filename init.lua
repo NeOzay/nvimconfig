@@ -123,11 +123,6 @@ if fn.filereadable "~/win32yank.exe" == 1 then
 ]]
 end
 
---vim.cmd("colorscheme one_monokai")
---vim.g.monokaipro_filter = "spectrum"
---vim.g.sonokai_style = 'shusia'
---vim.g.sonokai_style = 'atlantis'
-vim.cmd [[colorscheme tokyonight-night]]
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
