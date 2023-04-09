@@ -37,8 +37,7 @@ cmp.setup {
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
+        luasnip.expand_or_jump() else
         fallback()
       end
     end, { 'i', 's' }),
@@ -63,7 +62,7 @@ cmp.setup {
           return vim.api.nvim_list_bufs()
         end
       }
-    };
+    },
     { name = 'async_path'}
   },
 
