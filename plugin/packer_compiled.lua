@@ -79,10 +79,10 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
-  ["bufferline.nvim"] = {
+  ["barbar.nvim"] = {
     loaded = true,
-    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/bufferline.nvim",
-    url = "https://github.com/akinsho/bufferline.nvim"
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/barbar.nvim",
+    url = "https://github.com/romgrk/barbar.nvim"
   },
   ["cmp-async-path"] = {
     loaded = true,
@@ -154,6 +154,11 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
+  ["nvim-cokeline"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-cokeline",
+    url = "https://github.com/willothy/nvim-cokeline"
+  },
   ["nvim-highlight-colors"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-highlight-colors",
@@ -173,6 +178,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-neoclip.lua",
     url = "https://github.com/AckslD/nvim-neoclip.lua"
+  },
+  ["nvim-tabline"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/nvim-tabline",
+    url = "https://github.com/crispgm/nvim-tabline"
   },
   ["nvim-treesitter"] = {
     loaded = true,
@@ -198,6 +208,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/sonokai",
     url = "https://github.com/sainnhe/sonokai"
+  },
+  ["tabline-framework.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/tabline-framework.nvim",
+    url = "https://github.com/rafcamlet/tabline-framework.nvim"
   },
   ["telescope-fzf-native.nvim"] = {
     loaded = true,

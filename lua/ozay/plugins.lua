@@ -1,4 +1,5 @@
 require "neodev".setup{}
+require "ozay.tokyonight"
 require "ozay.cmp"
 require "ozay.navic"
 require "ozay.lspconfig"
@@ -24,6 +25,23 @@ require "neoclip".setup()
 require "ozay.treesitter"
 require('guess-indent').setup{}
 require("ozay.neo-tree")
-require "ozay.tokyonight"
 --require "ozay.bufferline"
+--require "ozay.barbar"
+--require "ozay.tabby"
+--require('tabline').setup({
+--    show_index = false,        -- show tab index
+--    show_modify = false,       -- show buffer modification indicator
+--    show_icon = true,        -- show file extension icon
+--    modify_indicator = '[+]', -- modify indicator
+--    no_name = 'No name',      -- no name buffer name
+--    brackets = { '', '' },  -- file name brackets surrounding
+--})
+require "ozay.cokeline"
+-- Try it:
+--require('tabline_framework').setup {
+--  render = require('tabline_framework.examples.fancy_indexes'),
+--  hl = { fg = '#abb2bf', bg = '#181A1F' },
+--  hl_sel = { fg = '#abb2bf', bg = '#282c34'},
+--  hl_fill = { fg = '#ffffff', bg = '#000000'},
+--}
 -- init.lua

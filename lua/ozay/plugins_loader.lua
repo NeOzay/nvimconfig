@@ -110,7 +110,12 @@ return packer.startup(function(use)
       }
   }
   use "nmac427/guess-indent.nvim"
-  use "akinsho/bufferline.nvim"
+  --use "akinsho/bufferline.nvim"
+  use {'romgrk/barbar.nvim', requires = 'nvim-web-devicons'}
+  --use 'nanozuki/tabby.nvim'
+  use 'crispgm/nvim-tabline'
+  use 'willothy/nvim-cokeline'
+  use { "rafcamlet/tabline-framework.nvim",  requires = "kyazdani42/nvim-web-devicons" }
   if packer_bootstrap then
     packer.sync()
   end

@@ -1,3 +1,4 @@
+vim.g.barbar_auto_setup = false -- disable auto-setup
 vim.g.mapleader = " "
 require "ozay.plugins_loader"
 require "ozay.plugins"
