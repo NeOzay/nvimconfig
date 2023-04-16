@@ -23,7 +23,7 @@ vim.opt.smartcase = true
 vim.opt.formatoptions:append(T('m', "M", "j"))
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.mouse = "nvi"
+vim.opt.mouse = "a"
 vim.opt.cursorline = true
 vim.opt.autoindent = true
 vim.opt.expandtab = true
@@ -38,6 +38,12 @@ vim.opt.foldlevelstart = 20
 vim.opt.termguicolors = true
 vim.opt.updatetime = 250
 vim.cmd 'set guicursor+=a:Cursor/lCursor'
+vim.cmd [[
+augroup OzayAuto
+autocmd!
+au Filetype lua setlocal formatoptions-=cro
+augroup end
+]]
 
 vim.opt.completeopt = T("menu", "menuone", "noselect")
 
@@ -90,8 +96,8 @@ end, { expr = true })
 nnoremap("<C-S>", "<Cmd>w<Cr>")
 nnoremap(" ", "<Nop>")
 nnoremap("<leader>j", "<cmd>Inspect<cr>")
-nnoremap("<leader>n", "<cmd>tabn<cr>")
-nnoremap("<leader>p", "<cmd>tabp<cr>")
+--nnoremap("<leader>n", "<cmd>tabn<cr>")
+--nnoremap("<leader>p", "<cmd>tabp<cr>")
 nnoremap("<leader>c", "ciw", { nowait = true })
 --nnoremap("<leader>h", "<cmd>tab help <C-R><C-W><cr>")
 nnoremap("<leader>h", ":tab help <C-R><C-W><cr>")

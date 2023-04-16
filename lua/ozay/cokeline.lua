@@ -62,8 +62,7 @@ local components = {
     text = function(buffer)
       return buffer.unique_prefix
     end,
-    ft
-      = comments_fg,
+    ft = comments_fg,
     style = 'italic',
     truncation = {
       priority = 3,

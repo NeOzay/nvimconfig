@@ -40,6 +40,7 @@ local function sonokai(colors)
   }
 end
 
+local h = {}
 tokyonight.setup {
   on_colors = function(colors)
     ---@class ColorScheme
@@ -52,7 +53,6 @@ tokyonight.setup {
 
   on_highlights = function(highlights, colors)
     vim.cmd [[colorscheme tokyonight-night]]
-    local h = {}
     setmetatable(h, {
       __newindex = function(t, k, v)
         if type(v) == "table" then
@@ -184,7 +184,6 @@ tokyonight.setup {
     ["comments"] = { italic = false },
   }
 }
-y = [[%<%#NavicIconsClass# 󰠱 %*%#NavicText#Logger%*%#NavicSeparator#> %*%#NavicIconsProperty#󰜢 %*%#NavicText#name%*]]
 
 vim.cmd([[
   augroup reload_colorscheme
@@ -194,3 +193,4 @@ vim.cmd([[
   ]])
 
 vim.cmd [[colorscheme tokyonight-night]]
+return h
