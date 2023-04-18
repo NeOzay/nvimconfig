@@ -36,6 +36,6 @@ require("ozay.neo-tree")
 --    no_name = 'No name',      -- no name buffer name
 --    brackets = { '', '' },  -- file name brackets surrounding
 --})
---require "ozay.cokeline"
-require "ozay.tabline-framework"
+require "ozay.cokeline"
+--require "ozay.tabline-framework"
 -- init.lua
