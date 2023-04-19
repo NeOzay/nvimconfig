@@ -40,6 +40,7 @@ local function sonokai(colors)
   }
 end
 
+---@type table<string, Highlight>
 local h = {}
 tokyonight.setup {
   on_colors = function(colors)
@@ -92,7 +93,6 @@ tokyonight.setup {
         }
       end
     })
-    local n = 1
 
     h["String"] = { fg = sonokaiPalette.yellow }
     h["Constant"] = { fg = colors.magenta }
@@ -193,4 +193,5 @@ vim.cmd([[
   ]])
 
 vim.cmd [[colorscheme tokyonight-night]]
+_G.highlight = h
 return h

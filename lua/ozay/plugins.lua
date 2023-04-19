@@ -38,12 +38,12 @@ require("ozay.neo-tree")
 --})
 --require "ozay.cokeline"
 require "ozay.tabline-framework"
-require("indentmini").setup({
-  char = "|",
-  exclude = {
-    "erlang",
-    "markdown",
-  }
-})
-vim.cmd.highlight("default link IndentLine Comment")
+--require("indentmini").setup({
+--  char = "",
+--  exclude = {
+--    "erlang",
+--    "markdown",
+--  }
+--})
+--vim.api.nvim_set_hl(0, "IndentLine", { fg = highlight.Comment.fg, bg = "None" })
 -- init.lua

@@ -6,7 +6,7 @@ local errors_fg = highlights['DiagnosticError'].fg
 local warnings_fg = highlights['DiagnosticWarn'].fg
 ---@param f TablineFramework.struc
 local function render(f)
-  f.make_bufs(function(info)
+  f.make_tabs(function(info)
     f.add_btn("x", function(f)
       print("click")
     end)
