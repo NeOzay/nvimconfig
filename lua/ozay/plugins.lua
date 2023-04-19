@@ -1,4 +1,4 @@
-require "neodev".setup{}
+require "neodev".setup {}
 require "ozay.tokyonight"
 require "ozay.cmp"
 require "ozay.navic"
@@ -6,7 +6,7 @@ require "ozay.lspconfig"
 require "ozay.lspsaga"
 require "ozay.lualine"
 require "ozay.autopairs"
-require "fidget".setup{
+require "fidget".setup {
   window = {
     blend = 0,
     border = "rounded"
@@ -18,12 +18,12 @@ require "fidget".setup{
 --  }
 --}
 require('nvim-highlight-colors').setup {}
-require "trouble".setup{}
+require "trouble".setup {}
 require "ozay.autocommand"
 require "ozay.telescope"
 require "neoclip".setup()
 require "ozay.treesitter"
-require('guess-indent').setup{}
+require('guess-indent').setup {}
 require("ozay.neo-tree")
 --require "ozay.bufferline"
 --require "ozay.barbar"
@@ -36,6 +36,14 @@ require("ozay.neo-tree")
 --    no_name = 'No name',      -- no name buffer name
 --    brackets = { '', '' },  -- file name brackets surrounding
 --})
-require "ozay.cokeline"
---require "ozay.tabline-framework"
+--require "ozay.cokeline"
+require "ozay.tabline-framework"
+require("indentmini").setup({
+  char = "|",
+  exclude = {
+    "erlang",
+    "markdown",
+  }
+})
+vim.cmd.highlight("default link IndentLine Comment")
 -- init.lua

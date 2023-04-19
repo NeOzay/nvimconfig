@@ -115,7 +115,8 @@ return packer.startup(function(use)
   --use 'nanozuki/tabby.nvim'
   use 'crispgm/nvim-tabline'
   use 'willothy/nvim-cokeline'
-  use { "rafcamlet/tabline-framework.nvim",  requires = "kyazdani42/nvim-web-devicons" }
+  use '~/project/tabline-framework.nvim'
+  use 'nvimdev/indentmini.nvim'
   if packer_bootstrap then
     packer.sync()
   end

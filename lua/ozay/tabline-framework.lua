@@ -4,8 +4,12 @@ local cutil = require "tokyonight.util"
 
 local errors_fg = highlights['DiagnosticError'].fg
 local warnings_fg = highlights['DiagnosticWarn'].fg
+---@param f TablineFramework.struc
 local function render(f)
-  f.make_tabs(function(info)
+  f.make_bufs(function(info)
+    f.add_btn("x", function(f)
+      print("click")
+    end)
     f.add(" ")
     local icon, iconhl = f.icon(info.filename), f.icon_color(info.filename)
     if icon then

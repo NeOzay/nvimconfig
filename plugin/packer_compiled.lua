@@ -114,6 +114,11 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/guess-indent.nvim",
     url = "https://github.com/nmac427/guess-indent.nvim"
   },
+  ["indentmini.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/indentmini.nvim",
+    url = "https://github.com/nvimdev/indentmini.nvim"
+  },
   ["lspkind.nvim"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/lspkind.nvim",
@@ -212,7 +217,7 @@ _G.packer_plugins = {
   ["tabline-framework.nvim"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/tabline-framework.nvim",
-    url = "https://github.com/rafcamlet/tabline-framework.nvim"
+    url = "/home/ozay/project/tabline-framework.nvim"
   },
   ["telescope-fzf-native.nvim"] = {
     loaded = true,
