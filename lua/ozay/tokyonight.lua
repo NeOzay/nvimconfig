@@ -41,6 +41,10 @@ local function sonokai(colors)
 end
 
 ---@type table<string, Highlight>
+
+---@class HighlightColection
+---@operator call(string):Highlight 
+---@field [string] Highlight
 local h = {}
 tokyonight.setup {
   on_colors = function(colors)
@@ -139,6 +143,7 @@ tokyonight.setup {
     h["luaBraces"] = { fg = colors.blue1 }
     h["luaFuncKeyword"] = { fg = colors.red, style = { italic = true } }
 
+    h["FloatBorder"] = h("#27a1b9", colors)
 
     h["CmpItemKindFunction"] = "Function"
     h["CmpItemKindProperty"] = "@property"

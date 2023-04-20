@@ -159,3 +159,5 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
 
 api.nvim_create_user_command("Format", "lua vim.lsp.buf.format()", {})
 api.nvim_create_user_command("Luarc", "!cp /home/ozay/.config/nvim/.luarc.json .", {})
+
+
