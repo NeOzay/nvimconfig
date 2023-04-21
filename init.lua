@@ -52,19 +52,6 @@ vim.g.vimsyn_embed = 'l'
 local fn = vim.fn
 local api = vim.api
 
-function SynGroup()
-  local token = vim.lsp.semantic_tokens.get_at_pos()
-  token = token and token[1]
-  if token then
-    local info = ("%s@%s"):format(token.type, table.concat(token.modifiers, ","))
-    print(info)
-  else
-    local pos = api.nvim_win_get_cursor(0)
-    local s = fn.synID(pos[1], pos[2] + 1, 1)
-    local t = fn.synIDattr(s, 'name') .. " -> " .. fn.synIDattr(fn.synIDtrans(s), "name")
-    print(t)
-  end
-end
 
 api.nvim_create_user_command("Trim", function()
   local view = fn.winsaveview()
@@ -142,7 +129,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 
 vim.diagnostic.config {
   float = { border = "rounded" },
-  signs = false
+  signs = false,
+  close_events = { "BufHidden", "InsertLeave" },
 }
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
   vim.lsp.handlers.signature_help, {

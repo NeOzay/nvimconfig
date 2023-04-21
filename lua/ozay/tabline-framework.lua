@@ -1,12 +1,11 @@
 local colors = require "tokyonight.colors".setup()
-local highlights = require "ozay.tokyonight"
 local cutil = require "tokyonight.util"
 
 local errors_fg = highlights['DiagnosticError'].fg
 local warnings_fg = highlights['DiagnosticWarn'].fg
----@param f TablineFramework.struc
+---@param f TablineFramework.renderTable
 local function render(f)
-  f.make_tabs(function(info)
+  f.make_bufs(function(info)
     f.add_btn("x", function(f)
       print("click")
     end)
@@ -20,14 +19,14 @@ local function render(f)
     local errors = #vim.diagnostic.get(info.buf, { severity = vim.diagnostic.severity.ERROR })
     local warnings = #vim.diagnostic.get(info.buf, { severity = vim.diagnostic.severity.WARN })
     if info.modified then
-      table.insert(style, "italic")
+      style["italic"] = true
     end
     if info.current then
-      table.insert(style, "bold")
+      style["bold"] = true
     end
     local fg = ((errors ~= 0 and errors_fg) or (warnings ~= 0 and warnings_fg) or nil)
     --f.set_gui(table.concat(style, ","))
-    f.add { filename or '[no name]', fg = fg, gui = table.concat(style, ",") }
+    f.add { filename or '[no name]', fg = fg, gui = style }
     f.add ' '
   end)
 end

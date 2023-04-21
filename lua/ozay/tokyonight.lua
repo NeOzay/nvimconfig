@@ -143,7 +143,6 @@ tokyonight.setup {
     h["luaBraces"] = { fg = colors.blue1 }
     h["luaFuncKeyword"] = { fg = colors.red, style = { italic = true } }
 
-    h["FloatBorder"] = h("#27a1b9", colors)
 
     h["CmpItemKindFunction"] = "Function"
     h["CmpItemKindProperty"] = "@property"
@@ -198,5 +197,5 @@ vim.cmd([[
   ]])
 
 vim.cmd [[colorscheme tokyonight-night]]
-_G.highlight = h
+_G.highlights = h
 return h
