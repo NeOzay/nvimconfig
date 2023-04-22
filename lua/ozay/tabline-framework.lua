@@ -6,10 +6,10 @@ local warnings_fg = highlights['DiagnosticWarn'].fg
 ---@param f TablineFramework.renderTable
 local function render(f)
   f.make_bufs(function(info)
-    f.add_btn("x", function(f)
+    f.add_btn("x ", function(f)
       print("click")
     end)
-    f.add(" ")
+    f.add("")
     local icon, iconhl = f.icon(info.filename), f.icon_color(info.filename)
     if icon then
       f.add { icon .. " ", fg = info.current and iconhl or nil }
@@ -35,4 +35,10 @@ require('tabline_framework').setup {
   hl = { fg = highlights["Comment"].fg, bg = colors.bg_dark },
   hl_sel = { fg = highlights["Normal"].fg, bg = cutil.darken(colors.dark3, 0.5) },
   --hl_fill = { fg = '#ffffff', bg = '#000000'},
+  buflist_size = 10,
+  tablist_size = 10,
+  min = 5,
+  max = 10
 }
+
+
