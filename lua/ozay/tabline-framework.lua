@@ -1,8 +1,8 @@
 local colors = require "tokyonight.colors".setup()
 local cutil = require "tokyonight.util"
 
-local errors_fg = highlights['DiagnosticError'].fg
-local warnings_fg = highlights['DiagnosticWarn'].fg
+local errors_fg = Highlights['DiagnosticError'].fg
+local warnings_fg = Highlights['DiagnosticWarn'].fg
 ---@param f TablineFramework.renderTable
 local function render(f)
   f.make_bufs(function(info)
@@ -32,8 +32,8 @@ local function render(f)
 end
 require('tabline_framework').setup {
   render = render,
-  hl = { fg = highlights["Comment"].fg, bg = colors.bg_dark },
-  hl_sel = { fg = highlights["Normal"].fg, bg = cutil.darken(colors.dark3, 0.5) },
+  hl = { fg = Highlights["Comment"].fg, bg = colors.bg_dark },
+  hl_sel = { fg = Highlights["Normal"].fg, bg = cutil.darken(colors.dark3, 0.5) },
   --hl_fill = { fg = '#ffffff', bg = '#000000'},
   buflist_size = 10,
   tablist_size = 10,

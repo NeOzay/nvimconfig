@@ -1,10 +1,10 @@
 local palette = require "tokyonight.colors"
 local tokyonight = require "tokyonight"
 local util = require "ozay.util"
-local getHighlightGroup = util.getRGBHighlightColors
-local getHighlightGroupLink = util.getHighlightGroupLink
-local getFgColor = util.getRGBHighlightFg
-local getBgColor = util.getRGBHighlightBg
+local get_hl = util.get_hl
+local get_hlLink = util.get_hlLink
+local get_hlFg = util.get_hlFg
+local get_hlBg = util.get_hlBg
 local isColor = util.isRGBColor
 
 local sonokaiPalette = {
@@ -33,18 +33,9 @@ local sonokaiPalette = {
   grey_dim    = '#605d68',
   none        = 'NONE'
 }
----@param colors ColorScheme
-local function sonokai(colors)
-  return {
-    1
-  }
-end
 
----@type table<string, Highlight>
+---@alias HighlightCollection table<string, {fg:string, bg:string, style:table<string, boolean>}>
 
----@class HighlightColection
----@operator call(string):Highlight 
----@field [string] Highlight
 local h = {}
 tokyonight.setup {
   on_colors = function(colors)
@@ -63,7 +54,7 @@ tokyonight.setup {
         if type(v) == "table" then
           highlights[k] = v
         else
-          highlights[k] = h[v] or getHighlightGroup(v)
+          highlights[k] = h[v] or get_hl(v)
         end
       end,
       __index = function (t, k)
@@ -74,20 +65,20 @@ tokyonight.setup {
         if v then
           return v
         else
-          return t[getHighlightGroupLink(k)]
+          return t[get_hlLink(k)]
         end
       end,
       ---@param t table
       ---@param fg string
-      ---@param bg string
+      ---@param bg? string
       ---@param styles? table
       __call = function (t, fg, bg, styles)
         --vim.notify(tostring(fg).." is color: "..tostring(isColor(fg)))
         if not isColor(fg) then
-          fg = h[fg] and h[fg].fg or getFgColor(fg)
+          fg = h[fg] and h[fg].fg or get_hlFg(fg)
         end
         if not isColor(bg) then
-          bg = h[bg] and h[bg].bg or getBgColor(bg)
+          bg = h[bg] and h[bg].bg or get_hlBg(bg)
         end
 
         return {
@@ -97,6 +88,7 @@ tokyonight.setup {
         }
       end
     })
+
 
     h["String"] = { fg = sonokaiPalette.yellow }
     h["Constant"] = { fg = colors.magenta }
@@ -142,7 +134,6 @@ tokyonight.setup {
     h["luaParens"] = { fg = colors.londonHue }
     h["luaBraces"] = { fg = colors.blue1 }
     h["luaFuncKeyword"] = { fg = colors.red, style = { italic = true } }
-
 
     h["CmpItemKindFunction"] = "Function"
     h["CmpItemKindProperty"] = "@property"
@@ -197,5 +188,5 @@ vim.cmd([[
   ]])
 
 vim.cmd [[colorscheme tokyonight-night]]
-_G.highlights = h
-return h
+---@type HighlightCollection
+_G.Highlights = h

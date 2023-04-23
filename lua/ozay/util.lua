@@ -11,24 +11,27 @@ function M.popupIsVisible()
   return false
 end
 
-function M.getRGBHighlightColors(group)
+function M.get_hl(group)
+  local c = vim.api.nvim_get_hl(0, { name = group })
   return {
-    bg = fn.synIDattr(fn.synIDtrans(fn.hlID(group)), "bg#"),
-    fg = fn.synIDattr(fn.synIDtrans(fn.hlID(group)), "fg#"),
+    fg = c.fg and string.format('#%06x', c.fg) or 'NONE',
+    bg = c.bg and string.format('#%06x', c.bg) or 'NONE'
   }
 end
 
-function M.getRGBHighlightFg(group)
-  return fn.synIDattr(fn.synIDtrans(fn.hlID(group)), "fg#")
+function M.get_hlFg(group)
+  local c = vim.api.nvim_get_hl(0, { name = group })
+  return c.fg and string.format('#%06x', c.fg) or 'NONE'
 end
-function M.getRGBHighlightBg(group)
-  return fn.synIDattr(fn.synIDtrans(fn.hlID(group)), "bg#")
+function M.get_hlBg(group)
+  local c = vim.api.nvim_get_hl(0, { name = group })
+  return c.bg and string.format('#%06x', c.bg) or 'NONE'
 end
 
-function M.getHighlightGroupLink(group)
-  local colorsGroup = M.getRGBHighlightColors(group)
+function M.get_hlLink(group)
+  local colorsGroup = M.get_hl(group)
   --vim.notify(vim.inspect(colorsGroup))
-  if colorsGroup.fg ~= "" or colorsGroup.bg ~= "" then
+  if colorsGroup.fg ~= "NONE" or colorsGroup.bg ~= "NONE" then
     return fn.synIDattr(fn.synIDtrans(fn.hlID(group)), "name")
   end
 end

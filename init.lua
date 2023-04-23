@@ -37,6 +37,7 @@ vim.opt.foldmethod = "indent"
 vim.opt.foldlevelstart = 20
 vim.opt.termguicolors = true
 vim.opt.updatetime = 250
+vim.opt.showtabline = 2
 vim.cmd 'set guicursor+=a:Cursor/lCursor'
 vim.cmd [[
 augroup OzayAuto
@@ -80,14 +81,21 @@ nnoremap("i", function()
     return "i"
   end
 end, { expr = true })
-nnoremap("<C-S>", "<Cmd>w<Cr>")
+nnoremap("a", function()
+  if #api.nvim_get_current_line() == 0 then
+    return [["_cc]]
+  else
+    return "a"
+  end
+end, { expr = true })
+nnoremap("<C-S>", "<Cmd>w<CR>")
 nnoremap(" ", "<Nop>")
 nnoremap("<leader>j", "<cmd>Inspect<cr>")
 --nnoremap("<leader>n", "<cmd>tabn<cr>")
 --nnoremap("<leader>p", "<cmd>tabp<cr>")
 nnoremap("<leader>c", "ciw", { nowait = true })
 --nnoremap("<leader>h", "<cmd>tab help <C-R><C-W><cr>")
-nnoremap("<leader>h", ":tab help <C-R><C-W><cr>")
+nnoremap("<leader>h", ":tab help <C-R><C-W><CR>")
 nnoremap(":", ": <BS>")
 nnoremap("<leader>d", function()
   vim.diagnostic.open_float(nil, { focus = false })
@@ -99,23 +107,6 @@ cnoremap <expr> <up> pumvisible() ? "<C-p>" : "<up>"
 cnoremap <expr> <down> pumvisible() ? "<C-n>": "<down>"
 endif
 ]]
-if fn.filereadable "~/win32yank.exe" == 1 then
-  vim.cmd [[
-  set clipboard+=unnamedplus
-  let g:clipboard = {
-  \   'name': 'win32yank-wsl',
-  \   'copy': {
-  \      '+': 'win32yank.exe -i --crlf',
-  \      '*': 'win32yank.exe -i --crlf',
-  \    },
-  \   'paste': {
-  \      '+': 'win32yank.exe -o --lf',
-  \      '*': 'win32yank.exe -o --lf',
-  \   },
-  \   'cache_enabled': 0,
-  \ }
-]]
-end
 
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -147,5 +138,3 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
 
 api.nvim_create_user_command("Format", "lua vim.lsp.buf.format()", {})
 api.nvim_create_user_command("Luarc", "!cp /home/ozay/.config/nvim/.luarc.json .", {})
-
-
