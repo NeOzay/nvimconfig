@@ -69,7 +69,7 @@ tokyonight.setup {
         end
       end,
       ---@param t table
-      ---@param fg string
+      ---@param fg? string
       ---@param bg? string
       ---@param styles? table
       __call = function (t, fg, bg, styles)
@@ -90,7 +90,7 @@ tokyonight.setup {
     })
 
 
-    h["String"] = { fg = sonokaiPalette.yellow }
+    h["String"] =  h(sonokaiPalette.yellow)
     h["Constant"] = { fg = colors.magenta }
     h["@lsp.mod.readonly"] = { fg = colors.londonHue2 }
 
@@ -174,6 +174,11 @@ tokyonight.setup {
     --highlights["NavicIconsTypeParameter"] = {}
     h["NavicText"] = { bg = black }
     h["NavicSeparator"] = h(colors.red1, black)
+
+    --h["UfoFoldedBg"] = h(nil, nil, {underline = true})
+    --h["UfoCursorFoldedLine"] = h(nil, colors.bg_highlight, {underline = true})
+    h["Folded"] = h(nil, nil)
+    h["FoldColumn"] = h(colors.blue7)
   end,
   styles = {
     ["comments"] = { italic = false },

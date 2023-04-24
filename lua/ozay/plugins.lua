@@ -46,4 +46,6 @@ require "ozay.tabline-framework"
 --  }
 --})
 --vim.api.nvim_set_hl(0, "IndentLine", { fg = highlight.Comment.fg, bg = "None" })
+require('ufo').setup()
+
 -- init.lua

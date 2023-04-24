@@ -38,7 +38,7 @@ end
 
 function M.isRGBColor(color)
   local reg = "[0-9a-f]"
-  return string.match(color, "#"..reg:rep(6)) ~= nil
+  return string.match(color or "", "#"..reg:rep(6)) ~= nil
 end
 
 return M

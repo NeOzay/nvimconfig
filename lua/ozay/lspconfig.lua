@@ -25,6 +25,10 @@ local lsp_flags = {
 }
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
+capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true
+}
 local function addOption(t)
   t = t or {}
   if t.on_attach then
