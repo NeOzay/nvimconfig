@@ -14,6 +14,7 @@ local function render(f)
     if icon then
       f.add { icon .. " ", fg = info.current and iconhl or nil }
     end
+    f.add(info.buf_nr)
     local filename = vim.fn.fnamemodify(info.filename, ":r")
     local style = {}
     local errors = #vim.diagnostic.get(info.buf, { severity = vim.diagnostic.severity.ERROR })
