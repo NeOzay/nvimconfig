@@ -14,7 +14,6 @@ local function render(f)
     if icon then
       f.add { icon .. " ", fg = info.current and iconhl or nil }
     end
-    f.add(info.buf_nr)
     local filename = vim.fn.fnamemodify(info.filename, ":r")
     local style = {}
     local errors = #vim.diagnostic.get(info.buf, { severity = vim.diagnostic.severity.ERROR })
@@ -36,7 +35,7 @@ require('tabline_framework').setup {
   hl = { fg = Highlights["Comment"].fg, bg = colors.bg_dark },
   hl_sel = { fg = Highlights["Normal"].fg, bg = cutil.darken(colors.dark3, 0.5) },
   --hl_fill = { fg = '#ffffff', bg = '#000000'},
-  buflist_size = 10,
+  buflist_size = 46,
   tablist_size = 10,
   min = 5,
   max = 10

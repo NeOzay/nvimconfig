@@ -51,8 +51,10 @@ vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 
 -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+--vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+--vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+vim.api.nvim_create_user_command("FoldOpenAll", "lua require('ufo').openAllFolds()", {})
+vim.api.nvim_create_user_command("FoldCloseAll", "lua require('ufo').closeAllFolds()", {})
 
 vim.opt.completeopt = T("menu", "menuone", "noselect")
 
@@ -146,3 +148,4 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
 
 api.nvim_create_user_command("Format", "lua vim.lsp.buf.format()", {})
 api.nvim_create_user_command("Luarc", "!cp /home/ozay/.config/nvim/.luarc.json .", {})
+
