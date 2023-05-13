@@ -34,7 +34,7 @@ local sonokaiPalette = {
   none        = 'NONE'
 }
 
----@alias HighlightCollection table<string, {fg:string, bg:string, style:table<string, boolean>}>
+---@alias HiglightCollection table<string, {fg:string, bg:string, style:table<string, boolean>}>
 
 local h = {}
 tokyonight.setup {
@@ -179,6 +179,7 @@ tokyonight.setup {
     --h["UfoCursorFoldedLine"] = h(nil, colors.bg_highlight, {underline = true})
     h["Folded"] = h(nil, nil)
     h["FoldColumn"] = h(colors.blue7)
+
   end,
   styles = {
     ["comments"] = { italic = false },

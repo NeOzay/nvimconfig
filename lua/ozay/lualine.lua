@@ -58,7 +58,9 @@ local setting = {
         return str.."%<%#lualine_c_normal#"
       end
     } },
-    lualine_y = { "diagnostics" }
+    lualine_y = { {"diagnostics", on_click = function ()
+      vim.cmd[[Trouble document_diagnostics]]
+    end} }
   },
   inactive_winbar = {},
   extensions = {}

@@ -46,7 +46,7 @@ local sumneko = {
         indent_style = "space",
         indent_size = "2",
       }
-    }
+    },
   },
   cmd = { findServer() }
 }

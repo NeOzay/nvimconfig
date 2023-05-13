@@ -18,7 +18,8 @@ require "fidget".setup {
 --  }
 --}
 require('nvim-highlight-colors').setup {}
-require "trouble".setup {}
+
+require"ozay.trouble"
 require "ozay.autocommand"
 require "ozay.telescope"
 require "neoclip".setup()
@@ -37,7 +38,7 @@ require("ozay.neo-tree")
 --    brackets = { '', '' },  -- file name brackets surrounding
 --})
 --require "ozay.cokeline"
-require "ozay.tabline-framework"
+--require "ozay.tabline-framework"
 --require("indentmini").setup({
 --  char = "",
 --  exclude = {
@@ -47,5 +48,6 @@ require "ozay.tabline-framework"
 --})
 --vim.api.nvim_set_hl(0, "IndentLine", { fg = highlight.Comment.fg, bg = "None" })
 require('ufo').setup()
+require('indentmini').setup()
 
 -- init.lua

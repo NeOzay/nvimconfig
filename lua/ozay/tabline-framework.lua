@@ -35,7 +35,7 @@ require('tabline_framework').setup {
   hl = { fg = Highlights["Comment"].fg, bg = colors.bg_dark },
   hl_sel = { fg = Highlights["Normal"].fg, bg = cutil.darken(colors.dark3, 0.5) },
   --hl_fill = { fg = '#ffffff', bg = '#000000'},
-  buflist_size = vim.opt.columns,
+  buflist_size = vim.opt.columns:get(),
   tablist_size = 10,
   min = 5,
   max = 999

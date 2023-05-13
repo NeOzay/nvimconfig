@@ -117,6 +117,7 @@ return packer.startup(function(use)
   use 'willothy/nvim-cokeline'
   use '~/project/tabline-framework.nvim'
   use 'nvimdev/indentmini.nvim'
+  --use "lukas-reineke/indent-blankline.nvim"
   use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
   if packer_bootstrap then
     packer.sync()
