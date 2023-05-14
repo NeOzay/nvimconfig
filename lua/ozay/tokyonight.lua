@@ -179,6 +179,7 @@ tokyonight.setup {
     --h["UfoCursorFoldedLine"] = h(nil, colors.bg_highlight, {underline = true})
     h["Folded"] = h(nil, nil)
     h["FoldColumn"] = h(colors.blue7)
+    h["MiniIndentscopeSymbol"] = h["Comment"]
 
   end,
   styles = {

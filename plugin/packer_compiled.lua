@@ -134,6 +134,11 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
+  ["mini.indentscope"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/mini.indentscope",
+    url = "https://github.com/echasnovski/mini.indentscope"
+  },
   ["neo-tree.nvim"] = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/neo-tree.nvim",
@@ -243,6 +248,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
     url = "https://github.com/folke/tokyonight.nvim"
+  },
+  ["translate.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/translate.nvim",
+    url = "https://github.com/uga-rosa/translate.nvim"
   },
   ["trouble.nvim"] = {
     loaded = true,

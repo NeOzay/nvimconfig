@@ -48,6 +48,8 @@ require("ozay.neo-tree")
 --})
 --vim.api.nvim_set_hl(0, "IndentLine", { fg = highlight.Comment.fg, bg = "None" })
 require('ufo').setup()
-require('indentmini').setup()
+require('mini.indentscope').setup()
+--require('indentmini').setup()
+require("translate").setup({})
 
 -- init.lua

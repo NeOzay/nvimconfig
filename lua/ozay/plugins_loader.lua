@@ -119,6 +119,8 @@ return packer.startup(function(use)
   use 'nvimdev/indentmini.nvim'
   --use "lukas-reineke/indent-blankline.nvim"
   use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
+  use 'echasnovski/mini.indentscope'
+  use 'uga-rosa/translate.nvim'
   if packer_bootstrap then
     packer.sync()
   end
