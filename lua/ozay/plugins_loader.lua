@@ -68,7 +68,7 @@ return packer.startup(function(use)
   use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
 
-  use { 'j-hui/fidget.nvim' }
+  use { 'j-hui/fidget.nvim', tag = 'legacy' }
   use {
     "SmiteshP/nvim-navic",
     requires = "neovim/nvim-lspconfig"
@@ -121,6 +121,9 @@ return packer.startup(function(use)
   use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
   use 'echasnovski/mini.indentscope'
   use 'uga-rosa/translate.nvim'
+  
+  use "b0o/schemastore.nvim"
+  use "hiphish/rainbow-delimiters.nvim"
   if packer_bootstrap then
     packer.sync()
   end

@@ -224,6 +224,16 @@ _G.packer_plugins = {
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/promise-async",
     url = "https://github.com/kevinhwang91/promise-async"
   },
+  ["rainbow-delimiters.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/rainbow-delimiters.nvim",
+    url = "https://github.com/hiphish/rainbow-delimiters.nvim"
+  },
+  ["schemastore.nvim"] = {
+    loaded = true,
+    path = "/home/ozay/.local/share/nvim/site/pack/packer/start/schemastore.nvim",
+    url = "https://github.com/b0o/schemastore.nvim"
+  },
   sonokai = {
     loaded = true,
     path = "/home/ozay/.local/share/nvim/site/pack/packer/start/sonokai",

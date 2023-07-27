@@ -48,8 +48,34 @@ require("ozay.neo-tree")
 --})
 --vim.api.nvim_set_hl(0, "IndentLine", { fg = highlight.Comment.fg, bg = "None" })
 require('ufo').setup()
-require('mini.indentscope').setup()
+require('mini.indentscope').setup({
+  options = {
+   try_as_border = true
+  }
+})
 --require('indentmini').setup()
 require("translate").setup({})
 
+-- This module contains a number of default definitions
+local rainbow_delimiters = require 'rainbow-delimiters'
+
+vim.g.rainbow_delimiters = {
+    strategy = {
+        [''] = rainbow_delimiters.strategy['global'],
+        --typescript = rainbow_delimiters.strategy['local'],
+    },
+    query = {
+        [''] = 'rainbow-delimiters',
+        lua = 'rainbow-blocks',
+    },
+    highlight = {
+        'RainbowDelimiterRed',
+        'RainbowDelimiterYellow',
+        'RainbowDelimiterBlue',
+        'RainbowDelimiterOrange',
+        'RainbowDelimiterGreen',
+        'RainbowDelimiterViolet',
+        'RainbowDelimiterCyan',
+    },
+}
 -- init.lua

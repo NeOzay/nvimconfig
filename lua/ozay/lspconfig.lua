@@ -26,8 +26,8 @@ local lsp_flags = {
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true
+  dynamicRegistration = false,
+  lineFoldingOnly = true
 }
 local function addOption(t)
   t = t or {}
@@ -45,8 +45,15 @@ local function addOption(t)
 end
 
 lspconfig.lua_ls.setup(addOption(require("ozay.lsp.sumneko_lua")))
-lspconfig.jsonls.setup(addOption())
-lspconfig.vimls.setup ( addOption() )
+lspconfig.jsonls.setup(addOption({
+  settings = {
+    json = {
+      schemas = require('schemastore').json.schemas(),
+      validate = { enable = true },
+    },
+  }
+}))
+lspconfig.vimls.setup(addOption())
 local eslintconf = {
   on_attach = function(client, bufnr)
     vim.api.nvim_create_autocmd("BufWritePre", {
@@ -58,3 +65,10 @@ local eslintconf = {
 
 lspconfig.eslint.setup(addOption(eslintconf))
 lspconfig.tsserver.setup(addOption())
+
+
+  -- init.lua
+--lspconfig.jdtls.setup(addOption())
+require'lspconfig'.java_language_server.setup(addOption({
+  cmd = {"/home/ozay/java-language-server/dist/lang_server_linux.sh"}
+}))

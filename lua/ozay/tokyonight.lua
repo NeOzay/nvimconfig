@@ -111,8 +111,8 @@ tokyonight.setup {
     h["@member"] = { fg = colors.green }
     h["@parameter"] = { fg = colors.orange }
 
-    h["Type"] = { fg = colors.blue2, style = { italic = true } }
-    h["@type"] = { fg = colors.blue2, style = { italic = true } }
+    h["Type"] = { fg = colors.blue2, style = { italic = false } }
+    h["@type"] = { fg = colors.blue2, style = { italic = false } }
     h["@class"] = { fg = colors.blue2 }
     h["@lsp.type.enum"] = { fg = colors.red }
     h["@constructor"] = "@method"

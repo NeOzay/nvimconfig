@@ -1,5 +1,5 @@
 local lualine = require "lualine"
-local winbar = require('lspsaga.symbolwinbar')
+--local winbar = require('lspsaga.symbolwinbar')
 local navic = require "nvim-navic"
 
 local setting = {

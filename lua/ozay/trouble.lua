@@ -1,6 +1,6 @@
 local signs = {
     Error = "",
-    Warning = "",
+    Warn = "",
     Hint = "",
     Information = ""
 }
@@ -13,7 +13,7 @@ require "trouble".setup {
   signs = {
         -- icons / text used for a diagnostic
         error = signs.Error,
-        warning = signs.Warning,
+        warning = signs.Warn,
         hint = signs.Hint,
         information = signs.Information,
     }

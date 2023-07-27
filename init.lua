@@ -82,7 +82,7 @@ local function newMapType(char)
 end
 
 local nnoremap = newMapType("n")
-local cnoremap = newMapType("c")
+local inoremap = newMapType("i")
 
 nnoremap("i", function()
   if #api.nvim_get_current_line() == 0 then
@@ -98,6 +98,15 @@ nnoremap("a", function()
     return "a"
   end
 end, { expr = true })
+
+inoremap("<tab>", function()
+  if #api.nvim_get_current_line() == 0 then
+    return [[<C-O>"_cc]]
+  else
+    return "<tab>"
+  end
+end, { expr = true })
+
 nnoremap("<C-S>", "<Cmd>w<CR>")
 nnoremap(" ", "<Nop>")
 nnoremap("<leader>j", "<cmd>Inspect<cr>")
@@ -143,6 +152,7 @@ vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
   vim.lsp.handlers.hover, {
     border = 'rounded',
+
   }
 )
 
