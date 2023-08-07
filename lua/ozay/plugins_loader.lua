@@ -29,11 +29,11 @@ end
 
 -- Have packer use a popup window
 packer.init({
-    display = {
-        open_fn = function()
-          return require('packer.util').float({ border = 'single' })
-        end
-    }
+  display = {
+    open_fn = function()
+      return require('packer.util').float({ border = 'single' })
+    end
+  }
 }
 )
 
@@ -52,8 +52,8 @@ return packer.startup(function(use)
   use "folke/neodev.nvim"
   --use "vim-airline/vim-airline"
   use {
-      'nvim-lualine/lualine.nvim',
-      requires = { 'kyazdani42/nvim-web-devicons' }
+    'nvim-lualine/lualine.nvim',
+    requires = { 'kyazdani42/nvim-web-devicons' }
   }
   use { "windwp/nvim-autopairs" }
   use "mroavi/vim-pasta"
@@ -61,12 +61,12 @@ return packer.startup(function(use)
   use { "neovim/nvim-lspconfig" }
 
   use "onsails/lspkind.nvim"
-  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+  use 'hrsh7th/nvim-cmp'     -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
   use 'hrsh7th/cmp-buffer'
   use 'FelipeLema/cmp-async-path'
   use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
-  use 'L3MON4D3/LuaSnip' -- Snippets plugin
+  use 'L3MON4D3/LuaSnip'         -- Snippets plugin
 
   use { 'j-hui/fidget.nvim', tag = 'legacy' }
   use {
@@ -74,54 +74,56 @@ return packer.startup(function(use)
     requires = "neovim/nvim-lspconfig"
   }
   use {
-      "folke/trouble.nvim",
-      requires = "kyazdani42/nvim-web-devicons",
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
   }
   --use 'NvChad/nvim-colorizer.lua'
   use 'brenoprata10/nvim-highlight-colors'
   use({
-      "glepnir/lspsaga.nvim",
-      branch = "main",
-      requires = { { "nvim-tree/nvim-web-devicons" } }
+    "nvimdev/lspsaga.nvim",
+    branch = "main",
+    --after = "nvim-lspconfig",
+    requires = { { "nvim-tree/nvim-web-devicons" } }
   })
   use {
-      'nvim-telescope/telescope.nvim', branch = '0.1.x',
-      -- or                          , branch = '0.1.x',
-      requires = { { 'nvim-lua/plenary.nvim' } }
+    'nvim-telescope/telescope.nvim', branch = '0.1.x',
+    -- or                          , branch = '0.1.x',
+    requires = { { 'nvim-lua/plenary.nvim' } }
   }
   use {
-      'nvim-telescope/telescope-fzf-native.nvim',
-      run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+    'nvim-telescope/telescope-fzf-native.nvim',
+    run =
+    'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
   use {
-      "AckslD/nvim-neoclip.lua",
-      require = "nvim-telescope/telescope.nvim"
+    "AckslD/nvim-neoclip.lua",
+    require = "nvim-telescope/telescope.nvim"
   }
   use { "nvim-treesitter/nvim-treesitter" }
   --use { "nvim-telescope/telescope-file-browser.nvim" }
 
   use {
-      "nvim-neo-tree/neo-tree.nvim",
-      branch = "v2.x",
-      requires = {
-          "nvim-lua/plenary.nvim",
-          "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-          "MunifTanjim/nui.nvim",
-      }
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",     -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+    }
   }
   use "nmac427/guess-indent.nvim"
   --use "akinsho/bufferline.nvim"
-  use {'romgrk/barbar.nvim', requires = 'nvim-web-devicons'}
+  use { 'romgrk/barbar.nvim', requires = 'nvim-web-devicons' }
   --use 'nanozuki/tabby.nvim'
   use 'crispgm/nvim-tabline'
   use 'willothy/nvim-cokeline'
   use '~/project/tabline-framework.nvim'
   use 'nvimdev/indentmini.nvim'
   --use "lukas-reineke/indent-blankline.nvim"
-  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
+  use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
   use 'echasnovski/mini.indentscope'
   use 'uga-rosa/translate.nvim'
-  
+
   use "b0o/schemastore.nvim"
   use "hiphish/rainbow-delimiters.nvim"
   if packer_bootstrap then

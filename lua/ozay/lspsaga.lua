@@ -36,12 +36,14 @@ local saga = require('lspsaga').setup {
     color_mode = true,
   },
   definition = {
+    keys = {
     edit = "<C-o>",
     vsplit = "<C-v>",
     split = "<C-i>",
     tabe = "<C-t>",
     quit = "q",
     close = "<Esc>",
+    }
   },
   ui = {
     kind = kind
