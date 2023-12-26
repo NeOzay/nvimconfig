@@ -1,3 +1,4 @@
+local util = require("ozay.util")
 require("neo-tree").setup({
   filesystem = {
     window = {
@@ -24,7 +25,13 @@ require("neo-tree").setup({
       handler = function()
         -- Make this whatever your current Cursor highlight group is.
         --vim.notify("leave", vim.log.levels.ERROR)
-        --vim.cmd 'highlight Cursor blend=0'
+        vim.cmd 'highlight Cursor blend=0'
+      end
+    },
+    {
+      event = "neo_tree_popup_buffer_enter",
+      handler = function ()
+        vim.cmd 'highlight Cursor blend=0'
       end
     }
   },
@@ -35,10 +42,10 @@ require("neo-tree").setup({
   }
 })
 
-vim.api.nvim_set_keymap(
-  "n",
-  "<space>fx",
+util.nnoremap(
+  "<space>x",
   ":NeoTreeFloatToggle<CR>",
+  "neo-tree",
   { noremap = true }
 )
 vim.cmd[[

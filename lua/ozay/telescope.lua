@@ -1,6 +1,9 @@
 -- You dont need to set any of these options. These are the default ones. Only
 -- the loading is important
 local telescope = require('telescope')
+
+local util = require("ozay.util")
+
 telescope.setup {
     defaults = {
         mappings = {
@@ -34,8 +37,9 @@ require('telescope').load_extension('neoclip')
 --require("telescope").load_extension "file_browser"
 
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>fr', "<Cmd>Telescope neoclip<CR>", {})
+util.nnoremap('<leader>ff', builtin.find_files, "files")
+util.nnoremap('<leader>fg', builtin.live_grep, "live grep")
+util.nnoremap('<leader>fb', builtin.buffers, "buffers")
+util.nnoremap('<leader>fh', builtin.help_tags, "help tag")
+util.nnoremap('<leader>fj', builtin.highlights, "highlights")
+util.nnoremap('<leader>fr', "<Cmd>Telescope neoclip<CR>", "neoclip")

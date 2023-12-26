@@ -26,27 +26,7 @@ require "neoclip".setup()
 require "ozay.treesitter"
 require('guess-indent').setup {}
 require("ozay.neo-tree")
---require "ozay.bufferline"
---require "ozay.barbar"
---require "ozay.tabby"
---require('tabline').setup({
---    show_index = false,        -- show tab index
---    show_modify = false,       -- show buffer modification indicator
---    show_icon = true,        -- show file extension icon
---    modify_indicator = '[+]', -- modify indicator
---    no_name = 'No name',      -- no name buffer name
---    brackets = { '', '' },  -- file name brackets surrounding
---})
---require "ozay.cokeline"
---require "ozay.tabline-framework"
---require("indentmini").setup({
---  char = "",
---  exclude = {
---    "erlang",
---    "markdown",
---  }
---})
---vim.api.nvim_set_hl(0, "IndentLine", { fg = highlight.Comment.fg, bg = "None" })
+require "ozay.cokeline"
 require('ufo').setup()
 require('mini.indentscope').setup({
   options = {
@@ -78,4 +58,5 @@ vim.g.rainbow_delimiters = {
         'RainbowDelimiterCyan',
     },
 }
+require("ozay.miniclue")
 -- init.lua

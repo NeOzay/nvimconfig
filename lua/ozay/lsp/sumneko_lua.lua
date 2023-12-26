@@ -48,7 +48,14 @@ local sumneko = {
       }
     },
   },
-  cmd = { findServer() }
+  cmd = { findServer() },
+  root_dir = (function()
+    local pathfinder = require("lspconfig").util.root_pattern(".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml", "selene.toml", "selene.yml", ".git")
+    return function(fname)
+      local path = pathfinder(fname)
+      return path and path ~= "/" and path or nil
+    end
+  end)()
 }
 
 return sumneko

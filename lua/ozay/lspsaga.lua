@@ -2,6 +2,9 @@ local lspkind = require "lspkind"
 local symbol_map = lspkind.symbol_map
 local keymap = vim.keymap.set
 --require('lspsaga.lspkind')
+
+local util = require("ozay.util")
+
 local kind = {
   Object = "@property",
   Array = "@property",
@@ -21,7 +24,7 @@ local kind = {
 
 for key, value in pairs(kind) do
   if type(value) == "table" then
-  value[1] = value[1].." "
+    value[1] = value[1].." "
   end
 end
 
@@ -56,13 +59,14 @@ local saga = require('lspsaga').setup {
 -- If there is no definition, it will instead be hidden
 -- When you use an action in finder like "open vsplit",
 -- you can use <C-t> to jump back
-keymap("n", "gh", "<cmd>Lspsaga lsp_finder<CR>")
+util.nnoremap("gh", "<cmd>Lspsaga lsp_finder<CR>", 'lsp finder')
 
 -- Code action
-keymap({ "n", "v" }, "<leader>a", "<cmd>Lspsaga code_action<CR>")
+util.nnoremap("<leader>a", "<cmd>Lspsaga code_action<CR>", 'code action')
+util.vnoremap("<leader>a", "<cmd>Lspsaga code_action<CR>", 'code action')
 
 -- Rename all occurrences of the hovered word for the entire file
-keymap("n", "gr", "<cmd>Lspsaga rename<CR>")
+util.nnoremap("gr", "<cmd>Lspsaga rename<CR>", "rename")
 
 -- Rename all occurrences of the hovered word for the selected files
 --keymap("n", "gr", "<cmd>Lspsaga rename ++project<CR>")
@@ -72,40 +76,41 @@ keymap("n", "gr", "<cmd>Lspsaga rename<CR>")
 -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
 -- It also supports tagstack
 -- Use <C-t> to jump back
-keymap("n", "gd", "<cmd>Lspsaga peek_definition<CR>")
+util.nnoremap("gd", "<cmd>Lspsaga peek_definition<CR>", "peek definition")
 
 -- Go to definition
 --keymap("n","gd", "<cmd>Lspsaga goto_definition<CR>")
 
-keymap("n", "gt", "<cmd>Lspsaga peek_type_definition<CR>")
+util.nnoremap("gt", "<cmd>Lspsaga peek_type_definition<CR>", "peek type def")
 
 -- Show line diagnostics
 -- You can pass argument ++unfocus to
 -- unfocus the show_line_diagnostics floating window
-keymap("n", "<leader>sl", "<cmd>Lspsaga show_line_diagnostics<CR>")
+util.nnoremap("<leader>sl", "<cmd>Lspsaga show_line_diagnostics<CR>", "diagnostic (line)")
 
 -- Show cursor diagnostics
 -- Like show_line_diagnostics, it supports passing the ++unfocus argument
-keymap("n", "<leader>sc", "<cmd>Lspsaga show_cursor_diagnostics<CR>")
+util.nnoremap("<leader>sc", "<cmd>Lspsaga show_cursor_diagnostics<CR>", "diagnostic (cursor)")
 
 -- Show buffer diagnostics
-keymap("n", "<leader>sb", "<cmd>Lspsaga show_buf_diagnostics<CR>")
+util.nnoremap("<leader>sb", "<cmd>Lspsaga show_buf_diagnostics<CR>", "diagnostic")
 
 -- Diagnostic jump
 -- You can use <C-o> to jump back to your previous location
-keymap("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
-keymap("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>")
+util.nnoremap("[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", "diagnostic prev")
+util.nnoremap("]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", "diagnostic next")
 
 -- Diagnostic jump with filters such as only jumping to an error
-keymap("n", "[E", function()
+util.nnoremap("[E", function()
   require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
-end)
-keymap("n", "]E", function()
+end, "error prev")
+util.nnoremap("]E", function()
   require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
-end)
+end, "error next")
 
 -- Toggle outline
-keymap("n", "<leader>o", "<cmd>Lspsaga outline<CR>")
+util.nnoremap("<leader>o", "<cmd>Lspsaga outline<CR>", "outline")
+
 
 -- Hover Doc
 -- If there is no hover doc,
@@ -113,7 +118,7 @@ keymap("n", "<leader>o", "<cmd>Lspsaga outline<CR>")
 -- there is no information available.
 -- To disable it just use ":Lspsaga hover_doc ++quiet"
 -- Pressing the key twice will enter the hover window
-keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>")
+util.nnoremap("K", "<cmd>Lspsaga hover_doc<CR>", "hover")
 
 -- If you want to keep the hover window in the top right hand corner,
 -- you can pass the ++keep argument
@@ -123,8 +128,8 @@ keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>")
 --keymap("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>")
 
 -- Call hierarchy
-keymap("n", "<Leader>ci", "<cmd>Lspsaga incoming_calls<CR>")
-keymap("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>")
+util.nnoremap("<Leader>si", "<cmd>Lspsaga incoming_calls<CR>")
+util.nnoremap("<Leader>so", "<cmd>Lspsaga outgoing_calls<CR>")
 
 -- Floating terminal
 keymap({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")

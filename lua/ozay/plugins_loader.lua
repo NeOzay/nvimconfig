@@ -125,7 +125,9 @@ return packer.startup(function(use)
   use 'uga-rosa/translate.nvim'
 
   use "b0o/schemastore.nvim"
-  use "hiphish/rainbow-delimiters.nvim"
+  use "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
+  use 'echasnovski/mini.clue'
+  use 'lbrayner/vim-rzip'
   if packer_bootstrap then
     packer.sync()
   end

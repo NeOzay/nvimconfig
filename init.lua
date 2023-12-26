@@ -1,7 +1,8 @@
-vim.g.barbar_auto_setup = false -- disable auto-setup
+vim.g.barbar_auto_setup = false -- disable auto-setu
 vim.g.mapleader = " "
 require "ozay.plugins_loader"
 require "ozay.plugins"
+local util = require("ozay.util")
 --require "ozay.test"
 
 local function T(...)
@@ -40,7 +41,7 @@ vim.opt.updatetime = 250
 vim.opt.showtabline = 2
 vim.cmd 'set guicursor+=a:Cursor/lCursor'
 vim.cmd [[
-augroup OzayAuto
+augroup OzayAut
 autocmd!
 au Filetype lua setlocal formatoptions-=cro
 augroup end
@@ -70,55 +71,42 @@ api.nvim_create_user_command("Trim", function()
   fn.winrestview(view)
 end, { desc = "trim all lines of current buffer" })
 
-local keymap = vim.keymap.set
 
-local function newMapType(char)
-  ---@param lhs string
-  ---@param rhs string|fun():string?
-  ---@param opts table|nil
-  return function(lhs, rhs, opts)
-    keymap(char, lhs, rhs, opts)
-  end
-end
-
-local nnoremap = newMapType("n")
-local inoremap = newMapType("i")
-
-nnoremap("i", function()
+util.nnoremap("i", function()
   if #api.nvim_get_current_line() == 0 then
     return [["_cc]]
   else
     return "i"
   end
-end, { expr = true })
-nnoremap("a", function()
+end, "insert", { expr = true })
+util.nnoremap("a", function()
   if #api.nvim_get_current_line() == 0 then
     return [["_cc]]
   else
     return "a"
   end
-end, { expr = true })
+end, "append", { expr = true })
 
-inoremap("<tab>", function()
+util.inoremap("<tab>", function()
   if #api.nvim_get_current_line() == 0 then
     return [[<C-O>"_cc]]
   else
     return "<tab>"
   end
-end, { expr = true })
+end, "tab", { expr = true })
 
-nnoremap("<C-S>", "<Cmd>w<CR>")
-nnoremap(" ", "<Nop>")
-nnoremap("<leader>j", "<cmd>Inspect<cr>")
+util.nnoremap("<C-S>", "<Cmd>w<CR>")
+util.nnoremap(" ", "<Nop>")
+util.nnoremap("<leader>j", "<cmd>Inspect<cr>", "inspect")
 --nnoremap("<leader>n", "<cmd>tabn<cr>")
 --nnoremap("<leader>p", "<cmd>tabp<cr>")
-nnoremap("<leader>c", "ciw", { nowait = true })
+util.nnoremap("<leader>c", "ciw", "ciw", { nowait = true })
 --nnoremap("<leader>h", "<cmd>tab help <C-R><C-W><cr>")
-nnoremap("<leader>h", ":tab help <C-R><C-W><CR>")
-nnoremap(":", ": <BS>")
-nnoremap("<leader>d", function()
+util.nnoremap("<leader>h", ":help <C-R><C-W><CR>", "h under cursor")
+util.nnoremap(":", ": <BS>")
+util.nnoremap("<leader>d", function()
   vim.diagnostic.open_float(nil, { focus = false })
-end)
+end, "show diagnostic")
 
 vim.cmd [[
 if &wildoptions =~ "pum"

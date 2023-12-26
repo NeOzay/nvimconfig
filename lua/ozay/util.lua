@@ -41,4 +41,22 @@ function M.isRGBColor(color)
   return string.match(color or "", "#"..reg:rep(6)) ~= nil
 end
 
+local keymap = vim.keymap.set
+
+local function newMapType(char)
+  ---@param lhs string
+  ---@param rhs string|fun():string?
+  ---@param desc string|nil
+  ---@param opts table|nil
+  return function(lhs, rhs, desc, opts)
+    opts = opts or {}
+    opts.desc = desc
+    keymap(char, lhs, rhs, opts)
+  end
+end
+
+M.nnoremap = newMapType("n")
+M.inoremap = newMapType("i")
+M.vnoremap = newMapType("v")
+
 return M
