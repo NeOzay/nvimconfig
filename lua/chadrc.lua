@@ -5,13 +5,28 @@
 ---@type ChadrcConfig
 local M = {}
 
-M.base46 = {
-	theme = "onedark",
+local field = "#A6A67C"
+local class = "#0DB9D7"
 
-	-- hl_override = {
-	-- 	Comment = { italic = true },
-	-- 	["@comment"] = { italic = true },
-	-- },
+M.base46 = {
+	theme = "sonokai",
+
+  hl_add = {
+    ["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false},
+    ["@lsp.typemod.class.declaration"] = {italic = true},
+  },
+
+	hl_override = {
+		["@comment"] = { italic = false },
+		["@lsp.type.comment"] = { link = "@comment" },
+		["@keyword"] = { italic = true, fg = "blue" },
+    ["@keyword.conditional"] = {fg = "blue"},
+		["@keyword.return"] = { italic = true, fg = "blue" },
+    ["@lsp.type.property"] = { fg = field},
+    ["@property"] = { fg = field},
+    ["@lsp.type.class"] = {fg = class},
+    ["@type"] = {fg = class},
+	}
 }
 
 -- M.nvdash = { load_on_startup = true }
