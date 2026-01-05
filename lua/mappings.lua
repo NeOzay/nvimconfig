@@ -1,4 +1,4 @@
-require "nvchad.mappings"
+require("nvchad.mappings")
 
 -- add yours here
 
@@ -10,6 +10,7 @@ map("n", "gl", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" 
 map("n", "<leader>cc", "ciw")
 
 map("i", "jk", "<ESC>")
+
 -- Trouble.nvim mappings (voir aussi lazy keys dans plugins/init.lua)
 -- <leader>xx - Toggle diagnostics
 -- <leader>xX - Buffer diagnostics

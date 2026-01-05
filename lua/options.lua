@@ -1,4 +1,4 @@
-require "nvchad.options"
+require("nvchad.options")
 
 -- add yours here!
 
@@ -9,6 +9,7 @@ o.scrolloff = 5
 o.sidescrolloff = 15
 o.cursorline = true
 o.showmatch = true
-o.mouse="a"
+o.mouse = "a"
+o.exrc = true
 
-vim.g.clipboard = "tmux"
+--vim.g.clipboard = "tmux"
