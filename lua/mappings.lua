@@ -7,6 +7,8 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("n", "<C-j>", "<cmd>Inspect<CR>")
 map("n", "gl", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" })
+map("n", "<leader>o", "o<Esc>")
+map("n", "<leader>O", "O<Esc>")
 map("n", "<leader>cc", "ciw")
 
 map("i", "jk", "<ESC>")
