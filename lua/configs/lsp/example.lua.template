@@ -1,0 +1,28 @@
+-- Template pour ajouter un nouveau serveur LSP
+-- Copiez ce fichier et renommez-le selon votre LSP (ex: typescript.lua, rust.lua)
+
+local M = {}
+
+-- Nom du serveur LSP (obligatoire)
+M.server_name = "nom_du_serveur_lsp"
+
+-- Configuration spécifique au serveur (optionnel)
+M.settings = {
+  -- Ajoutez vos settings ici
+  -- Exemple pour un serveur fictif:
+  -- myserver = {
+  --   enable = true,
+  --   option = "value"
+  -- }
+}
+
+-- Commandes personnalisées (optionnel)
+M.commands = function()
+  -- Ajoutez vos commandes personnalisées ici
+  -- Exemple:
+  -- vim.api.nvim_create_user_command("MonCommande", function()
+  --   print("Commande exécutée")
+  -- end, { desc = "Description de la commande" })
+end
+
+return M

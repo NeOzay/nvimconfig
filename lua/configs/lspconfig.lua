@@ -63,90 +63,14 @@ M.defaults = function()
     end,
   })
 
-  local lua_lsp_settings = {
-    Lua = {
-      runtime = { version = "LuaJIT" },
-      workspace = {
-        library = {
-          vim.fn.expand "$VIMRUNTIME/lua",
-          vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
-          vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
-          "${3rd}/luv/library",
-        },
-      },
-    },
-  }
-
   -- Use new vim.lsp.config API for Neovim 0.11+
+  -- Configuration globale pour tous les serveurs LSP
   vim.lsp.config("*", { capabilities = M.capabilities, on_init = M.on_init })
-  vim.lsp.config("emmylua_ls", { settings = lua_lsp_settings })
-  vim.lsp.enable "emmylua_ls"
+
+  -- Charge et configure tous les serveurs LSP depuis le module
+  require("configs.lsp").setup()
 end
 
 M.defaults()
 
--- Python: Détection automatique de l'environnement virtuel (Poetry, venv, etc.)
-local function get_python_path()
-  local cwd = vim.fn.getcwd()
-
-  -- 1. Essayer Poetry
-  local poetry_env = vim.fn.system("cd " .. cwd .. " && poetry env info --path 2>/dev/null")
-  if vim.v.shell_error == 0 and poetry_env ~= "" then
-    poetry_env = vim.trim(poetry_env)
-    local poetry_python = poetry_env .. "/bin/python"
-    if vim.fn.executable(poetry_python) == 1 then
-      return poetry_python
-    end
-  end
-
-  -- 2. Essayer .venv local
-  local venv_python = cwd .. "/.venv/bin/python"
-  if vim.fn.executable(venv_python) == 1 then
-    return venv_python
-  end
-
-  -- 3. Essayer venv local
-  local venv_alt = cwd .. "/venv/bin/python"
-  if vim.fn.executable(venv_alt) == 1 then
-    return venv_alt
-  end
-
-  -- 4. Utiliser python système
-  return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
-end
-
--- Python LSP configuration
-local basedpyright_settings = {
-  basedpyright = {
-    analysis = {
-      typeCheckingMode = "standard", -- "off", "basic", "standard", "strict"
-      autoSearchPaths = true,
-      useLibraryCodeForTypes = true,
-      diagnosticMode = "openFilesOnly", -- "workspace" ou "openFilesOnly"
-      autoImportCompletions = true,
-      extraPaths = {},
-    },
-  },
-  python = {
-    pythonPath = get_python_path(),
-  },
-}
-
-vim.lsp.config("basedpyright", { settings = basedpyright_settings })
-
-local servers = { "basedpyright" }
-vim.lsp.enable(servers)
-
--- Commande pour afficher le chemin Python détecté
-vim.api.nvim_create_user_command("PyPath", function()
-  local python_path = get_python_path()
-  vim.notify("Python path: " .. python_path, vim.log.levels.INFO)
-end, { desc = "Afficher le chemin Python utilisé par basedpyright" })
-
--- Commande pour recharger le LSP Python (utile si vous changez d'environnement)
-vim.api.nvim_create_user_command("PyReload", function()
-  vim.cmd("LspRestart basedpyright")
-  vim.notify("Basedpyright redémarré avec: " .. get_python_path(), vim.log.levels.INFO)
-end, { desc = "Redémarrer basedpyright avec le bon environnement" })
-
--- read :h vim.lsp.config for changing options of lsp servers 
+-- read :h vim.lsp.config for changing options of lsp servers

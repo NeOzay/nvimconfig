@@ -23,9 +23,12 @@ Configuration Neovim basée sur **NvChad v2.5**, un framework moderne qui fourni
 │   ├── configs/           # Configurations des plugins
 │   │   ├── conform.lua    # Formatage (stylua, ruff)
 │   │   ├── lazy.lua       # Configuration lazy.nvim
-│   │   └── lspconfig.lua  # Configuration LSP (basedpyright, etc.)
+│   │   ├── lspconfig.lua  # Configuration LSP (basedpyright, etc.)
+│   │   └── neo-tree.lua   # Configuration Neo-tree
 │   ├── plugins/
 │   │   └── init.lua       # Spécifications des plugins
+│   ├── highlights/        # Highlights personnalisés
+│   │   └── neo-tree.lua   # Highlights Neo-tree pour thème Sonokai
 │   └── themes/
 │       └── sonokai.lua    # Thème personnalisé
 ```
@@ -38,6 +41,7 @@ Point d'entrée qui :
 - Définit la touche leader (`<Space>`)
 - Bootstrap lazy.nvim (installation automatique)
 - Charge NvChad, plugins, thèmes, et imports personnalisés
+- Charge les highlights Neo-tree via `vim.schedule()` après l'initialisation du thème
 
 ### lua/chadrc.lua
 Configuration NvChad :
@@ -82,7 +86,8 @@ Configuration formatage :
 ### Édition & Navigation
 - nvim-treesitter - Coloration syntaxique
 - telescope.nvim - Recherche floue
-- nvim-tree.lua - Explorateur de fichiers
+- **neo-tree.nvim** - Explorateur de fichiers moderne (avec support thème Sonokai)
+- nvim-tree.lua - Explorateur de fichiers classique
 - which-key.nvim - Aide raccourcis
 - indent-blankline.nvim, nvim-autopairs
 
@@ -102,9 +107,15 @@ Thème personnalisé basé sur [Sonokai](https://github.com/sainnhe/sonokai) (va
 - Support complet Treesitter et LSP semantic tokens
 - Italiques pour commentaires, keywords, built-in variables
 - Couleurs ANSI terminal configurées
+- Intégrations complètes : Trouble, Telescope, CMP, Neo-tree, Git signs
 
-**Fichier :** `lua/themes/sonokai.lua`
+**Fichiers :**
+- `lua/themes/sonokai.lua` - Définition du thème (base_30, base_16, polish_hl)
+- `lua/highlights/neo-tree.lua` - Highlights Neo-tree (chargés depuis init.lua)
+
 **Activation :** `M.base46.theme = "sonokai"` dans `lua/chadrc.lua`
+
+**Note :** Les highlights Neo-tree sont chargés dynamiquement via `init.lua` car base46 ne fournit pas d'intégration native pour neo-tree. Le fichier `highlights/neo-tree.lua` exporte une fonction qui applique les highlights après l'initialisation du thème.
 
 **Palette principale :**
 - Rouge (#fc5d7c) - Keywords, operators
@@ -154,12 +165,18 @@ require "nvchad.module"  -- Charger les défauts NvChad
 ## État actuel
 
 **Fichiers modifiés :**
+- `init.lua` - Chargement highlights Neo-tree
 - `lua/chadrc.lua` - Thème et UI
 - `lua/options.lua` - Options Vim
 - `lua/plugins/init.lua` - Plugins ajoutés
 - `lua/configs/lspconfig.lua` - Configuration Python
 - `lua/configs/conform.lua` - Formatage activé
 - `lua/themes/sonokai.lua` - Thème personnalisé
+
+**Fichiers créés :**
+- `lua/configs/neo-tree.lua` - Configuration Neo-tree complète
+- `lua/configs/trouble.lua` - Configuration Trouble
+- `lua/highlights/neo-tree.lua` - Highlights Neo-tree pour Sonokai
 
 **Configuration :**
 - Setup fonctionnel avec Python, web dev

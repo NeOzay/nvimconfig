@@ -10,6 +10,7 @@ map("n", "gl", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" 
 map("n", "<leader>o", "o<Esc>")
 map("n", "<leader>O", "O<Esc>")
 map("n", "<leader>cc", "ciw")
+map("n", "<leader>e", "<Cmd>Neotree float<CR>")
 
 map("i", "jk", "<ESC>")
 
