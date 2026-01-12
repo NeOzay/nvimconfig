@@ -1,10 +1,15 @@
 -- Template pour ajouter un nouveau serveur LSP
 -- Copiez ce fichier et renommez-le selon votre LSP (ex: typescript.lua, rust.lua)
+-- Basez sur la documentation de Neovim LSP pour les options disponibles:
 
+---@type vim.lsp.Config
 local M = {}
 
 -- Nom du serveur LSP (obligatoire)
-M.server_name = "nom_du_serveur_lsp"
+M.name = "nom_du_serveur_lsp"
+
+-- Types de fichiers sur lesquels activer ce LSP (obligatoire)
+M.filetypes = { "filetype1", "filetype2" }
 
 -- Configuration spécifique au serveur (optionnel)
 M.settings = {
@@ -17,7 +22,7 @@ M.settings = {
 }
 
 -- Commandes personnalisées (optionnel)
-M.commands = function()
+M.on_init = function()
   -- Ajoutez vos commandes personnalisées ici
   -- Exemple:
   -- vim.api.nvim_create_user_command("MonCommande", function()
