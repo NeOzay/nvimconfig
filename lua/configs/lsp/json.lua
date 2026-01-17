@@ -9,7 +9,7 @@ local has_schemastore, schemastore = pcall(require, "schemastore")
 
 M.settings = {
 	json = {
-		schemas = has_schemastore and schemastore.json.schemas() or {},
+		schemas = has_schemastore and schemastore.json and schemastore.json.schemas() or {},
 		validate = { enable = true },
 		format = {
 			enable = true,

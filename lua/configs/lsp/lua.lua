@@ -6,33 +6,39 @@ M.name = "emmylua_ls"
 M.filetypes = { "lua" }
 
 M.settings = {
-  Lua = {
-    runtime = {
-      version = "LuaJIT",
-      requirePattern = { "?.lua", "?/init.lua", "lua/?.lua", "lua/?/init.lua" }
-    },
-    workspace = {
-      library = {
-        vim.fn.expand("$VIMRUNTIME/lua"),
-        -- vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types",
-        -- vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy",
-      },
-      checkThirdParty = false,
-      workspaceRoots = {
-        vim.fn.getcwd(),
-      },
-      ignoreDir = {},
-    },
-    strict = {
-      requirePath = true
-    },
-    diagnostics = {
-      enable = true,
-      globals = { "vim" },
-    },
-  },
+	Lua = {
+		runtime = {
+			version = "LuaJIT",
+			requireLikeFunction = { "pRequire" },
+			requirePattern = { "?.lua", "?/init.lua", "lua/?.lua", "lua/?/init.lua" },
+		},
+		workspace = {
+			library = {
+				-- vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types",
+				-- vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy",
+			},
+			checkThirdParty = false,
+			ignoreDir = {},
+		},
+		strict = {
+			requirePath = true,
+		},
+		diagnostics = {
+			enable = true,
+			-- globals = { "vim" },
+		},
+	},
 }
 
-vim.list_extend(M.settings.Lua.workspace.library, vim.opt.rtp:get())
+local function addPluginsAndVimToLib()
+	local lib = M.settings.Lua.workspace.library
+	table.insert(lib, vim.fn.expand("$VIMRUNTIME/lua"))
+	local folder = vim.fn.stdpath("data") .. "/lazy/"
+	for name, _ in vim.fs.dir(folder) do
+		table.insert(lib, vim.fs.joinpath(folder, name))
+	end
+end
+
+addPluginsAndVimToLib()
 
 return M

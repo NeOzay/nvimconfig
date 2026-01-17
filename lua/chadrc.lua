@@ -8,33 +8,65 @@ local M = {}
 local field = "#A6A67C"
 local class = "#0DB9D7"
 
+---@diagnostic disable-next-line
 M.base46 = {
-  theme = "sonokai",
-  integrations = { "trouble", "telescope" },
+	theme = "sonokai",
+	integrations = { "trouble", "telescope", "blankline" },
 
-  hl_add = {
-    ["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
-    ["@lsp.typemod.class.declaration"] = { italic = true },
-  },
+	hl_add = {
+		["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
+		["@lsp.typemod.class.declaration"] = { italic = true },
+		["@lsp.type.keyword.lua"] = { fg = "None" },
+		["@lsp.type.operator.lua"] = { fg = "None" },
+		["@lsp.mod.documentation.lua"] = { italic = true, fg = "blue" },
+		Bold = { bold = true },
+		DiagnosticUnderlineError = { sp = "red", undercurl = true },
+		-- Rainbow indent colors
+		RainbowIndentRed = { fg = { "red", "line", 80 } },
+		RainbowIndentYellow = { fg = { "yellow", "line", 80 } },
+		RainbowIndentBlue = { fg = { "blue", "line", 80 } },
+		RainbowIndentOrange = { fg = { "orange", "line", 80 } },
+		RainbowIndentGreen = { fg = { "green", "line", 80 } },
+		RainbowIndentViolet = { fg = { "purple", "line", 80 } },
+		RainbowIndentCyan = { fg = { "cyan", "line", 80 } },
 
-  hl_override = {
-    ["@comment"] = { italic = false },
-    ["@lsp.type.comment"] = { link = "@comment" },
-    ["@keyword"] = { italic = true, fg = "blue" },
-    ["@keyword.conditional"] = { fg = "blue" },
-    ["@keyword.return"] = { italic = true, fg = "blue" },
-    ["@lsp.type.property"] = { fg = field },
-    ["@property"] = { fg = field },
-    ["@lsp.type.class"] = { fg = class },
-    ["@type"] = { fg = class },
-  },
+		RainbowScopeRed = { fg = { "red", "grey", 50 } },
+		RainbowScopeYellow = { fg = { "yellow", "grey", 50 } },
+		RainbowScopeBlue = { fg = { "blue", "grey", 50 } },
+		RainbowScopeOrange = { fg = { "orange", "grey", 50 } },
+		RainbowScopeGreen = { fg = { "green", "grey", 50 } },
+		RainbowScopeViolet = { fg = { "purple", "grey", 50 } },
+		RainbowScopeCyan = { fg = { "cyan", "grey", 50 } },
+	},
+
+	---@type Base46HLGroupsList
+	hl_override = {
+		["Comment"] = { link = "@comment" },
+		["@comment"] = { italic = false },
+		["@lsp.type.comment"] = { link = "@comment" },
+		["@keyword"] = { italic = true, fg = "blue" },
+		["@keyword.function"] = { italic = true, fg = "blue" },
+		["@keyword.conditional"] = { fg = "red", italic = true },
+		["@keyword.return"] = { italic = true, fg = "blue" },
+		["@lsp.type.property"] = { fg = field },
+		["@property"] = { fg = field },
+		["@lsp.type.class"] = { fg = class },
+		["@type"] = { fg = class },
+		PmenuSel = { fg = "NONE" },
+	},
 }
 
 -- M.nvdash = { load_on_startup = true }
 M.ui = {
-  tabufline = {
-    lazyload = false,
-  },
+	tabufline = {
+		lazyload = false,
+	},
+	cmp = {
+		icons_left = true,
+	},
+	telescope = {
+		style = "bordered",
+	},
 }
 
 return M

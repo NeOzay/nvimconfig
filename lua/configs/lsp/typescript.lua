@@ -46,26 +46,29 @@ M.on_init = function(client, _)
 	-- Commandes personnalisées pour TypeScript
 	-- Commande pour organiser les imports
 	vim.api.nvim_create_user_command("TsOrganizeImports", function()
-		vim.lsp.buf.execute_command({
+		client:exec_cmd({
+			title = "Organiser les imports TypeScript",
 			command = "_typescript.organizeImports",
 			arguments = { vim.api.nvim_buf_get_name(0) },
-		})
+		}, { bufnr = 0 })
 	end, { desc = "Organiser les imports TypeScript" })
 
 	-- Commande pour supprimer les imports non utilisés
 	vim.api.nvim_create_user_command("TsRemoveUnused", function()
-		vim.lsp.buf.execute_command({
+		client:exec_cmd({
+			title = "Supprimer les imports non utilisés",
 			command = "_typescript.removeUnusedImports",
 			arguments = { vim.api.nvim_buf_get_name(0) },
-		})
+		}, { bufnr = 0 })
 	end, { desc = "Supprimer les imports non utilisés" })
 
 	-- Commande pour ajouter les imports manquants
 	vim.api.nvim_create_user_command("TsAddMissingImports", function()
-		vim.lsp.buf.execute_command({
+		client:exec_cmd({
+			title = "Ajouter les imports manquants",
 			command = "_typescript.addMissingImports",
 			arguments = { vim.api.nvim_buf_get_name(0) },
-		})
+		}, { bufnr = 0 })
 	end, { desc = "Ajouter les imports manquants" })
 end
 

@@ -40,7 +40,7 @@ M.settings = {
 			typeCheckingMode = "strict", -- "off", "basic", "standard", "strict"
 			autoSearchPaths = true,
 			useLibraryCodeForTypes = true,
-			diagnosticMode = "openFilesOnly", -- "workspace" ou "openFilesOnly"
+			diagnosticMode = "workspace", -- "workspace" ou "openFilesOnly"
 			autoImportCompletions = true,
 			extraPaths = {},
 		},
