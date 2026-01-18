@@ -205,6 +205,7 @@ M.polish_hl = {
 		Search = { bg = "#fc5d7c", fg = "#2c2e34" }, -- editor.findMatchBackground
 		IncSearch = { bg = "#b39df3", fg = "#2c2e34" },
 		EndOfBuffer = { bg = M.base_30.one_bg },
+		SpecialKey = { link = "Comment" },
 
 		-- Diagnostics
 		DiagnosticError = { fg = M.base_30.red },
@@ -213,10 +214,10 @@ M.polish_hl = {
 		DiagnosticHint = { fg = M.base_30.green },
 
 		-- Diagnostic signs in gutter
-		DiagnosticSignError = { fg = M.base_30.red, bg = M.base_30.one_bg },
-		DiagnosticSignWarn = { fg = M.base_30.yellow, bg = M.base_30.one_bg },
-		DiagnosticSignInfo = { fg = M.base_30.cyan, bg = M.base_30.one_bg },
-		DiagnosticSignHint = { fg = M.base_30.green, bg = M.base_30.one_bg },
+		DiagnosticSignError = { fg = M.base_30.red },
+		DiagnosticSignWarn = { fg = M.base_30.yellow },
+		DiagnosticSignInfo = { fg = M.base_30.cyan },
+		DiagnosticSignHint = { fg = M.base_30.green },
 
 		-- Diff
 		DiffAdd = { bg = "#394634" }, -- diff_green

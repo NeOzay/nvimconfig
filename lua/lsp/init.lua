@@ -18,7 +18,7 @@ function M.setup(common_config)
 
 	for _, config_name in ipairs(M.lsp_configs) do
 		---@type vim.lsp.Config
-		local lsp_config, ok = pRequire("configs.lsp." .. config_name)
+		local lsp_config, ok = pRequire("lsp." .. config_name)
 		if ok and lsp_config.name then
 			local server_name = lsp_config.name
 			-- Merger la config commune avec la config spécifique

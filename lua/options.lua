@@ -12,5 +12,6 @@ o.showmatch = true
 o.mouse = "a"
 o.exrc = true
 o.virtualedit = "block"
+o.mousemoveevent = true
 
 vim.g.clipboard = ""

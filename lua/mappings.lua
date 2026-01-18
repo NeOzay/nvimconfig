@@ -3,6 +3,10 @@ require("nvchad.mappings")
 -- add yours here
 
 local map = vim.keymap.set
+local del = vim.keymap.del
+
+del("n", "<leader>e")
+del("n", "<C-n>")
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("n", "<C-j>", "<cmd>Inspect<CR>")
@@ -10,7 +14,10 @@ map("n", "gl", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" 
 map("n", "<leader>o", "o<Esc>")
 map("n", "<leader>O", "O<Esc>")
 map("n", "<leader>cc", "ciw")
-map("n", "<leader>e", "<Cmd>Neotree float<CR>")
+map("n", "<leader>ee", "<Cmd>Neotree position=float<CR>")
+map("n", "<leader>ec", "<Cmd>Neotree reveal=true position=float<CR>")
+map("n", "<leader>eb", "<Cmd>Neotree source=buffers position=float<CR>")
+map("n", "<F3>", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 
 map("i", "jk", "<ESC>")
 

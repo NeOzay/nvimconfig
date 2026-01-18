@@ -6,12 +6,12 @@
 local M = {}
 
 local field = "#A6A67C"
-local class = "#0DB9D7"
+-- local class = "#0DB9D7"
 
 ---@diagnostic disable-next-line
 M.base46 = {
 	theme = "sonokai",
-	integrations = { "trouble", "telescope", "blankline" },
+	integrations = { "trouble", "telescope", "blankline", "navic" },
 
 	hl_add = {
 		["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
@@ -37,6 +37,10 @@ M.base46 = {
 		RainbowScopeGreen = { fg = { "green", "grey", 50 } },
 		RainbowScopeViolet = { fg = { "purple", "grey", 50 } },
 		RainbowScopeCyan = { fg = { "cyan", "grey", 50 } },
+		CurSearch = { bg = "green", fg = "#2c2e34" },
+		SatelliteSearchCurrent = { bg = "green", fg = "#2c2e34" },
+		TreesitterContext = { bg = "black" },
+		TreesitterContextBottom = { fg = "NONE", bg = "none" },
 	},
 
 	---@type Base46HLGroupsList
@@ -50,8 +54,8 @@ M.base46 = {
 		["@keyword.return"] = { italic = true, fg = "blue" },
 		["@lsp.type.property"] = { fg = field },
 		["@property"] = { fg = field },
-		["@lsp.type.class"] = { fg = class },
-		["@type"] = { fg = class },
+		["@lsp.type.class"] = { fg = { "blue", -20 } },
+		["@type"] = { fg = { "blue", -20 } },
 		PmenuSel = { fg = "NONE" },
 	},
 }
