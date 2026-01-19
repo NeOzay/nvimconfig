@@ -3,19 +3,19 @@ vim.g.mapleader = " "
 
 ---@return any, boolean
 function pRequire(module)
-	local status, lib = pcall(require, module)
-	if not status then
-		return nil, status
-	end
-	return lib, status
+  local status, lib = pcall(require, module)
+  if not status then
+    return nil, status
+  end
+  return lib, status
 end
 
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.uv.fs_stat(lazypath) then
-	local repo = "https://github.com/folke/lazy.nvim.git"
-	vim.fn.system({ "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath })
+  local repo = "https://github.com/folke/lazy.nvim.git"
+  vim.fn.system({ "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath })
 end
 
 vim.opt.rtp:prepend(lazypath)
@@ -25,14 +25,14 @@ local lazy_config = require("lazy-conf")
 
 -- load plugins
 require("lazy").setup({
-	{
-		"NvChad/NvChad",
-		lazy = false,
-		branch = "v2.5",
-		import = "nvchad.plugins",
-	},
+  {
+    "NvChad/NvChad",
+    lazy = false,
+    branch = "v2.5",
+    import = "nvchad.plugins",
+  },
 
-	{ import = "plugins" },
+  { import = "plugins" },
 }, lazy_config)
 require("nvchad.plugins")
 
@@ -46,5 +46,5 @@ require("cmd")
 require("highlights")
 
 vim.schedule(function()
-	require("mappings")
+  require("mappings")
 end)

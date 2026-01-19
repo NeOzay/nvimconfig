@@ -1,3 +1,5 @@
+-- ===== ANCIEN CODE (commenté) =====
+--[[
 local function on_menu_opened()
 	vim.b.copilot_suggestion_hidden = true
 end
@@ -30,5 +32,29 @@ return {
 		dependencies = { "zbirenbaum/copilot.lua" },
 		event = "InsertEnter",
 		config = copilot_cmp_config,
+	},
+}
+--]]
+
+-- ===== NOUVEAU CODE (blink.cmp) =====
+local function copilot_config()
+	require("copilot").setup({
+		suggestion = { enabled = false },
+		panel = { enabled = false },
+	})
+end
+
+---@type LazySpec[]
+return {
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = copilot_config,
+	},
+	{
+		"giuxtaposition/blink-cmp-copilot",
+		dependencies = { "zbirenbaum/copilot.lua" },
+		event = "InsertEnter",
 	},
 }

@@ -35,6 +35,8 @@ end
 
 local function on_init(_client, _) end
 
+-- ===== ANCIEN CODE (commenté) =====
+--[[
 local function setup_capabilities()
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 	---@diagnostic disable-next-line
@@ -51,6 +53,19 @@ local function setup_capabilities()
 	capabilities.textDocument.diagnostic = {
 		dynamicRegistration = true,
 	}
+	return capabilities
+end
+--]]
+
+-- ===== NOUVEAU CODE (blink.cmp) =====
+local function setup_capabilities()
+	local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+	---@diagnostic disable-next-line
+	capabilities.textDocument.diagnostic = {
+		dynamicRegistration = true,
+	}
+
 	return capabilities
 end
 

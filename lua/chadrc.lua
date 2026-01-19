@@ -65,9 +65,10 @@ M.ui = {
 	tabufline = {
 		lazyload = false,
 	},
-	cmp = {
-		icons_left = true,
-	},
+	-- Ancienne config cmp (commentée pour blink.cmp)
+	-- cmp = {
+	-- 	icons_left = true,
+	-- },
 	telescope = {
 		style = "bordered",
 	},
