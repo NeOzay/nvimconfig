@@ -4,6 +4,17 @@ local function select_textobject(query)
 	end
 end
 
+local function swap_textobject(query, reverse)
+	if not reverse then
+		return function()
+			require("nvim-treesitter-textobjects.swap").swap_next(query)
+		end
+	end
+	return function()
+		require("nvim-treesitter-textobjects.swap").swap_previous(query)
+	end
+end
+
 local function init()
 	vim.g.no_plugin_maps = true
 end
@@ -46,5 +57,13 @@ return {
 
 		{ "ac", select_textobject("@condition.outer"), mode = { "o", "x" }, desc = "Select around condition" },
 		{ "ic", select_textobject("@condition.inner"), mode = { "o", "x" }, desc = "inner condition" },
+
+		{ "<leader>s", swap_textobject("@parameter.inner"), mode = "n", desc = "Swap parameter" },
+		{
+			"<leader>S",
+			swap_textobject("@parameter.outer", true),
+			mode = "n",
+			desc = "Swap parameter outer",
+		},
 	},
 }

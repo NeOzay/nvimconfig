@@ -18,7 +18,7 @@ return {
 		providers = {
 			"lsp",
 			"treesitter",
-			"regex",
+			-- "regex",
 		},
 		delay = 100,
 		filetypes_allowlist = {

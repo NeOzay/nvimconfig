@@ -64,160 +64,160 @@ M = require("base46").override_theme(M, "sonokai")
 M.polish_hl = {
 	treesitter = {
 		-- Variables
-		["@variable"] = { fg = M.base_30.white },
-		["@variable.member"] = { fg = M.base_30.white },
-		["@variable.builtin"] = { fg = M.base_30.orange, italic = true },
-		["@variable.parameter"] = { fg = M.base_30.orange },
+		["@variable"] = { fg = base_30.white },
+		["@variable.member"] = { fg = base_30.white },
+		["@variable.builtin"] = { fg = base_30.orange, italic = true },
+		["@variable.parameter"] = { fg = base_30.orange },
 
 		-- Functions
-		["@function"] = { fg = M.base_30.green },
-		["@function.call"] = { fg = M.base_30.green },
-		["@function.builtin"] = { fg = M.base_30.green },
-		["@function.method"] = { fg = M.base_30.green },
-		["@function.method.call"] = { fg = M.base_30.green },
+		["@function"] = { fg = base_30.green },
+		["@function.call"] = { fg = base_30.green },
+		["@function.builtin"] = { fg = base_30.green },
+		["@function.method"] = { fg = base_30.green },
+		["@function.method.call"] = { fg = base_30.green },
 
 		-- Operators & Punctuation
-		["@operator"] = { fg = M.base_30.red },
-		["@punctuation.bracket"] = { fg = M.base_30.grey_fg },
-		["@punctuation.delimiter"] = { fg = M.base_30.grey_fg2 },
-		["@punctuation.special"] = { fg = M.base_30.red },
+		["@operator"] = { fg = base_30.red },
+		["@punctuation.bracket"] = { fg = base_30.grey_fg },
+		["@punctuation.delimiter"] = { fg = base_30.grey_fg2 },
+		["@punctuation.special"] = { fg = base_30.red },
 
 		-- Keywords
-		["@keyword"] = { fg = M.base_30.red, italic = true },
-		["@keyword.function"] = { fg = M.base_30.red },
-		["@keyword.return"] = { fg = M.base_30.red, italic = true },
-		["@keyword.operator"] = { fg = M.base_30.red },
-		["@keyword.conditional"] = { fg = M.base_30.red },
-		["@keyword.repeat"] = { fg = M.base_30.red },
+		["@keyword"] = { fg = base_30.red, italic = true },
+		["@keyword.function"] = { fg = base_30.red },
+		["@keyword.return"] = { fg = base_30.red, italic = true },
+		["@keyword.operator"] = { fg = base_30.red },
+		["@keyword.conditional"] = { fg = base_30.red },
+		["@keyword.repeat"] = { fg = base_30.red },
 
 		-- Types & Constants
-		["@type"] = { fg = M.base_30.cyan },
-		["@type.builtin"] = { fg = M.base_30.cyan, italic = true },
-		["@type.qualifier"] = { fg = M.base_30.red },
-		["@constant"] = { fg = M.base_30.purple },
-		["@constant.builtin"] = { fg = M.base_30.purple },
-		["@constant.macro"] = { fg = M.base_30.purple },
+		["@type"] = { fg = base_30.cyan },
+		["@type.builtin"] = { fg = base_30.cyan, italic = true },
+		["@type.qualifier"] = { fg = base_30.red },
+		["@constant"] = { fg = base_30.purple },
+		["@constant.builtin"] = { fg = base_30.purple },
+		["@constant.macro"] = { fg = base_30.purple },
 
 		-- Strings & Numbers
-		["@string"] = { fg = M.base_30.yellow },
-		["@string.escape"] = { fg = M.base_30.purple },
-		["@string.regex"] = { fg = M.base_30.yellow },
-		["@number"] = { fg = M.base_30.purple },
-		["@boolean"] = { fg = M.base_30.purple },
+		["@string"] = { fg = base_30.yellow },
+		["@string.escape"] = { fg = base_30.purple },
+		["@string.regex"] = { fg = base_30.yellow },
+		["@number"] = { fg = base_30.purple },
+		["@boolean"] = { fg = base_30.purple },
 
 		-- Tags (HTML/JSX)
-		["@tag"] = { fg = M.base_30.red },
-		["@tag.attribute"] = { fg = M.base_30.cyan, italic = true },
-		["@tag.delimiter"] = { fg = M.base_30.grey_fg },
+		["@tag"] = { fg = base_30.red },
+		["@tag.attribute"] = { fg = base_30.cyan, italic = true },
+		["@tag.delimiter"] = { fg = base_30.grey_fg },
 
 		-- Properties & Attributes
-		["@property"] = { fg = M.base_30.white },
-		["@attribute"] = { fg = M.base_30.cyan, italic = true },
+		["@property"] = { fg = base_30.white },
+		["@attribute"] = { fg = base_30.cyan, italic = true },
 
 		-- Comments
-		["@comment"] = { fg = M.base_30.grey_fg },
-		["@comment.todo"] = { fg = M.base_30.black, bg = M.base_30.yellow, bold = true },
-		["@comment.warning"] = { fg = M.base_30.black, bg = M.base_30.orange, bold = true },
-		["@comment.note"] = { fg = M.base_30.black, bg = M.base_30.blue, bold = true },
-		["@comment.danger"] = { fg = M.base_30.black, bg = M.base_30.red, bold = true },
-		["@comment.error"] = { fg = M.base_30.black, bg = M.base_30.red, bold = true },
+		["@comment"] = { fg = base_30.grey_fg },
+		["@comment.todo"] = { fg = base_30.black, bg = M.base_30.yellow, bold = true },
+		["@comment.warning"] = { fg = base_30.black, bg = M.base_30.orange, bold = true },
+		["@comment.note"] = { fg = base_30.black, bg = M.base_30.blue, bold = true },
+		["@comment.danger"] = { fg = base_30.black, bg = M.base_30.red, bold = true },
+		["@comment.error"] = { fg = base_30.black, bg = M.base_30.red, bold = true },
 
 		-- Markup (Markdown)
-		["@markup.heading"] = { fg = M.base_30.yellow, bold = true },
-		["@markup.heading.1"] = { fg = M.base_30.yellow, bold = true },
-		["@markup.heading.2"] = { fg = M.base_30.yellow, bold = true },
-		["@markup.heading.3"] = { fg = M.base_30.yellow, bold = true },
-		["@markup.heading.4"] = { fg = M.base_30.yellow, bold = true },
-		["@markup.heading.5"] = { fg = M.base_30.yellow, bold = true },
-		["@markup.heading.6"] = { fg = M.base_30.yellow, bold = true },
+		["@markup.heading"] = { fg = base_30.yellow, bold = true },
+		["@markup.heading.1"] = { fg = base_30.yellow, bold = true },
+		["@markup.heading.2"] = { fg = base_30.yellow, bold = true },
+		["@markup.heading.3"] = { fg = base_30.yellow, bold = true },
+		["@markup.heading.4"] = { fg = base_30.yellow, bold = true },
+		["@markup.heading.5"] = { fg = base_30.yellow, bold = true },
+		["@markup.heading.6"] = { fg = base_30.yellow, bold = true },
 		["@markup.strong"] = { bold = true },
 		["@markup.italic"] = { italic = true },
 		["@markup.strikethrough"] = { strikethrough = true },
 		["@markup.underline"] = { underline = true },
-		["@markup.link"] = { fg = M.base_30.green, underline = true },
-		["@markup.link.url"] = { fg = M.base_30.green, underline = true },
-		["@markup.raw"] = { fg = M.base_30.yellow },
-		["@markup.list"] = { fg = M.base_30.red },
-		["@markup.list.checked"] = { fg = M.base_30.green },
-		["@markup.list.unchecked"] = { fg = M.base_30.grey_fg },
+		["@markup.link"] = { fg = base_30.green, underline = true },
+		["@markup.link.url"] = { fg = base_30.green, underline = true },
+		["@markup.raw"] = { fg = base_30.yellow },
+		["@markup.list"] = { fg = base_30.red },
+		["@markup.list.checked"] = { fg = base_30.green },
+		["@markup.list.unchecked"] = { fg = base_30.grey_fg },
 
 		-- Diff
-		["@diff.plus"] = { fg = M.base_30.green },
-		["@diff.minus"] = { fg = M.base_30.red },
-		["@diff.delta"] = { fg = M.base_30.blue },
+		["@diff.plus"] = { fg = base_30.green },
+		["@diff.minus"] = { fg = base_30.red },
+		["@diff.delta"] = { fg = base_30.blue },
 	},
 
 	lsp = {
 		-- Semantic tokens
-		["@lsp.type.namespace"] = { fg = M.base_30.cyan },
-		["@lsp.type.class"] = { fg = M.base_30.cyan },
-		["@lsp.type.enum"] = { fg = M.base_30.cyan },
-		["@lsp.type.interface"] = { fg = M.base_30.cyan },
-		["@lsp.type.struct"] = { fg = M.base_30.cyan },
-		["@lsp.type.typeParameter"] = { fg = M.base_30.cyan },
-		["@lsp.type.parameter"] = { fg = M.base_30.orange },
-		["@lsp.type.variable"] = { fg = M.base_30.white },
-		["@lsp.type.property"] = { fg = M.base_30.white },
-		["@lsp.type.enumMember"] = { fg = M.base_30.purple },
-		["@lsp.type.function"] = { fg = M.base_30.green },
-		["@lsp.type.method"] = { fg = M.base_30.green },
-		["@lsp.type.macro"] = { fg = M.base_30.purple },
-		["@lsp.type.decorator"] = { fg = M.base_30.cyan },
-		["@lsp.type.comment"] = { fg = M.base_30.grey_fg },
+		["@lsp.type.namespace"] = { fg = base_30.cyan },
+		["@lsp.type.class"] = { fg = base_30.cyan },
+		["@lsp.type.enum"] = { fg = base_30.cyan },
+		["@lsp.type.interface"] = { fg = base_30.cyan },
+		["@lsp.type.struct"] = { fg = base_30.cyan },
+		["@lsp.type.typeParameter"] = { fg = base_30.cyan },
+		["@lsp.type.parameter"] = { fg = base_30.orange },
+		["@lsp.type.variable"] = { fg = base_30.white },
+		["@lsp.type.property"] = { fg = base_30.white },
+		["@lsp.type.enumMember"] = { fg = base_30.purple },
+		["@lsp.type.function"] = { fg = base_30.green },
+		["@lsp.type.method"] = { fg = base_30.green },
+		["@lsp.type.macro"] = { fg = base_30.purple },
+		["@lsp.type.decorator"] = { fg = base_30.cyan },
+		["@lsp.type.comment"] = { fg = base_30.grey_fg },
 	},
 
 	syntax = {
 		-- Basic syntax
-		Comment = { fg = M.base_30.grey_fg },
-		Operator = { fg = M.base_30.red },
-		String = { fg = M.base_30.yellow },
-		Function = { fg = M.base_30.green },
-		Keyword = { fg = M.base_30.red, italic = true },
-		Type = { fg = M.base_30.cyan, italic = true },
-		Constant = { fg = M.base_30.purple },
-		Identifier = { fg = M.base_30.white },
-		Special = { fg = M.base_30.purple },
-		PreProc = { fg = M.base_30.red },
-		Statement = { fg = M.base_30.red },
+		Comment = { fg = base_30.grey_fg },
+		Operator = { fg = base_30.red },
+		String = { fg = base_30.yellow },
+		Function = { fg = base_30.green },
+		Keyword = { fg = base_30.red, italic = true },
+		Type = { fg = base_30.cyan, italic = true },
+		Constant = { fg = base_30.purple },
+		Identifier = { fg = base_30.white },
+		Special = { fg = base_30.purple },
+		PreProc = { fg = base_30.red },
+		Statement = { fg = base_30.red },
 
 		-- Conditional & Repeat
-		Conditional = { fg = M.base_30.red, italic = true },
-		Repeat = { fg = M.base_30.red, italic = true },
+		Conditional = { fg = base_30.red, italic = true },
+		Repeat = { fg = base_30.red, italic = true },
 
 		-- Special characters
-		SpecialChar = { fg = M.base_30.purple },
-		Delimiter = { fg = M.base_30.grey_fg },
+		SpecialChar = { fg = base_30.purple },
+		Delimiter = { fg = base_30.grey_fg },
 
 		-- Errors & Warnings
-		Error = { fg = M.base_30.red },
-		Todo = { fg = M.base_30.black, bg = M.base_30.yellow, bold = true },
+		Error = { fg = base_30.red },
+		Todo = { fg = base_30.black, bg = M.base_30.yellow, bold = true },
 	},
 
 	-- UI Highlights (based on VSCode Sonokai)
 	defaults = {
 		-- Editor
 		CursorLine = { bg = "#30323a" }, -- editor.lineHighlightBackground
-		CursorLineNr = { fg = M.base_30.white }, -- editorLineNumber.activeForeground
-		LineNr = { fg = M.base_30.grey_fg, bg = M.base_30.one_bg }, -- editorLineNumber.foreground + darker gutterno
-		SignColumn = { bg = M.base_30.one_bg }, -- Gutter (Git signs, etc.)
+		CursorLineNr = { fg = base_30.white }, -- editorLineNumber.activeForeground
+		LineNr = { fg = base_30.grey_fg, bg = M.base_30.one_bg }, -- editorLineNumber.foreground + darker gutterno
+		SignColumn = { bg = base_30.one_bg }, -- Gutter (Git signs, etc.)
 		Visual = { bg = "#3b3e48" }, -- editor.selectionBackground
 		MatchParen = { bg = "#414550" }, -- editorBracketMatch.background
 		Search = { bg = "#fc5d7c", fg = "#2c2e34" }, -- editor.findMatchBackground
 		IncSearch = { bg = "#b39df3", fg = "#2c2e34" },
-		EndOfBuffer = { bg = M.base_30.one_bg },
+		EndOfBuffer = { bg = base_30.one_bg },
 		SpecialKey = { link = "Comment" },
 
 		-- Diagnostics
-		DiagnosticError = { fg = M.base_30.red },
-		DiagnosticWarn = { fg = M.base_30.yellow },
-		DiagnosticInfo = { fg = M.base_30.cyan },
-		DiagnosticHint = { fg = M.base_30.green },
+		DiagnosticError = { fg = base_30.red },
+		DiagnosticWarn = { fg = base_30.yellow },
+		DiagnosticInfo = { fg = base_30.cyan },
+		DiagnosticHint = { fg = base_30.green },
 
 		-- Diagnostic signs in gutter
-		DiagnosticSignError = { fg = M.base_30.red },
-		DiagnosticSignWarn = { fg = M.base_30.yellow },
-		DiagnosticSignInfo = { fg = M.base_30.cyan },
-		DiagnosticSignHint = { fg = M.base_30.green },
+		DiagnosticSignError = { fg = base_30.red },
+		DiagnosticSignWarn = { fg = base_30.yellow },
+		DiagnosticSignInfo = { fg = base_30.cyan },
+		DiagnosticSignHint = { fg = base_30.green },
 
 		-- Diff
 		DiffAdd = { bg = "#394634" }, -- diff_green
@@ -226,24 +226,24 @@ M.polish_hl = {
 		DiffText = { bg = "#354157" },
 
 		-- Pmenu (popup menu)
-		Pmenu = { bg = "#33363f", fg = M.base_30.white }, -- editorSuggestWidget
-		PmenuSel = { bg = "#3b3e48", fg = M.base_30.white },
+		Pmenu = { bg = "#33363f", fg = base_30.white }, -- editorSuggestWidget
+		PmenuSel = { bg = "#3b3e48", fg = base_30.white },
 		PmenuSbar = { bg = "#33363f" },
-		PmenuThumb = { bg = M.base_30.grey_fg },
+		PmenuThumb = { bg = base_30.grey_fg },
 
 		-- Statusline colors handled by base46 integrations
 		-- Tabs colors handled by base46 integrations
 
 		-- Folds
-		Folded = { bg = "#30323a", fg = M.base_30.grey_fg },
-		FoldColumn = { fg = M.base_30.grey_fg, bg = M.base_30.one_bg },
+		Folded = { bg = "#30323a", fg = base_30.grey_fg },
+		FoldColumn = { fg = base_30.grey_fg, bg = M.base_30.one_bg },
 
 		-- Borders
 		FloatBorder = { fg = "#414550" }, -- editorWidget.border
 		NormalFloat = { bg = "#30323a" }, -- editorHoverWidget.background
 
 		-- Links
-		Underlined = { fg = M.base_30.green, underline = true },
+		Underlined = { fg = base_30.green, underline = true },
 	},
 
 	telescope = {
@@ -260,71 +260,71 @@ M.polish_hl = {
 	},
 
 	cmp = {
-		CmpItemAbbrMatch = { fg = M.base_30.green, bold = true },
-		CmpItemAbbrMatchFuzzy = { fg = M.base_30.green, bold = true },
-		CmpItemKindFunction = { fg = M.base_30.green },
-		CmpItemKindMethod = { fg = M.base_30.green },
-		CmpItemKindClass = { fg = M.base_30.cyan },
-		CmpItemKindStruct = { fg = M.base_30.cyan },
-		CmpItemKindInterface = { fg = M.base_30.cyan },
-		CmpItemKindVariable = { fg = M.base_30.white },
-		CmpItemKindConstant = { fg = M.base_30.purple },
-		CmpItemKindKeyword = { fg = M.base_30.red },
-		CmpItemKindOperator = { fg = M.base_30.red },
-		CmpItemKindSnippet = { fg = M.base_30.yellow },
-		CmpItemKindText = { fg = M.base_30.white },
+		CmpItemAbbrMatch = { fg = base_30.green, bold = true },
+		CmpItemAbbrMatchFuzzy = { fg = base_30.green, bold = true },
+		CmpItemKindFunction = { fg = base_30.green },
+		CmpItemKindMethod = { fg = base_30.green },
+		CmpItemKindClass = { fg = base_30.cyan },
+		CmpItemKindStruct = { fg = base_30.cyan },
+		CmpItemKindInterface = { fg = base_30.cyan },
+		CmpItemKindVariable = { fg = base_30.white },
+		CmpItemKindConstant = { fg = base_30.purple },
+		CmpItemKindKeyword = { fg = base_30.red },
+		CmpItemKindOperator = { fg = base_30.red },
+		CmpItemKindSnippet = { fg = base_30.yellow },
+		CmpItemKindText = { fg = base_30.white },
 	},
 
 	git = {
 		-- Git signs in gutter
-		GitSignsAdd = { fg = M.base_30.green, bg = M.base_30.one_bg },
-		GitSignsChange = { fg = M.base_30.cyan, bg = M.base_30.one_bg },
-		GitSignsDelete = { fg = M.base_30.red, bg = M.base_30.one_bg },
+		GitSignsAdd = { fg = base_30.green, bg = M.base_30.one_bg },
+		GitSignsChange = { fg = base_30.cyan, bg = M.base_30.one_bg },
+		GitSignsDelete = { fg = base_30.red, bg = M.base_30.one_bg },
 
 		-- Git diff colors (in buffer)
-		DiffAdd = { fg = M.base_30.green },
-		DiffChange = { fg = M.base_30.cyan },
-		DiffDelete = { fg = M.base_30.red },
-		DiffModified = { fg = M.base_30.cyan },
+		DiffAdd = { fg = base_30.green },
+		DiffChange = { fg = base_30.cyan },
+		DiffDelete = { fg = base_30.red },
+		DiffModified = { fg = base_30.cyan },
 	},
 
 	trouble = {
 		-- Trouble.nvim colors
-		TroubleNormal = { bg = M.base_30.black, fg = M.base_30.white },
-		TroubleNormalNC = { bg = M.base_30.black, fg = M.base_30.white },
+		TroubleNormal = { bg = base_30.black, fg = M.base_30.white },
+		TroubleNormalNC = { bg = base_30.black, fg = M.base_30.white },
 
 		-- Text styling
-		TroubleText = { fg = M.base_30.white },
-		TroubleTextError = { fg = M.base_30.red },
-		TroubleTextWarning = { fg = M.base_30.yellow },
-		TroubleTextInformation = { fg = M.base_30.cyan },
-		TroubleTextHint = { fg = M.base_30.green },
+		TroubleText = { fg = base_30.white },
+		TroubleTextError = { fg = base_30.red },
+		TroubleTextWarning = { fg = base_30.yellow },
+		TroubleTextInformation = { fg = base_30.cyan },
+		TroubleTextHint = { fg = base_30.green },
 
 		-- Icons
-		TroubleIconError = { fg = M.base_30.red },
-		TroubleIconWarning = { fg = M.base_30.yellow },
-		TroubleIconInformation = { fg = M.base_30.cyan },
-		TroubleIconHint = { fg = M.base_30.green },
+		TroubleIconError = { fg = base_30.red },
+		TroubleIconWarning = { fg = base_30.yellow },
+		TroubleIconInformation = { fg = base_30.cyan },
+		TroubleIconHint = { fg = base_30.green },
 
 		-- Source
-		TroubleSource = { fg = M.base_30.grey_fg },
-		TroubleCode = { fg = M.base_30.grey_fg },
+		TroubleSource = { fg = base_30.grey_fg },
+		TroubleCode = { fg = base_30.grey_fg },
 
 		-- Location
-		TroubleLocation = { fg = M.base_30.grey_fg },
-		TroubleFile = { fg = M.base_30.cyan },
-		TroubleDirectory = { fg = M.base_30.blue },
+		TroubleLocation = { fg = base_30.grey_fg },
+		TroubleFile = { fg = base_30.cyan },
+		TroubleDirectory = { fg = base_30.blue },
 
 		-- Counts
-		TroubleCount = { fg = M.base_30.purple, bg = M.base_30.one_bg2 },
+		TroubleCount = { fg = base_30.purple, bg = M.base_30.one_bg2 },
 
 		-- Indents
-		TroubleIndent = { fg = M.base_30.line },
-		TroubleIndentFoldClosed = { fg = M.base_30.grey_fg },
-		TroubleIndentFoldOpen = { fg = M.base_30.grey_fg },
+		TroubleIndent = { fg = base_30.line },
+		TroubleIndentFoldClosed = { fg = base_30.grey_fg },
+		TroubleIndentFoldOpen = { fg = base_30.grey_fg },
 
 		-- Fold icons
-		TroubleFoldIcon = { fg = M.base_30.grey_fg },
+		TroubleFoldIcon = { fg = base_30.grey_fg },
 	},
 }
 

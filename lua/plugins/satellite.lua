@@ -1,6 +1,7 @@
 ---@type LazySpec
 return {
 	"lewis6991/satellite.nvim",
+	enabled = false,
 	event = "BufReadPre",
 	opts = {
 		current_only = false,

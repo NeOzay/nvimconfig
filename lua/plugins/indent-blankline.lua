@@ -2,6 +2,7 @@
 return {
 	"lukas-reineke/indent-blankline.nvim",
 	event = "User FilePost",
+	-- enabled = false,
 	---@type ibl.config
 	opts = {
 		indent = {

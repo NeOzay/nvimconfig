@@ -1,4 +1,5 @@
 require("nvchad.autocmds")
+local utils = require("utils")
 vim.o.updatetime = 250
 
 local UserAutocmds = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
@@ -89,6 +90,7 @@ autocmd("BufEnter", {
 	group = UserAutocmds,
 })
 
+-- activer les fonctionnalités de nvim-treesitter à l'ouverture d'un fichier supporté
 autocmd("FileType", {
 	pattern = require("nvim-treesitter").get_installed(),
 	callback = function()
@@ -103,11 +105,32 @@ autocmd("FileType", {
 	group = UserAutocmds,
 })
 
--- vim.api.nvim_create_autocmd("LspTokenUpdate", {
--- 	callback = function(args)
--- 		local token = args.data.token
--- 		if token.type == "variable" and not token.modifiers.readonly then
--- 			vim.lsp.semantic_tokens.highlight_token(token, args.buf, args.data.client_id, "MyMutableVariableHighlight")
--- 		end
--- 	end,
--- })
+-- Restaurer automatiquement la session au démarrag
+autocmd("VimEnter", {
+	group = vim.api.nvim_create_augroup("persistence_autoload", { clear = true }),
+	nested = true,
+	callback = function()
+		-- Ne pas restaurer si des arguments ont été passés (fichiers ouverts)
+		if vim.fn.argc() == 0 and not vim.g.started_with_stdin then
+			local persistence, ok = pRequire("persistence")
+			if ok then
+				persistence.load()
+			end
+		end
+	end,
+})
+
+-- Mettre les fichiers en lecture seule s'ils sont en dehors de l'espace de travail
+autocmd("BufReadPost", {
+	callback = function()
+		local filepath = vim.fn.expand("%:p")
+		local cwd = vim.fn.getcwd()
+
+		-- Vérifier si le fichier est en dehors du répertoire de travail
+		if not vim.startswith(filepath, cwd) then
+			vim.bo.readonly = true
+			vim.bo.modifiable = false
+		end
+	end,
+	group = UserAutocmds,
+})

@@ -19,6 +19,10 @@ M.base46 = {
 		["@lsp.type.keyword.lua"] = { fg = "None" },
 		["@lsp.type.operator.lua"] = { fg = "None" },
 		["@lsp.mod.documentation.lua"] = { italic = true, fg = "blue" },
+
+		-- ["@lsp.type.string"] = {},
+		["@string.delimitor"] = { link = "@comment" },
+
 		Bold = { bold = true },
 		DiagnosticUnderlineError = { sp = "red", undercurl = true },
 		-- Rainbow indent colors
@@ -41,6 +45,43 @@ M.base46 = {
 		SatelliteSearchCurrent = { bg = "green", fg = "#2c2e34" },
 		TreesitterContext = { bg = "black" },
 		TreesitterContextBottom = { fg = "NONE", bg = "none" },
+		["@lsp"] = { fg = "NONE", bg = "NONE" },
+
+		-- Blink.cmp kind colors
+		BlinkCmpKindText = { link = "@text" },
+		BlinkCmpKindMethod = { link = "@function.method" },
+		BlinkCmpKindFunction = { link = "@function" },
+		BlinkCmpKindConstructor = { link = "@constructor" },
+		BlinkCmpKindField = { link = "@variable.member" },
+		BlinkCmpKindVariable = { link = "@variable" },
+		BlinkCmpKindClass = { link = "@type" },
+		BlinkCmpKindInterface = { link = "@type" },
+		BlinkCmpKindModule = { link = "@module" },
+		BlinkCmpKindProperty = { link = "@property" },
+		BlinkCmpKindUnit = { link = "@number" },
+		BlinkCmpKindValue = { link = "@number" },
+		BlinkCmpKindEnum = { link = "@type" },
+		BlinkCmpKindKeyword = { link = "@keyword" },
+		BlinkCmpKindSnippet = { link = "@string" },
+		BlinkCmpKindColor = { link = "@constant" },
+		BlinkCmpKindFile = { link = "@string.special.path" },
+		BlinkCmpKindReference = { link = "@variable.parameter.reference" },
+		BlinkCmpKindFolder = { link = "@string.special.path" },
+		BlinkCmpKindEnumMember = { link = "@constant" },
+		BlinkCmpKindConstant = { link = "@constant" },
+		BlinkCmpKindStruct = { link = "@type" },
+		BlinkCmpKindEvent = { link = "@type" },
+		BlinkCmpKindOperator = { link = "@operator" },
+		BlinkCmpKindTypeParameter = { link = "@type" },
+		BlinkCmpKindCopilot = { fg = "green" },
+
+		-- DAP (debugger) signs
+		DapBreakpoint = { fg = "red" },
+		DapBreakpointCondition = { fg = "orange" },
+		DapLogPoint = { fg = "blue" },
+		DapStopped = { fg = "green" },
+		DapBreakpointRejected = { fg = "grey" },
+		DapStoppedLine = { bg = { "green", "black", 20 } },
 	},
 
 	---@type Base46HLGroupsList
@@ -55,15 +96,19 @@ M.base46 = {
 		["@lsp.type.property"] = { fg = field },
 		["@property"] = { fg = field },
 		["@lsp.type.class"] = { fg = { "blue", -20 } },
+		["@lsp.type.namespace"] = { fg = { "blue", -20 } },
 		["@type"] = { fg = { "blue", -20 } },
 		PmenuSel = { fg = "NONE" },
+		["@lsp"] = { fg = "NONE", bg = "NONE" },
 	},
 }
 
 -- M.nvdash = { load_on_startup = true }
+---@diagnostic disable-next-line
 M.ui = {
 	tabufline = {
 		lazyload = false,
+		enabled = false,
 	},
 	-- Ancienne config cmp (commentée pour blink.cmp)
 	-- cmp = {
