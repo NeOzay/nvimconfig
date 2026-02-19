@@ -14,7 +14,7 @@ M.lsp_configs = {
 function M.setup(server_list)
 	for _, config_name in ipairs(server_list or M.lsp_configs) do
 		---@type vim.lsp.Config
-		local lsp_config, ok = pRequire("lsp." .. config_name)
+		local lsp_config, ok = pRequire("lsp.servers." .. config_name)
 		if ok and lsp_config.name then
 			local server_name = lsp_config.name
 			vim.lsp.config(server_name, lsp_config)
@@ -24,8 +24,7 @@ function M.setup(server_list)
 		end
 	end
 
-	-- Les serveurs seront activés automatiquement sur les bons filetypes
-	-- car nous avons défini le champ 'filetypes' dans la configuration
+	-- require("lsp.hover").setup()
 end
 
 return M

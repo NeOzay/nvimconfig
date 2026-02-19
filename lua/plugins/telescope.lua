@@ -23,6 +23,38 @@ end
 return {
 	"nvim-telescope/telescope.nvim",
 	opts = opts,
+	keys = {
+		{ "<leader>fw", "<cmd>Telescope live_grep<CR>", desc = "telescope live grep" },
+		{ "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "telescope find buffers" },
+		{ "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "telescope help page" },
+		{ "<leader>ma", "<cmd>Telescope marks<CR>", desc = "telescope find marks" },
+		{ "<leader>fo", "<cmd>Telescope oldfiles<CR>", desc = "telescope find oldfiles" },
+		{ "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", desc = "telescope find in current buffer" },
+		{ "<leader>cm", "<cmd>Telescope git_commits<CR>", desc = "telescope git commits" },
+		{ "<leader>gt", "<cmd>Telescope git_status<CR>", desc = "telescope git status" },
+		{ "<leader>pt", "<cmd>Telescope terms<CR>", desc = "telescope pick hidden term" },
+		{
+			"<leader>th",
+			function()
+				require("nvchad.themes").open()
+			end,
+			desc = "telescope nvchad themes",
+		},
+		{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "telescope find files" },
+		{
+			"<leader>fa",
+			"<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
+			desc = "telescope find all files",
+		},
+		{ "<F3>", "<cmd>Telescope find_files<cr>", desc = "telescope find files" },
+		{
+			"<leader>fj",
+			function()
+				require("pickers").jumplist()
+			end,
+			desc = "Telescope jumplist",
+		},
+	},
 	config = function(_, _opts)
 		local telescope = require("telescope")
 		telescope.setup(_opts)

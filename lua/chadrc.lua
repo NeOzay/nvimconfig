@@ -118,5 +118,6 @@ M.ui = {
 		style = "bordered",
 	},
 }
+M.lsp = { signature = true }
 
 return M

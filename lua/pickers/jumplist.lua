@@ -7,7 +7,7 @@ local action_state = require("telescope.actions.state")
 
 --- Tronque le début d'un chemin si trop long
 ---@param path string
----@param max_len number
+---@param max_len integer
 ---@return string
 local function truncate_path(path, max_len)
 	if #path <= max_len then
@@ -126,6 +126,7 @@ return function(opts)
 					local selection = action_state.get_selected_entry()
 					if selection then
 						api.nvim_set_current_buf(selection.bufnr)
+						---@diagnostic disable-next-line
 						api.nvim_win_set_cursor(0, { selection.lnum, selection.col - 1 })
 					end
 				end)

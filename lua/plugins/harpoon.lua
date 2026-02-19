@@ -1,9 +1,17 @@
 local function gen_keymaps()
 	local keys = {
 		{
-			"<leader>a",
+			"<C-a>",
 			function()
-				require("harpoon"):list():add()
+				local harpoon = require("harpoon")
+				local list = harpoon:list()
+				for index, item in pairs(list.items) do
+					if vim.fs.abspath(item.value) == vim.api.nvim_buf_get_name(0) then
+						list:remove_at(index)
+						return
+					end
+				end
+				list:add()
 			end,
 			mode = "n",
 			desc = "Harpoon: ajouter",
@@ -41,10 +49,10 @@ local function gen_keymaps()
 			desc = "Harpoon: fichier précédent",
 		},
 	}
-	local slot_keys = { "<C-h>", "<C-t>", "<C-n>", "<C-s>" }
-	for i, key in ipairs(slot_keys) do
+	local utils = require("utils")
+	for i, key in pairs(utils.keys_nb_map) do
 		table.insert(keys, {
-			key,
+			("<leader>%s"):format(key),
 			function()
 				require("harpoon"):list():select(i)
 			end,

@@ -1,13 +1,15 @@
+local format = require("blink-cmp-copilot.format")
 local colors = require("base46").get_theme_tb("base_30") ---@type Base30Table
 ---@diagnostic disable
--- Cache pour lastused (mis à jour à chaque changement de buffer)
-local buffer_lastused = {}
 
-vim.api.nvim_create_autocmd("BufEnter", {
-	callback = function(args)
-		buffer_lastused[args.buf] = vim.uv.now()
-	end,
-})
+-- -- Cache pour lastused (mis à jour à chaque changement de buffer)
+-- local buffer_lastused = {}
+--
+-- vim.api.nvim_create_autocmd("BufEnter", {
+-- 	callback = function(args)
+-- 		buffer_lastused[args.buf] = vim.uv.now()
+-- 	end,
+-- })
 
 ---@param buffer {path: string}
 ---@return integer|nil
@@ -16,7 +18,7 @@ local function get_harpoon_index(buffer)
 	local list = harpoon:list()
 	for i, item in pairs(list.items) do
 		local buf_path = buffer.path
-		local item_path = vim.fn.fnamemodify(item.value, ":p")
+		local item_path = vim.fs.abspath(item.value)
 		if buf_path == item_path then
 			return i
 		end
@@ -44,10 +46,10 @@ local function buffer_sorter(a, b)
 		return false
 	end
 
-	-- Aucun n'est harponné: trier par lastused (plus récent d'abord)
-	local a_lastused = buffer_lastused[a.number] or 0
-	local b_lastused = buffer_lastused[b.number] or 0
-	return a_lastused > b_lastused
+	-- -- Aucun n'est harponné: trier par lastused (plus récent d'abord)
+	-- local a_lastused = buffer_lastused[a.number] or 0
+	-- local b_lastused = buffer_lastused[b.number] or 0
+	-- return a_lastused > b_lastused
 end
 
 -- Charger tous les buffers harponnés au démarrage
@@ -55,45 +57,51 @@ local function load_harpoon_buffers()
 	local harpoon = require("harpoon")
 	local list = harpoon:list()
 	for _, item in pairs(list.items) do
-		local path = vim.fn.fnamemodify(item.value, ":p")
-		if vim.fn.filereadable(path) == 1 then
-			vim.fn.bufadd(path)
+		local path = vim.fs.abspath(item.value)
+		if vim.fn.filereadable(path) == 1 and vim.fn.bufnr(path) == -1 then
+			-- 1. Créer un nouveau buffer (pas forcément listé ou chargé)
+			local bufnr = vim.api.nvim_create_buf(true, false)
+			-- 2. Définir le nom du fichier pour ce buffer
+			vim.api.nvim_buf_set_name(bufnr, path)
+			-- 3. Charger le contenu du fichier sur le disque
+			vim.fn.bufload(bufnr)
 		end
 	end
 end
 
-local states = {
-	pass_harpoon = false,
-	has_separtor = false,
-}
-
-local function reset_states()
-	states.pass_harpoon = false
-	states.has_separtor = false
-end
+-- local states = {
+-- 	pass_harpoon = false,
+-- 	has_separtor = false,
+-- }
+--
+-- local function reset_states()
+-- 	states.pass_harpoon = false
+-- 	states.has_separtor = false
+-- end
 
 ---@type table<string, Cokeline.Component>
 local components = {}
 
-components.reset_states = {
-	text = function(buffer)
-		if buffer.is_first then
-			reset_states()
-		end
-		return ""
-	end,
-}
+-- components.reset_states = {
+-- 	text = function(buffer)
+-- 		if buffer.is_first then
+-- 			reset_states()
+-- 		end
+-- 		return ""
+-- 	end,
+-- }
 -- Indicateur gauche (harpon ou barre)
+
 components.separator = {
 	text = function(buffer)
 		local idx = get_harpoon_index(buffer)
 		if idx then
 			return " " .. idx .. " "
 		end
-		if not states.pass_harpoon then
-			states.pass_harpoon = true
-			return "▎"
-		end
+		-- if not states.pass_harpoon then
+		-- 	states.pass_harpoon = true
+		-- 	return "▎"
+		-- end
 		return " "
 	end,
 	fg = function(buffer)
@@ -197,7 +205,8 @@ local function config()
 
 		buffers = {
 			filter_valid = function(buffer)
-				return buffer.type == ""
+				-- return buffer.type == ""
+				return get_harpoon_index(buffer) ~= nil
 			end,
 			new_buffers_position = "last",
 		},
@@ -218,7 +227,7 @@ local function config()
 
 		---@type Cokeline.Component[]
 		components = {
-			components.reset_states,
+			-- components.reset_states,
 			components.separator,
 			components.icon,
 			components.prefix,
@@ -257,7 +266,7 @@ local function config()
 	end
 end
 
----@type LazySpec
+---@type LazyPluginSpec
 return {
 	"NeOzay/nvim-cokeline",
 	dev = true,
@@ -268,4 +277,10 @@ return {
 	},
 	event = "User FilePost",
 	config = config,
+	keys = {
+		{ "<Tab>", "<Plug>(cokeline-focus-next)", mode = "n", desc = "Buffer suivant" },
+		{ "<leader>bp", "<Plug>(cokeline-pick-focus)", mode = "n", desc = "Pick buffer" },
+		{ "<leader>bc", "<Plug>(cokeline-pick-close)", mode = "n", desc = "Pick close buffer" },
+		{ "<leader><M-d>", "<Plug>(cokeline-pick-close)", mode = "n", desc = "Pick close buffer" },
+	},
 }

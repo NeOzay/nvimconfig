@@ -1,6 +1,6 @@
 ---@type LazyPluginSpec
 return {
-	dir = "~/project/nvim-plugins/hover-translator",
+	dir = "~/projects/nvim-plugins/hover-translator",
 	lazy = false,
 	dev = true,
 	---@type Partial<hover-translator.config>

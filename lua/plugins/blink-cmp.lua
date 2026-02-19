@@ -8,6 +8,7 @@ return {
 		"L3MON4D3/LuaSnip",
 		"rafamadriz/friendly-snippets",
 		"giuxtaposition/blink-cmp-copilot",
+		-- { "saghen/blink.compat", opts = {} },
 	},
 
 	---@module 'blink.cmp'
@@ -30,6 +31,10 @@ return {
 
 		sources = {
 			default = { "lsp", "copilot", "snippets", "path", "buffer" },
+			per_filetype = {
+				AvanteInput = { "avante_commands", "avante_mentions", "avante_files", "avante_shortcuts" },
+				codecompanion = { "codecompanion" },
+			},
 			providers = {
 				copilot = {
 					name = "copilot",
@@ -45,6 +50,30 @@ return {
 				lsp = {
 					timeout_ms = 2000,
 				},
+				-- avante_commands = {
+				-- 	name = "avante_commands",
+				-- 	module = "blink.compat.source",
+				-- 	score_offset = 90,
+				-- 	opts = {},
+				-- },
+				-- avante_files = {
+				-- 	name = "avante_files",
+				-- 	module = "blink.compat.source",
+				-- 	score_offset = 100,
+				-- 	opts = {},
+				-- },
+				-- avante_mentions = {
+				-- 	name = "avante_mentions",
+				-- 	module = "blink.compat.source",
+				-- 	score_offset = 1000,
+				-- 	opts = {},
+				-- },
+				-- avante_shortcuts = {
+				-- 	name = "avante_shortcuts",
+				-- 	module = "blink.compat.source",
+				-- 	score_offset = 1000,
+				-- 	opts = {},
+				-- },
 			},
 		},
 
@@ -106,7 +135,7 @@ return {
 		},
 
 		signature = {
-			enabled = true,
+			enabled = false,
 			window = {
 				border = "rounded",
 			},

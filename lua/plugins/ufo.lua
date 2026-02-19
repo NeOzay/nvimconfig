@@ -19,7 +19,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.api.nvim_create_autocmd("LspTokenUpdate", {
 	callback = function(args)
 		lsp_ns_cache = nil
-		local ok, ufo = pcall(require, "ufo")
+		local ufo, ok = pRequire("ufo")
 		if ok then
 			ufo.disableFold(args.buf)
 			ufo.enableFold(args.buf)
@@ -45,8 +45,8 @@ local function hl_exists(name)
 	if not name then
 		return false
 	end
-	local ok, hl = pcall(api.nvim_get_hl, 0, { name = name, link = false, create = false })
-	return ok and hl and next(hl) ~= nil
+	local hl = api.nvim_get_hl(0, { name = name, link = false, create = false })
+	return hl and next(hl) ~= nil
 end
 
 --- Calcule la largeur d'un texte virtuel

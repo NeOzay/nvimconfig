@@ -13,7 +13,9 @@ return {
 		mode = "topline",
 		separator = nil,
 		zindex = 20,
-		on_attach = nil,
+		on_attach = function(bufnr)
+			return vim.bo[bufnr].filetype ~= "markdown"
+		end,
 	},
 	config = function(_, opts)
 		local tsc = require("treesitter-context")

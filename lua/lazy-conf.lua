@@ -12,7 +12,7 @@ return {
 		},
 	},
 	dev = {
-		path = "~/project/nvim-plugins/",
+		path = "~/projects/nvim-plugins/",
 	},
 
 	performance = {

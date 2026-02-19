@@ -11,6 +11,17 @@ function pRequire(module)
 	return lib, status
 end
 
+local UserAutocmds = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
+
+---@param event vim.api.keyset.events|vim.api.keyset.events[]
+---@param opts vim.api.keyset.create_autocmd
+---@return integer
+function Userautocmd(event, opts)
+	opts = opts or {}
+	opts.group = opts.group or UserAutocmds
+	return vim.api.nvim_create_autocmd(event, opts)
+end
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -40,7 +51,8 @@ require("lazy").setup({
 	{ import = "plugins.conform" },
 	{ import = "plugins.copilot" },
 	{ import = "plugins.dap" },
-	{ import = "plugins.diffview" },
+	{ import = "plugins.codediff" },
+	{ import = "plugins.codecompanion" },
 	{ import = "plugins.fidget" },
 	{ import = "plugins.gitsigns" },
 	{ import = "plugins.harpoon" },
@@ -48,9 +60,10 @@ require("lazy").setup({
 	{ import = "plugins.hover-translator" },
 	{ import = "plugins.illuminate" },
 	{ import = "plugins.indent-blankline" },
-	{ import = "plugins.init" },
 	{ import = "plugins.lspconfig" },
+	{ import = "plugins.lsp-endhints" },
 	{ import = "plugins.navic" },
+	{ import = "plugins.markview" },
 	{ import = "plugins.neo-tree" },
 	{ import = "plugins.neogit" },
 	{ import = "plugins.nvim-cmp" },
@@ -63,8 +76,10 @@ require("lazy").setup({
 	{ import = "plugins.treesitter-context" },
 	{ import = "plugins.treesitter-textobjects" },
 	{ import = "plugins.trouble" },
+	{ import = "plugins.snacks" },
 	{ import = "plugins.ufo" },
 	{ "lambdalisue/vim-suda", lazy = false },
+	{ import = "plugins.wezterm-types" },
 }, lazy_config)
 
 require("nvchad.plugins")

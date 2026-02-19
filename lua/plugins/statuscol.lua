@@ -1,3 +1,27 @@
+local DapDisabledBreakpoints = require("shared_data").DapDisabledBreakpoints
+local disabled_ns = require("shared_data").disabled_ns
+
+--- Place un extmark pour représenter un breakpoint désactivé.
+---@param bufnr integer
+---@param line integer Numéro de ligne (1-indexé)
+local function place_disabled_sign(bufnr, line)
+	vim.api.nvim_buf_set_extmark(bufnr, disabled_ns, line - 1, 0, {
+		sign_text = "○",
+		sign_hl_group = "DapBreakpointRejected",
+		priority = 11,
+	})
+end
+
+--- Supprime l'extmark de breakpoint désactivé à une ligne donnée.
+---@param bufnr integer
+---@param line integer Numéro de ligne (1-indexé)
+local function unplace_disabled_sign(bufnr, line)
+	local marks = vim.api.nvim_buf_get_extmarks(bufnr, disabled_ns, { line - 1, 0 }, { line - 1, -1 }, {})
+	for _, mark in ipairs(marks) do
+		vim.api.nvim_buf_del_extmark(bufnr, disabled_ns, mark[1])
+	end
+end
+
 local _git_types = { "Add", "Change", "Delete", "Topdelete", "Changedelete", "Untracked" }
 
 local function setup_hl()
@@ -6,7 +30,7 @@ local function setup_hl()
 end
 
 local function get_git_hl(bufnr, lnum, is_cursor)
-	local ok, gitsigns = pcall(require, "gitsigns")
+	local gitsigns, ok = pRequire("gitsigns")
 	if not ok then
 		return
 	end
@@ -49,26 +73,22 @@ end
 ---
 --- Structure: { [filepath]: { [line_str]: opts } }
 
---- Variable globale partagée avec dap.lua pour la persistance
----@type table<string, table<string, DapBreakpointOpts>>
-_G.DapDisabledBreakpoints = _G.DapDisabledBreakpoints or {}
-
 --- Récupère les options d'un breakpoint désactivé.
 ---@param filepath string Chemin absolu du fichier
 ---@param line number Numéro de ligne
----@return DapBreakpointOpts|nil opts Options du breakpoint ou nil si non trouvé
+---@return Ozay.Dap.BreakpointOpts|nil opts Options du breakpoint ou nil si non trouvé
 local function get_disabled_bp(filepath, line)
-	local file_bps = _G.DapDisabledBreakpoints[filepath]
+	local file_bps = DapDisabledBreakpoints[filepath]
 	return file_bps and file_bps[tostring(line)]
 end
 
 --- Enregistre un breakpoint comme désactivé.
 ---@param filepath string Chemin absolu du fichier
 ---@param line number Numéro de ligne
----@param opts DapBreakpointOpts Options du breakpoint à sauvegarder
+---@param opts Ozay.Dap.BreakpointOpts Options du breakpoint à sauvegarder
 local function set_disabled_bp(filepath, line, opts)
-	_G.DapDisabledBreakpoints[filepath] = _G.DapDisabledBreakpoints[filepath] or {}
-	_G.DapDisabledBreakpoints[filepath][tostring(line)] = opts
+	DapDisabledBreakpoints[filepath] = DapDisabledBreakpoints[filepath] or {}
+	DapDisabledBreakpoints[filepath][tostring(line)] = opts
 end
 
 --- Supprime un breakpoint de la liste des désactivés.
@@ -76,11 +96,11 @@ end
 ---@param filepath string Chemin absolu du fichier
 ---@param line number Numéro de ligne
 local function remove_disabled_bp(filepath, line)
-	local file_bps = _G.DapDisabledBreakpoints[filepath]
+	local file_bps = DapDisabledBreakpoints[filepath]
 	if file_bps then
 		file_bps[tostring(line)] = nil
 		if vim.tbl_isempty(file_bps) then
-			_G.DapDisabledBreakpoints[filepath] = nil
+			DapDisabledBreakpoints[filepath] = nil
 		end
 	end
 end
@@ -140,7 +160,7 @@ function _G.DapClickHandler(minwid, clicks, button, mods)
 		-- Clic gauche: toggle breakpoint
 		if disabled_opts then
 			-- Supprimer d'abord le signe désactivé
-			vim.fn.sign_unplace("dap_disabled", { buffer = bufnr, lnum = line })
+			unplace_disabled_sign(bufnr, line)
 			remove_disabled_bp(filepath, line)
 		end
 		dap.toggle_breakpoint()
@@ -150,7 +170,7 @@ function _G.DapClickHandler(minwid, clicks, button, mods)
 
 		if disabled_opts then
 			-- Réactiver: restaurer le breakpoint avec ses options d'origine
-			vim.fn.sign_unplace("dap_disabled", { buffer = bufnr, lnum = line })
+			unplace_disabled_sign(bufnr, line)
 			dap.set_breakpoint(disabled_opts.condition, disabled_opts.hit_condition, disabled_opts.log_message)
 			remove_disabled_bp(filepath, line)
 		elseif bp then
@@ -161,13 +181,133 @@ function _G.DapClickHandler(minwid, clicks, button, mods)
 				log_message = bp.logMessage,
 			})
 			breakpoints.remove(bufnr, line)
-			-- Afficher le signe "désactivé" (cercle vide gris)
-			vim.fn.sign_place(0, "dap_disabled", "DapBreakpointRejected", bufnr, { lnum = line, priority = 11 })
+			-- Afficher l'extmark "désactivé" (cercle vide gris)
+			place_disabled_sign(bufnr, line)
 		else
 			-- Aucun breakpoint: en créer un nouveau
 			dap.toggle_breakpoint()
 		end
 	end
+end
+
+---@class statuscol.FoldData
+---@field width integer         -- current width of the fold column
+---@field close string         -- foldclose char
+---@field open string          -- foldopen char
+---@field sep string           -- foldsep char
+
+---@class statuscol.text.arg
+---@field lnum integer         -- v:lnum
+---@field relnum integer       -- v:relnum
+---@field virtnum integer      -- v:virtnum
+---@field buf integer          -- buffer handle of drawn window
+---@field win integer          -- window handle of drawn window
+---@field actual_curbuf integer -- buffer handle of |g:actual_curwin|
+---@field actual_curwin integer -- window handle of |g:actual_curbuf|
+---@field nu boolean           -- 'number' option value
+---@field rnu boolean          -- 'relativenumber' option value
+---@field empty boolean        -- statuscolumn is currently empty
+---@field fold statuscol.FoldData        -- fold column data
+---@field tick integer         -- display_tick value
+---@field wp any               -- win_T pointer handle (FFI cdata)
+
+local ft_ignore = {
+	Avante = true,
+	AvanteInput = true,
+	help = true,
+	["neo-tree"] = true,
+	codecompanion = true,
+	snacks_terminal = true,
+}
+local ft_padding = { help = true, checkhealth = true, snacks_terminal = true }
+local ft_scrolloff = { help = true, checkhealth = true }
+
+---@param arg statuscol.text.arg
+local function should_ignore(arg)
+	local ft = vim.bo[arg.buf].filetype
+	return not ft_ignore[ft] and vim.wo.number
+end
+
+Userautocmd({ "FileType", "WinEnter", "BufWinEnter" }, {
+	callback = function(args)
+		local w = vim.api.nvim_get_current_win()
+		local wo = vim.wo[w]
+		local bo = vim.bo[args.buf]
+		vim.defer_fn(function()
+			if not vim.api.nvim_buf_is_loaded(args.buf) or not vim.api.nvim_win_is_valid(w) then
+				return
+			end
+			if ft_ignore[bo.filetype] or bo.buftype == "nofile" or not wo.number then
+				wo.number = false
+				wo.signcolumn = "no"
+				wo.foldcolumn = "0"
+				if ft_scrolloff[bo.filetype] then
+					wo.sidescrolloff = -1
+					wo.scrolloff = -1
+				else
+					wo.sidescrolloff = 0
+					wo.scrolloff = 0
+				end
+			else
+				wo.number = true
+				wo.signcolumn = "yes"
+				wo.foldcolumn = "1"
+				wo.sidescrolloff = -1
+				wo.scrolloff = -1
+			end
+		end, 75)
+	end,
+})
+
+local function opts()
+	local builtin = require("statuscol.builtin")
+
+	local padding = {
+		text = { " " },
+		condition = {
+			function(args)
+				return ft_padding[vim.bo[args.buf].filetype]
+			end,
+		},
+		hl = "Normal",
+	}
+
+	local sign = { -- Signes DAP (breakpoints actifs via legacy signs + désactivés via extmarks)
+		sign = {
+			name = { "Dap.*" },
+			namespace = { "dap_disabled" },
+			maxwidth = 1,
+			colwidth = 2,
+			auto = false,
+		},
+		---@param args statuscol.text.arg
+		condition = {
+			function(args)
+				return should_ignore(args) and vim.b[args.buf].scratch ~= true
+			end,
+		},
+		click = "v:lua.DapClickHandler",
+	}
+	---@param win statuscol.text.arg
+	local function number_cond(win)
+		if win.nu then
+			return true
+		end
+		return false
+	end
+	local number = { text = { builtin.lnumfunc }, condition = { number_cond } } --click = "v:lua.ScLa" },
+	local git_gold =
+		{ text = { " ", fold_with_git }, condition = { should_ignore, should_ignore }, click = "v:lua.ScFa" }
+
+	return {
+		relculright = true,
+		segments = {
+			padding,
+			sign,
+			number,
+			git_gold,
+		},
+	}
 end
 
 ---@type LazySpec
@@ -180,24 +320,5 @@ return {
 		vim.api.nvim_create_autocmd("ColorScheme", { callback = setup_hl })
 		require("statuscol").setup(opts)
 	end,
-	opts = function()
-		local builtin = require("statuscol.builtin")
-		return {
-			relculright = true,
-			segments = {
-				-- Signes DAP (breakpoints)
-				{
-					sign = {
-						name = { "Dap.*" },
-						maxwidth = 1,
-						colwidth = 2,
-						auto = false,
-					},
-					click = "v:lua.DapClickHandler",
-				},
-				{ text = { builtin.lnumfunc } }, --click = "v:lua.ScLa" },
-				{ text = { " ", fold_with_git }, click = "v:lua.ScFa" },
-			},
-		}
-	end,
+	opts = opts,
 }

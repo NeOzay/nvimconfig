@@ -1,3 +1,6 @@
+local DapDisabledBreakpoints = require("shared_data").DapDisabledBreakpoints
+local disabled_ns = require("shared_data").disabled_ns
+
 ---@namespace Ozay
 ---============================================================================
 --- Persistance des breakpoints DAP par workspace
@@ -92,7 +95,7 @@ local function save_breakpoints()
 	end
 
 	-- Copier les breakpoints désactivés depuis la variable globale
-	saved.disabled = vim.deepcopy(_G.DapDisabledBreakpoints or {})
+	saved.disabled = vim.deepcopy(DapDisabledBreakpoints)
 
 	local file = io.open(get_workspace_breakpoints_file(), "w")
 	if file then
@@ -127,20 +130,16 @@ local function load_breakpoints_for_buffer()
 	-- Charger les breakpoints désactivés et afficher leurs signes
 	local disabled_bps = saved.disabled[current_file]
 	if disabled_bps then
-		---@diagnostic disable-next-line
-		_G.DapDisabledBreakpoints = _G.DapDisabledBreakpoints or {}
-		_G.DapDisabledBreakpoints[current_file] = _G.DapDisabledBreakpoints[current_file] or {}
+		DapDisabledBreakpoints[current_file] = DapDisabledBreakpoints[current_file] or {}
 		for line_str, opts in pairs(disabled_bps) do
 			local line = tonumber(line_str)
 			if line and line <= line_count then
-				_G.DapDisabledBreakpoints[current_file][line_str] = opts
-				vim.fn.sign_place(
-					0,
-					"dap_disabled",
-					"DapBreakpointRejected",
-					bufnr,
-					{ lnum = math.floor(line), priority = 11 }
-				)
+				DapDisabledBreakpoints[current_file][line_str] = opts
+				vim.api.nvim_buf_set_extmark(bufnr, disabled_ns, math.floor(line) - 1, 0, {
+					sign_text = "○",
+					sign_hl_group = "DapBreakpointRejected",
+					priority = 11,
+				})
 			end
 		end
 	end

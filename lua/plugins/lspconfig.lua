@@ -3,7 +3,7 @@
 local function wrapTrouble(mode, opt)
 	---@type trouble
 	local trouble = require("trouble")
-	opt = opt or {}
+	opt = opt or { auto_close = true }
 	opt.mode = mode
 	return function()
 		trouble.open(opt)

@@ -4,7 +4,6 @@ return {
 	lazy = true,
 	dependencies = {
 		"nvim-lua/plenary.nvim",
-		"sindrets/diffview.nvim",
 		"nvim-telescope/telescope.nvim",
 	},
 	cmd = "Neogit",
@@ -135,7 +134,7 @@ return {
 		},
 		integrations = {
 			telescope = nil,
-			diffview = true,
+			diffview = false,
 			fzf_lua = nil,
 			mini_pick = nil,
 		},

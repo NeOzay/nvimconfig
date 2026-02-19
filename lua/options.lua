@@ -5,9 +5,9 @@ require("nvchad.options")
 local o = vim.o
 --o.cursorlineopt = "both" -- to enable cursorline!
 o.wrap = false
-o.scrolloff = 5
+vim.opt_global.scrolloff = 5
 o.mousescroll = "ver:5,hor:5"
-o.sidescrolloff = 15
+vim.opt_global.sidescrolloff = 15
 o.cursorline = true
 o.showmatch = true
 o.mouse = "a"
@@ -22,7 +22,8 @@ o.shiftwidth = 2
 o.softtabstop = 2
 o.autoindent = true
 
-vim.g.clipboard = ""
+o.clipboard = "unnamed"
+-- vim.g.clipboard = "wl-copy"
 
 -- Options pour nvim-ufo (folding)
 o.foldcolumn = "1"

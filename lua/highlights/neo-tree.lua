@@ -2,7 +2,7 @@
 -- These highlights are loaded via autocmd after ColorScheme
 
 return function()
-	local colors = require("base46").get_theme_tb("base_30") ---@type Base30Table
+	local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
 
 	local highlights = {
 		-- Neo-tree UI

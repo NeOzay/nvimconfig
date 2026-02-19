@@ -1,7 +1,7 @@
 -- Neogit highlights for Sonokai theme
 
 return function()
-	local colors = require("base46").get_theme_tb("base_30") ---@type Base30Table
+	local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
 
 	local highlights = {
 		-- Headers
