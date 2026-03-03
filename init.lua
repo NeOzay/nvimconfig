@@ -1,6 +1,38 @@
 vim.g.base46_cache = vim.fn.stdpath("data") .. "/base46/"
 vim.g.mapleader = " "
 
+-- uncomment to enable debug mode
+--dofile(vim.fn.stdpath("config") .. "/lua/debug.lua")
+
+local keymap_set = vim.keymap.set
+-- Notre wrapper personnalisé
+function vim.keymap.set(modes, lhs, rhs, opts)
+	local mode_to_replace = { n = true, v = true, o = true }
+	opts = opts or {}
+	if type(modes) == "string" then
+		modes = { modes }
+	end
+	local first = lhs:sub(1, 1)
+	local rest = lhs:sub(2)
+	local azerty_lhs = first .. (rest:gsub(".", {
+		["["] = "ç",
+		["]"] = "à",
+		["{"] = "é",
+		["}"] = "è",
+	}))
+	if azerty_lhs == lhs then
+		return keymap_set(modes, lhs, rhs, opts)
+	end
+
+	for i, mode in ipairs(modes) do
+		if mode_to_replace[mode] then
+			keymap_set(mode, azerty_lhs, rhs, opts)
+		end
+	end
+
+	keymap_set(modes, lhs, rhs, opts)
+end
+
 ---@return any, boolean
 function pRequire(module)
 	local status, lib = pcall(require, module)
@@ -62,6 +94,7 @@ require("lazy").setup({
 	{ import = "plugins.indent-blankline" },
 	{ import = "plugins.lspconfig" },
 	{ import = "plugins.lsp-endhints" },
+	{ import = "plugins.which-key" },
 	{ import = "plugins.navic" },
 	{ import = "plugins.markview" },
 	{ import = "plugins.neo-tree" },
@@ -76,6 +109,7 @@ require("lazy").setup({
 	{ import = "plugins.treesitter-context" },
 	{ import = "plugins.treesitter-textobjects" },
 	{ import = "plugins.trouble" },
+	{ import = "plugins.lualine" },
 	{ import = "plugins.snacks" },
 	{ import = "plugins.ufo" },
 	{ "lambdalisue/vim-suda", lazy = false },
@@ -86,13 +120,13 @@ require("nvchad.plugins")
 
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
-dofile(vim.g.base46_cache .. "statusline")
+-- dofile(vim.g.base46_cache .. "statusline") -- remplacé par lualine
 
 require("options")
 require("autocmds")
 require("cmd")
-require("highlights")
 
 vim.schedule(function()
 	require("mappings")
+	require("highlights")
 end)

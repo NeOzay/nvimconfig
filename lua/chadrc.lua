@@ -117,6 +117,9 @@ M.ui = {
 	telescope = {
 		style = "bordered",
 	},
+	statusline = {
+		enabled = false,
+	},
 }
 M.lsp = { signature = true }
 

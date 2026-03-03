@@ -25,9 +25,19 @@ function M.load_all()
 	end
 end
 
-vim.schedule(function()
-	M.load_all()
-end)
+local his
+function M.get_availables()
+	if his then
+		return his
+	end
+	his = {}
+	for file, _tp in vim.fs.dir(dir) do
+		if not file:find("^init") then
+			his[#his + 1] = file
+		end
+	end
+	return his
+end
 
 Userautocmd("BufWritePost", {
 	pattern = "*/lua/highlights/*.lua",
@@ -39,6 +49,26 @@ Userautocmd("BufWritePost", {
 		end
 		M.load(name)
 		vim.notify("Highlights rechargés: " .. name, vim.log.levels.INFO)
+	end,
+})
+
+local function escape_pattern(text)
+	return text:gsub("[-%%^$*+?.()|%[%]{}]", "%%%1")
+end
+
+Userautocmd("User", {
+	pattern = "LazyLoad",
+	callback = function(opt)
+		---@cast opt.data string
+		local his = M.get_availables()
+		for _, hi in ipairs(his) do
+			-- remove .lua and escape pattern chars
+			local clear_name = escape_pattern(hi:sub(1, -5))
+			if opt.data:find(clear_name) then
+				print("loading highlights: " .. opt.data)
+				M.load(hi)
+			end
+		end
 	end,
 })
 

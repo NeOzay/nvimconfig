@@ -1,8 +1,8 @@
----@type LazySpec
+---@type LazyPluginSpec
 return {
 	"esmuellert/codediff.nvim",
-	dependencies = { "MunifTanjim/nui.nvim" },
 	cmd = "CodeDiff",
+	dev = true,
 	keys = {
 		{ "<leader>gd", "<cmd>CodeDiff<cr>", desc = "Open CodeDiff" },
 		{ "<leader>gh", "<cmd>CodeDiff history HEAD~50 %<cr>", desc = "File History (current)" },
@@ -14,7 +14,7 @@ return {
 		original_position = "left",
 		explorer = {
 			position = "left",
-			width = 35,
+			width = 25,
 			view_mode = "tree",
 			initial_focus = "explorer",
 		},

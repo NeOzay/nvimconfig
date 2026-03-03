@@ -20,11 +20,13 @@ map("i", "<C-k>", "<Up>", { desc = "move up" })
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
-map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
+-- map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
 
 map("n", "<leader>n", "<cmd>set nu!<CR>", { desc = "toggle line number" })
 map("n", "<leader>rn", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
 map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
+map("n", "<leader>ts", "<cmd>StlToggle<CR>", { desc = "toggle statusline lualine/NvChad" })
+map("n", "<leader>tl", "<cmd>LualineReload<CR>", { desc = "recharger lualine" })
 
 map({ "n", "x" }, "<leader>fm", function()
 	require("conform").format({ lsp_fallback = true })
@@ -72,26 +74,16 @@ end, { desc = "whichkey query lookup" })
 
 -- add yours here --
 
--- global lsp mappings
-map("n", "<leader>ds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
-
 -- del("n", "<leader>e")
 -- del("n", "<C-n>")
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("n", "<C-j>", "<cmd>Inspect<CR>")
-map("n", "gl", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" })
-map("n", "<leader>o", "o<Esc>k")
-map("n", "<leader>O", "O<Esc>j")
+map("n", "xl", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" })
+map("n", "<leader>o", "]<space>", { remap = true })
+map("n", "<leader>O", "[<space>", { remap = true })
 map("n", "<leader>cc", "ciw")
-map("n", "<leader>ee", "<Cmd>Neotree position=float<CR>")
-map("n", "<leader>ec", "<Cmd>Neotree reveal=true position=float<CR>")
-map("n", "<leader>eb", "<Cmd>Neotree source=buffers position=float<CR>")
 
--- map({ "n", "v" }, "<C-i>", "k", { desc = "move up" })
--- map({ "n", "v" }, "<C-k>", "j", { desc = "move down" })
--- map({ "n", "v" }, "<C-j>", "h", { desc = "move left" })
--- map({ "n", "v" }, "<C-l>", "l", { desc = "move right" })
 map("n", "<M-Left>", "<C-w>h", { desc = "switch window left" })
 map("n", "<M-h>", "<C-w>h", { desc = "switch window left" })
 map("n", "<M-Right>", "<C-w>l", { desc = "switch window right" })
@@ -138,3 +130,15 @@ end, { expr = true })
 -- vim.keymap.set("n", "<LeftDrag>", "<Nop>")
 -- vim.keymap.set("n", "<LeftMouse>", "<Nop>")
 -- vim.keymap.set("v", "<LeftDrag>", "<Nop>")
+
+-- On définit les options pour le pont récursif
+local recursive_map = { remap = true, silent = true }
+
+-- Le pont pour les crochets (utilisés par 90% des plugins comme Gitsigns, Diagnostic, etc.)
+-- On utilise souvent 'à' pour ']' et '^' (ou une autre touche) pour '['
+map({ "n", "v", "o" }, "ç", "[", recursive_map)
+map({ "n", "v", "o" }, "à", "]", recursive_map)
+
+-- Le pont pour les accolades (Paragraphes et structures)
+map({ "n", "v", "o" }, "é", "{", recursive_map)
+map({ "n", "v", "o" }, "è", "}", recursive_map)

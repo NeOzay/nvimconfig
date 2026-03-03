@@ -19,11 +19,7 @@ local function popup_size()
 	}
 end
 
-local function popup_title(_state)
-	return " Ma Fenêtre Flottante "
-end
-
----@type LazySpec
+---@type LazyPluginSpec
 return {
 	"nvim-neo-tree/neo-tree.nvim",
 	branch = "v3.x",
@@ -32,9 +28,37 @@ return {
 		"MunifTanjim/nui.nvim",
 		"nvim-tree/nvim-web-devicons",
 	},
-	lazy = false,
+	setup = true,
+	keys = {
+		{ "<leader>ee", "<Cmd>Neotree position=float<CR>", desc = "neo-tree float window" },
+		{
+			"<leader>ec",
+			"<Cmd>Neotree reveal=true position=float<CR>",
+			desc = "neo-tree float window and reveal current file",
+		},
+		{ "<leader>eb", "<Cmd>Neotree source=buffers position=float<CR>", desc = "neo-tree float window with buffers" },
+		{
+			"<leader>eg",
+			"<Cmd>Neotree source=git_status position=float<CR>",
+			desc = "neo-tree float window with git status",
+		},
+	},
 	opts = {
 		close_if_last_window = false,
+		event_handlers = {
+			{
+				event = "file_renamed",
+				handler = function(args)
+					vim.fn.system({ "git", "add", args.source, args.destination })
+				end,
+			},
+			{
+				event = "file_moved",
+				handler = function(args)
+					vim.fn.system({ "git", "add", args.source, args.destination })
+				end,
+			},
+		},
 		popup_border_style = "",
 		clipboard = {
 			sync = "none",
@@ -117,24 +141,65 @@ return {
 				enabled = false,
 			},
 		},
-		commands = {},
+		commands = {
+			expand_node = function(state)
+				local renderer = require("neo-tree.ui.renderer")
+				local utils = require("neo-tree.utils")
+				local fs_commands = require("neo-tree.sources.filesystem.commands")
+				local tree = state.tree
+				local node = assert(tree:get_node())
+
+				if not utils.is_expandable(node) or node:is_expanded() then
+					return
+				end
+
+				if node.type == "directory" then
+					fs_commands.toggle_node(state)
+					return
+				end
+
+				if node:has_children() then
+					local updated = node:expand()
+					if updated then
+						renderer.redraw(state)
+					end
+				end
+			end,
+			toggle_all_nodes = function(state, node)
+				local utils = require("neo-tree.utils")
+				local tree = state.tree
+				local node = node or assert(tree:get_node())
+				if not utils.is_expandable(node) or node:is_expanded() then
+					require("neo-tree.sources.filesystem.commands").close_all_subnodes(state)
+				else
+					require("neo-tree.sources.filesystem.commands").expand_all_subnodes(state)
+				end
+			end,
+
+			toggle_current_node = function(state, node)
+				local utils = require("neo-tree.utils")
+				local tree = state.tree
+				local node = node or assert(tree:get_node())
+				if not utils.is_expandable(node) or node:is_expanded() then
+					require("neo-tree.sources.filesystem.commands").close_node(state)
+				else
+					require("neo-tree.sources.filesystem.commands").toggle_node(state)
+				end
+			end,
+		},
 		window = {
 			popup = {
 				size = popup_size(),
-				title = popup_title,
+				-- title = popup_title,
 				border = "rounded",
 			},
 			position = "left",
 			width = 40,
 			mapping_options = {
-				noremap = true,
-				nowait = true,
+				noremap = false,
+				nowait = false,
 			},
 			mappings = {
-				["<space>"] = {
-					"toggle_node",
-					nowait = false,
-				},
 				["<2-LeftMouse>"] = "open",
 				["<cr>"] = "open",
 				["<esc>"] = "cancel",
@@ -151,8 +216,16 @@ return {
 				["s"] = "open_vsplit",
 				["t"] = "open_tabnew",
 				["w"] = "open_with_window_picker",
-				["C"] = "close_node",
-				["z"] = "close_all_nodes",
+				["z"] = "",
+				["C"] = "",
+				["za"] = "toggle_current_node",
+				["zA"] = "toggle_all_nodes",
+				["zR"] = "expand_all_nodes",
+				["zM"] = "close_all_nodes",
+				["zo"] = "expand_node",
+				["zc"] = "close_node",
+				["zC"] = "close_all_subnodes",
+				["zO"] = "expand_all_subnodes",
 				["a"] = {
 					"add",
 					config = {

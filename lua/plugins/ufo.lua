@@ -9,14 +9,14 @@ local LSP_PRIORITY, TS_PRIORITY = 2, 1
 -- Cache des namespaces LSP
 local lsp_ns_cache = nil
 
-vim.api.nvim_create_autocmd("LspAttach", {
+api.nvim_create_autocmd("LspAttach", {
 	callback = function()
 		lsp_ns_cache = nil
 	end,
 })
 
 -- Rafraîchir les folds quand les semantic tokens sont mis à jour
-vim.api.nvim_create_autocmd("LspTokenUpdate", {
+api.nvim_create_autocmd("LspTokenUpdate", {
 	callback = function(args)
 		lsp_ns_cache = nil
 		local ufo, ok = pRequire("ufo")
@@ -89,7 +89,7 @@ end
 -- ============================================================================
 
 --- Récupère les namespaces LSP (avec cache)
----@return table<string, number>
+---@return table<string, integer>
 local function get_lsp_ns()
 	if not lsp_ns_cache then
 		lsp_ns_cache = {}
@@ -103,8 +103,8 @@ local function get_lsp_ns()
 end
 
 --- Récupère les highlights LSP pour une ligne
----@param bufnr number
----@param row number
+---@param bufnr integer
+---@param row integer
 ---@return FoldHighlight[]
 local function get_lsp_hl(bufnr, row)
 	local result = {}
@@ -126,8 +126,8 @@ local function get_lsp_hl(bufnr, row)
 end
 
 --- Récupère les highlights treesitter pour une ligne
----@param bufnr number
----@param row number
+---@param bufnr integer
+---@param row integer
 ---@return FoldHighlight[]
 local function get_ts_hl(bufnr, row)
 	local result = {}
@@ -157,8 +157,8 @@ local function get_ts_hl(bufnr, row)
 end
 
 --- Fusionne et trie les highlights (LSP prioritaire)
----@param bufnr number
----@param row number
+---@param bufnr integer
+---@param row integer
 ---@return FoldHighlight[]
 local function get_highlights(bufnr, row)
 	local hl = get_lsp_hl(bufnr, row)
@@ -177,9 +177,9 @@ end
 -- ============================================================================
 
 --- Construit le texte virtuel coloré pour une ligne
----@param bufnr number
----@param row number
----@param offset number
+---@param bufnr integer
+---@param row integer
+---@param offset integer
 ---@param text string
 ---@return table[]
 local function build_virt_text(bufnr, row, offset, text)
@@ -213,8 +213,8 @@ local function build_virt_text(bufnr, row, offset, text)
 end
 
 --- Récupère le texte virtuel coloré d'une ligne avec sa largeur
----@param bufnr number
----@param row number
+---@param bufnr integer
+---@param row integer
 ---@return table[] virt_text
 ---@return number width
 local function get_line_virt(bufnr, row)
@@ -233,9 +233,9 @@ end
 --- Format: Première ... Dernière (N lignes)
 --- Format avec milieu: Première Milieu Dernière (2 lignes)
 ---@param virt_text table[]
----@param lnum number
----@param end_lnum number
----@param width number
+---@param lnum integer
+---@param end_lnum integer
+---@param width integer
 ---@param truncate_fn function
 ---@return table[]
 local function fold_handler(virt_text, lnum, end_lnum, width, truncate_fn)

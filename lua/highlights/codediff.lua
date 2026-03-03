@@ -6,8 +6,8 @@ return function()
 
 	local highlights = {
 		-- Diff: line-level
-		CodeDiffLineInsert = { bg = tool.mix(colors.green, colors.black, 90) },
-		CodeDiffLineDelete = { bg = tool.mix(colors.red, colors.black, 90) },
+		CodeDiffLineInsert = { bg = tool.mix(colors.green, colors.black, 92) },
+		CodeDiffLineDelete = { bg = tool.mix(colors.red, colors.black, 92) },
 
 		-- Diff: character-level (brighter)
 		CodeDiffCharInsert = { bg = tool.mix(colors.green, colors.black, 80) },

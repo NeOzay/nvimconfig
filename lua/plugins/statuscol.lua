@@ -219,6 +219,7 @@ local ft_ignore = {
 	codecompanion = true,
 	snacks_terminal = true,
 }
+
 local ft_padding = { help = true, checkhealth = true, snacks_terminal = true }
 local ft_scrolloff = { help = true, checkhealth = true }
 

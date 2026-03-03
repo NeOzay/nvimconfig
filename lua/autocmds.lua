@@ -1,5 +1,12 @@
 require("nvchad.autocmds")
-vim.o.updatetime = 250
+
+-- Recharger lualine automatiquement à la sauvegarde de lualine-conf.lua
+Userautocmd("BufWritePost", {
+	pattern = vim.fn.stdpath("config") .. "/lua/lualine-conf.lua",
+	callback = function()
+		vim.cmd("LualineReload")
+	end,
+})
 
 -- Variable pour suivre si le diagnostic a déjà été affiché à la position actuelle
 local diagnostic_shown_at = { buf = -1, line = -1, col = -1 }
