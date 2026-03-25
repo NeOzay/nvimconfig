@@ -3,7 +3,6 @@ return {
 	"saghen/blink.cmp",
 	event = "InsertEnter",
 	version = "*",
-	-- enabled = false, -- Désactivé en attendant une meilleure intégration avec NvChad
 	dependencies = {
 		"L3MON4D3/LuaSnip",
 		"rafamadriz/friendly-snippets",
@@ -143,11 +142,6 @@ return {
 	},
 
 	config = function(_, opts)
-		-- Tenter de charger le thème blink de NvChad base46 si disponible
-		pcall(function()
-			dofile(vim.g.base46_cache .. "blink_cmp")
-		end)
-
 		require("blink.cmp").setup(opts)
 	end,
 }

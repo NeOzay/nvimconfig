@@ -22,6 +22,7 @@ return {
 		},
 		scope = {
 			char = "▎",
+			priority = 70,
 			enabled = true,
 			show_start = true,
 			highlight = {
@@ -38,9 +39,7 @@ return {
 		},
 	},
 	config = function(_, opts)
-		dofile(vim.g.base46_cache .. "blankline")
 		require("ibl").setup(opts)
-		dofile(vim.g.base46_cache .. "blankline")
 		require("ibl.highlights").setup()
 	end,
 }

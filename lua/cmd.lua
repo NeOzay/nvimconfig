@@ -23,15 +23,12 @@ end, { desc = "Recharger lualine-conf.lua depuis le disque" })
 
 cmd("StlToggle", function()
 	if vim.g.stl_is_lualine ~= false then
-		-- Basculer vers NvChad
 		require("lualine").hide()
-		vim.o.statusline = "%!v:lua.require('nvchad.stl.default')()"
 		vim.g.stl_is_lualine = false
-		vim.notify("Statusline : NvChad", vim.log.levels.INFO)
+		vim.notify("Statusline : hidden", vim.log.levels.INFO)
 	else
-		-- Basculer vers lualine
 		require("lualine").hide({ unhide = true })
 		vim.g.stl_is_lualine = true
 		vim.notify("Statusline : lualine", vim.log.levels.INFO)
 	end
-end, { desc = "Basculer la statusline entre lualine et NvChad" })
+end, { desc = "Basculer la statusline lualine on/off" })

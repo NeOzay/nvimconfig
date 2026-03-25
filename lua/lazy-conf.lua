@@ -1,7 +1,7 @@
 ---@type Partial<LazyConfig>
 return {
 	defaults = { lazy = true },
-	install = { colorscheme = { "nvchad" } },
+	install = {},
 
 	ui = {
 		icons = {

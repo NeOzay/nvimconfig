@@ -1,10 +1,9 @@
--- require("nvchad.mappings")
 local utils = require("utils")
 
 local map = vim.keymap.set
 local del = vim.keymap.del
 
--- Nvchad mappings
+-- Base mappings
 map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
 map("i", "<C-e>", "<End>", { desc = "move end of line" })
 map("i", "<C-h>", "<Left>", { desc = "move left" })
@@ -24,8 +23,7 @@ map("n", "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
 
 map("n", "<leader>n", "<cmd>set nu!<CR>", { desc = "toggle line number" })
 map("n", "<leader>rn", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
-map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
-map("n", "<leader>ts", "<cmd>StlToggle<CR>", { desc = "toggle statusline lualine/NvChad" })
+map("n", "<leader>ts", "<cmd>StlToggle<CR>", { desc = "toggle statusline" })
 map("n", "<leader>tl", "<cmd>LualineReload<CR>", { desc = "recharger lualine" })
 
 map({ "n", "x" }, "<leader>fm", function()
@@ -40,30 +38,6 @@ map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 -- map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 -- map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window" })
 
--- -- terminal
--- map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
---
--- -- new terminals
--- map("n", "<leader>h", function()
---   require("nvchad.term").new { pos = "sp" }
--- end, { desc = "terminal new horizontal term" })
---
--- map("n", "<leader>v", function()
---   require("nvchad.term").new { pos = "vsp" }
--- end, { desc = "terminal new vertical term" })
---
--- -- toggleable
--- map({ "n", "t" }, "<A-v>", function()
---   require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
--- end, { desc = "terminal toggleable vertical term" })
---
--- map({ "n", "t" }, "<A-h>", function()
---   require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
--- end, { desc = "terminal toggleable horizontal term" })
---
--- map({ "n", "t" }, "<A-i>", function()
---   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
--- end, { desc = "terminal toggle floating term" })
 
 -- whichkey
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
@@ -79,7 +53,7 @@ end, { desc = "whichkey query lookup" })
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("n", "<C-j>", "<cmd>Inspect<CR>")
-map("n", "xl", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" })
+map("n", "<leader>X", vim.diagnostic.open_float, { desc = "Diagnostic sous le curseur" })
 map("n", "<leader>o", "]<space>", { remap = true })
 map("n", "<leader>O", "[<space>", { remap = true })
 map("n", "<leader>cc", "ciw")

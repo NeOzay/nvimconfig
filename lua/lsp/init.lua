@@ -24,7 +24,7 @@ function M.setup(server_list)
 		end
 	end
 
-	-- require("lsp.hover").setup()
+	require("lsp.hover").setup()
 end
 
 return M

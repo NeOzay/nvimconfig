@@ -232,12 +232,24 @@ function M.setup()
 				},
 				{
 					"filetype",
-					colored = false, -- Displays filetype icon in color if set to true
+					colored = true, -- Displays filetype icon in color if set to true
 					icon_only = true, -- Display only an icon for filetype
 					icon = { align = "left" }, -- Display filetype icon on the right hand side
 					-- icon =    {'X', align='right'}
 					-- Icon string ^ in table is ignored in filetype component
 					padding = { left = 1, right = 0 },
+				},
+				{
+					function()
+						local name = vim.fn.expand("%:t")
+						local dir = vim.fn.expand("%:p:h:t")
+						if dir == "" or dir == "." then
+							return ""
+						end
+						return dir .. "/"
+					end,
+					color = { fg = colors.grey_fg },
+					padding = { left = 0, right = 0 },
 				},
 				{
 					"filename",

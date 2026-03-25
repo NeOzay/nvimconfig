@@ -15,13 +15,6 @@ local function list_workspace_folders()
 end
 
 local function on_attach(client, bufnr)
-	-- -- Désactiver semantic tokens pour les gros fichiers (> 100KB)
-	-- local max_filesize = 100 * 1024
-	-- local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(bufnr))
-	-- if ok and stats and stats.size > max_filesize then
-	-- 	client.server_capabilities.semanticTokensProvider = nil
-	-- end
-
 	if client and client.server_capabilities and client.server_capabilities.documentSymbolProvider then
 		require("nvim-navic").attach(client, bufnr)
 	end
@@ -33,11 +26,13 @@ local function on_attach(client, bufnr)
 
 	map("n", "gD", wrapTrouble("lsp_declarations"), opts("Go to declaration"))
 	map("n", "gd", wrapTrouble("lsp_definitions"), opts("Go to definition"))
-	map("n", "gr", wrapTrouble("lsp_references"), opts("Go to references"))
+	map("n", "grr", wrapTrouble("lsp_references"), opts("Go to references"))
+	map("n", "gri", wrapTrouble("lsp_implementations"), opts("Go to implmentation"))
+	map("n", "grt", wrapTrouble("lsp_type_definitions"), opts("Go to type definition"))
 	map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts("Remove workspace folder"))
 	map("n", "<leader>wl", list_workspace_folders, opts("List workspace folders"))
-	map("n", "<leader>D", vim.lsp.buf.type_definition, opts("Go to type definition"))
-	map("n", "<F2>", require("nvchad.lsp.renamer"), opts("NvRenamer"))
+	map("n", "<F2>", vim.lsp.buf.rename, opts("Rename"))
+	map("n", "grn", vim.lsp.buf.rename, opts("Rename"))
 end
 
 local function on_init(_client, _) end
@@ -84,8 +79,12 @@ local function setup_floating_preview()
 end
 
 local function config()
-	dofile(vim.g.base46_cache .. "lsp")
-	require("nvchad.lsp").diagnostic_config()
+	local x = vim.diagnostic.severity
+	vim.diagnostic.config({
+		virtual_text = { prefix = "" },
+		signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
+		underline = true,
+	})
 
 	vim.diagnostic.config({
 		float = {
@@ -109,5 +108,6 @@ end
 ---@type LazySpec
 return {
 	"neovim/nvim-lspconfig",
+	event = "User FilePost",
 	config = config,
 }

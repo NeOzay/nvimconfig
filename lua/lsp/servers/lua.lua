@@ -1,4 +1,3 @@
-local settings = require("mason.settings")
 ---@type vim.lsp.Config
 local M = {}
 
@@ -6,7 +5,7 @@ M.name = "emmylua_ls"
 
 M.filetypes = { "lua" }
 
-M.cmd = { "emmylua_ls", "--log-level", "debug" }
+M.cmd = { "/var/home/Benoit/projects/emmylua-analyzer-rust/target/release/emmylua_ls" }
 
 -- M.root_dir = function(bufnr, on_dir)
 -- 	local fname = vim.api.nvim_buf_get_name(bufnr)
@@ -31,6 +30,7 @@ M.settings = {
 		runtime = {},
 		workspace = {
 			library = {},
+
 			checkThirdParty = false,
 			ignoreDir = {},
 			ignoreGlobs = {},
@@ -129,6 +129,15 @@ function M.before_init(params, config)
 		add_plugins_to_lib(config.settings, { "wezterm-types" })
 		---@diagnostic disable-next-line
 		config.settings.Lua.workspace.ignoreGlobs = { "wezterm.lua" }
+	end
+
+	-- Ajouter le dossier scratch aux workspace folders pour emmylua_ls
+	local scratch_dir = vim.fn.stdpath("data") .. "/scratch"
+	if params.workspaceFolders then
+		table.insert(params.workspaceFolders, {
+			uri = vim.uri_from_fname(scratch_dir),
+			name = "scratch",
+		})
 	end
 end
 

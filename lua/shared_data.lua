@@ -1,3 +1,4 @@
+--- Table utiliser pour partagée les données entre les modules, evite l'utilisation de variables globales Lua.
 local M = {}
 
 --- Variable globale partagée avec dap.lua pour la persistance

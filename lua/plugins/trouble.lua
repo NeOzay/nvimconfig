@@ -1,5 +1,4 @@
 local function config(_, opts)
-	dofile(vim.g.base46_cache .. "trouble")
 	require("trouble").setup(opts)
 end
 

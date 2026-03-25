@@ -23,20 +23,22 @@ return {
 		vim.api.nvim_create_autocmd("User", {
 			pattern = "GitSignsUpdate",
 			once = true,
-			callback = function() vim.cmd("redraw!") end,
+			callback = function()
+				vim.cmd("redraw!")
+			end,
 		})
 	end,
 	opts = {
 		signs = {
-			add = { text = "│" },
-			change = { text = "│" },
+			add = { text = "▐" },
+			change = { text = "▐" },
 			delete = { text = "_" },
 			topdelete = { text = "‾" },
 			changedelete = { text = "~" },
 			untracked = { text = "┆" },
 		},
 		signs_staged_enable = false,
-		signcolumn = false,
+		signcolumn = true,
 		preview_config = {
 			style = "minimal",
 			border = "rounded",

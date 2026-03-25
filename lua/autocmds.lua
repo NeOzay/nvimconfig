@@ -1,4 +1,68 @@
-require("nvchad.autocmds")
+local autocmd = vim.api.nvim_create_autocmd
+
+-- Event "User FilePost" — emitted after UIEnter + file buffer opened
+autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
+	group = vim.api.nvim_create_augroup("NvFilePost", { clear = true }),
+	callback = function(args)
+		local file = vim.api.nvim_buf_get_name(args.buf)
+		local buftype = vim.api.nvim_get_option_value("buftype", { buf = args.buf })
+
+		if not vim.g.ui_entered and args.event == "UIEnter" then
+			vim.g.ui_entered = true
+		end
+
+		if file ~= "" and buftype ~= "nofile" and vim.g.ui_entered then
+			vim.api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
+			vim.api.nvim_del_augroup_by_name("NvFilePost")
+
+			vim.schedule(function()
+				vim.api.nvim_exec_autocmds("FileType", {})
+				if vim.g.editorconfig then
+					require("editorconfig").config(args.buf)
+				end
+			end)
+		end
+	end,
+})
+
+-- Auto-start treesitter on every filetype
+autocmd("FileType", {
+	pattern = "*",
+	callback = function()
+		pcall(vim.treesitter.start)
+	end,
+})
+
+-- TSInstallAll command
+vim.api.nvim_create_user_command("TSInstallAll", function()
+	local spec = require("lazy.core.config").plugins["nvim-treesitter"]
+	local opts = type(spec.opts) == "table" and spec.opts or {}
+	require("nvim-treesitter").install(opts.ensure_installed)
+end, {})
+
+-- Auto signature help on trigger characters
+autocmd("LspAttach", {
+	callback = function(args)
+		vim.schedule(function()
+			local client = vim.lsp.get_client_by_id(args.data.client_id)
+			if client then
+				local signatureProvider = client.server_capabilities.signatureHelpProvider
+				if signatureProvider and signatureProvider.triggerCharacters then
+					require("lsp.signature").setup(client, args.buf)
+				end
+			end
+		end)
+	end,
+})
+
+Userautocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		vim.opt_local.wrap = true
+		vim.opt_local.linebreak = true
+		vim.opt_local.breakindent = true
+	end,
+})
 
 -- Recharger lualine automatiquement à la sauvegarde de lualine-conf.lua
 Userautocmd("BufWritePost", {

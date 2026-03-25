@@ -32,32 +32,6 @@ end
 
 M.statuscolumn = "%#normal# "
 
-local hi_cache = {}
-
----@param fg string
----@param bg string
-function M.hi_pathwork(fg, bg)
-	local hi_key = fg .. "&" .. bg
-	local new_hi = fg .. bg
-	if hi_cache[hi_key] then
-		return hi_cache[hi_key]
-	end
-	local main_hi = api.nvim_get_hl(0, { name = fg, link = false }) ---@as vim.api.keyset.highlight
-	main_hi.bg = api.nvim_get_hl(0, { name = bg, link = false }).bg
-	api.nvim_set_hl(0, new_hi, main_hi)
-	hi_cache[hi_key] = new_hi
-	return new_hi
-end
-
-Userautocmd("ColorScheme", {
-	callback = function()
-		for k in pairs(hi_cache) do
-			local fg, bg = k:match("^(.*)&(.*)$")
-			M.hi_pathwork(fg, bg)
-		end
-	end,
-})
-
 --- Get an icon from `mini.icons` or `nvim-web-devicons`.
 ---@param name string
 ---@param cat? "file"|"filetype"|"extension"|"directory"
@@ -94,6 +68,29 @@ function M.icon(name, cat, opts)
 		end
 	end
 	return opts.fallback.file or "󰈔 "
+end
+
+---@generic F:function
+---@param fn1 F
+---@param fn2 fun(fn1: F): F
+---@return F
+function M.wrap(fn1, fn2)
+	return fn2(fn1)
+end
+
+---@param text string
+function M.escape_pattern(text)
+	return text:gsub("[-%%^$*+?.()|%[%]{}]", "%%%1")
+end
+
+---@param win table
+---@param hi string
+function M.extend_winhighlight(win, hi)
+	if win.winhighlight or win.winhighlight ~= "" then
+		win.winhighlight = win.winhighlight .. "," .. hi
+	else
+		win.winhighlight = hi
+	end
 end
 
 return M
