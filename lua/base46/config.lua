@@ -1,27 +1,47 @@
-local M = {}
+-- User highlight overrides for base46.
+-- Supports: palette names ("blue"), lightness tuples ({ "blue", -20 }),
+-- mix tuples ({ "orange", "line", 80 }), and direct hex values.
 
 local field = "#A6A67C"
 
-M.base46 = {
+---@type Base46Config
+return {
 	theme = "sonokai",
-	integrations = { "trouble", "telescope", "blankline", "navic" },
+	integrations = "highlights",
 
-	hl_add = {
+	hl_override = {
 		-- indent-blankline
 		IblChar = { fg = "line" },
 		IblScopeChar = { fg = "grey" },
 
+		-- LSP semantic overrides
 		["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
 		["@lsp.typemod.class.declaration"] = { italic = true },
 		["@lsp.type.keyword.lua"] = { fg = "None" },
 		["@lsp.type.operator.lua"] = { fg = "None" },
 		["@lsp.mod.documentation.lua"] = { italic = true, fg = "blue" },
+		["@lsp.type.comment"] = { link = "@comment" },
+		["@lsp.type.property"] = { fg = field },
+		["@lsp.type.class"] = { fg = { "blue", -20 } },
+		["@lsp.type.namespace"] = { fg = { "blue", -20 } },
+		["@lsp"] = { fg = "NONE", bg = "NONE" },
 
-		-- ["@lsp.type.string"] = {},
+		-- Syntax overrides
+		["Comment"] = { link = "@comment" },
+		["@comment"] = { italic = false },
+		["@keyword"] = { italic = true, fg = "blue" },
+		["@keyword.function"] = { italic = true, fg = "blue" },
+		["@keyword.conditional"] = { fg = "red", italic = true },
+		["@keyword.return"] = { italic = true, fg = "blue" },
+		["@property"] = { fg = field },
+		["@variable.member"] = { fg = field },
+		["@type"] = { fg = { "blue", -20 } },
 		["@string.delimitor"] = { link = "@comment" },
-
+		["@string.documentation"] = { link = "@comment" },
+		PmenuSel = { fg = "NONE" },
 		Bold = { bold = true },
 		DiagnosticUnderlineError = { sp = "red", undercurl = true },
+
 		-- Rainbow indent colors
 		RainbowIndentRed = { fg = { "red", "line", 80 } },
 		RainbowIndentYellow = { fg = { "yellow", "line", 80 } },
@@ -38,11 +58,14 @@ M.base46 = {
 		RainbowScopeGreen = { fg = { "green", "grey", 50 } },
 		RainbowScopeViolet = { fg = { "purple", "grey", 50 } },
 		RainbowScopeCyan = { fg = { "cyan", "grey", 50 } },
+
+		-- Search
 		CurSearch = { bg = "green", fg = "#2c2e34" },
 		SatelliteSearchCurrent = { bg = "green", fg = "#2c2e34" },
+
+		-- Treesitter context
 		TreesitterContext = { bg = "black" },
 		TreesitterContextBottom = { fg = "NONE", bg = "none" },
-		["@lsp"] = { fg = "NONE", bg = "NONE" },
 
 		-- Blink.cmp kind colors
 		BlinkCmpKindText = { link = "@text" },
@@ -79,27 +102,5 @@ M.base46 = {
 		DapStopped = { fg = "green" },
 		DapBreakpointRejected = { fg = "grey" },
 		DapStoppedLine = { bg = { "green", "black", 20 } },
-		["@string.documentation"] = { link = "@comment" },
-	},
-
-	---@type Base46HLGroupsList
-	hl_override = {
-		["Comment"] = { link = "@comment" },
-		["@comment"] = { italic = false },
-		["@lsp.type.comment"] = { link = "@comment" },
-		["@keyword"] = { italic = true, fg = "blue" },
-		["@keyword.function"] = { italic = true, fg = "blue" },
-		["@keyword.conditional"] = { fg = "red", italic = true },
-		["@keyword.return"] = { italic = true, fg = "blue" },
-		["@lsp.type.property"] = { fg = field },
-		["@property"] = { fg = field },
-		["@variable.member"] = { fg = field },
-		["@lsp.type.class"] = { fg = { "blue", -20 } },
-		["@lsp.type.namespace"] = { fg = { "blue", -20 } },
-		["@type"] = { fg = { "blue", -20 } },
-		PmenuSel = { fg = "NONE" },
-		["@lsp"] = { fg = "NONE", bg = "NONE" },
 	},
 }
-
-return M

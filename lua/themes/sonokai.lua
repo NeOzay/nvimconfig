@@ -1,7 +1,7 @@
 -- Credits to original https://github.com/sainnhe/sonokai
--- Sonokai color scheme for NvChad (Default variant)
+-- Sonokai color scheme (Default variant)
+---@type Base46Theme
 local M = {}
-
 M.base_30 = {
 	white = "#e2e2e3",
 	darker_black = "#181819", -- activityBar.background
@@ -38,28 +38,25 @@ M.base_30 = {
 local base_30 = M.base_30
 
 M.base_16 = {
-	base00 = "#2c2e34",
+	base00 = base_30.black,
 	base01 = "#33353f",
-	base02 = "#363944",
-	base03 = "#3b3e48",
-	base04 = "#7f8490",
-	base05 = "#e2e2e3",
+	base02 = base_30.one_bg2,
+	base03 = base_30.one_bg3,
+	base04 = base_30.grey_fg,
+	base05 = base_30.white,
 	base06 = "#e8e8e9",
 	base07 = "#eeeeef",
-	base08 = "#fc5d7c",
-	base09 = "#b39df3",
-	base0A = "#e7c664",
-	base0B = "#9ed072",
-	base0C = "#76cce0",
-	base0D = "#9ed072",
-	base0E = "#fc5d7c",
-	base0F = "#b39df3",
+	base08 = base_30.red,
+	base09 = base_30.purple,
+	base0A = base_30.yellow,
+	base0B = base_30.green,
+	base0C = base_30.cyan,
+	base0D = base_30.green,
+	base0E = base_30.red,
+	base0F = base_30.purple,
 }
 
 M.type = "dark"
-
----@diagnostic disable-next-line
-M = require("base46").override_theme(M, "sonokai")
 
 M.polish_hl = {
 	treesitter = {
@@ -116,11 +113,11 @@ M.polish_hl = {
 
 		-- Comments
 		["@comment"] = { fg = base_30.grey_fg },
-		["@comment.todo"] = { fg = base_30.black, bg = M.base_30.yellow, bold = true },
-		["@comment.warning"] = { fg = base_30.black, bg = M.base_30.orange, bold = true },
-		["@comment.note"] = { fg = base_30.black, bg = M.base_30.blue, bold = true },
-		["@comment.danger"] = { fg = base_30.black, bg = M.base_30.red, bold = true },
-		["@comment.error"] = { fg = base_30.black, bg = M.base_30.red, bold = true },
+		["@comment.todo"] = { fg = base_30.black, bg = base_30.yellow, bold = true },
+		["@comment.warning"] = { fg = base_30.black, bg = base_30.orange, bold = true },
+		["@comment.note"] = { fg = base_30.black, bg = base_30.blue, bold = true },
+		["@comment.danger"] = { fg = base_30.black, bg = base_30.red, bold = true },
+		["@comment.error"] = { fg = base_30.black, bg = base_30.red, bold = true },
 
 		-- Markup (Markdown)
 		["@markup.heading"] = { fg = base_30.yellow, bold = true },
@@ -190,20 +187,20 @@ M.polish_hl = {
 
 		-- Errors & Warnings
 		Error = { fg = base_30.red },
-		Todo = { fg = base_30.black, bg = M.base_30.yellow, bold = true },
+		Todo = { fg = base_30.black, bg = base_30.yellow, bold = true },
 	},
 
 	-- UI Highlights (based on VSCode Sonokai)
 	defaults = {
 		-- Editor
-		CursorLine = { bg = "#30323a" }, -- editor.lineHighlightBackground
+		CursorLine = { bg = base_30.black2 }, -- editor.lineHighlightBackground
 		CursorLineNr = { fg = base_30.white }, -- editorLineNumber.activeForeground
-		LineNr = { fg = base_30.grey_fg, bg = M.base_30.one_bg }, -- editorLineNumber.foreground + darker gutterno
+		LineNr = { fg = base_30.grey_fg, bg = base_30.one_bg }, -- editorLineNumber.foreground + darker gutterno
 		SignColumn = { bg = base_30.one_bg }, -- Gutter (Git signs, etc.)
-		Visual = { bg = "#3b3e48" }, -- editor.selectionBackground
-		MatchParen = { bg = "#414550" }, -- editorBracketMatch.background
-		Search = { bg = "#fc5d7c", fg = "#2c2e34" }, -- editor.findMatchBackground
-		IncSearch = { bg = "#b39df3", fg = "#2c2e34" },
+		Visual = { bg = base_30.one_bg3 }, -- editor.selectionBackground
+		MatchParen = { bg = base_30.line }, -- editorBracketMatch.background
+		Search = { bg = base_30.red, fg = base_30.black }, -- editor.findMatchBackground
+		IncSearch = { bg = base_30.purple, fg = base_30.black },
 		EndOfBuffer = { bg = base_30.one_bg },
 		SpecialKey = { link = "Comment" },
 
@@ -227,7 +224,7 @@ M.polish_hl = {
 
 		-- Pmenu (popup menu)
 		Pmenu = { bg = "#33363f", fg = base_30.white }, -- editorSuggestWidget
-		PmenuSel = { bg = "#3b3e48", fg = base_30.white },
+		PmenuSel = { bg = base_30.one_bg3, fg = base_30.white },
 		PmenuSbar = { bg = "#33363f" },
 		PmenuThumb = { bg = base_30.grey_fg },
 
@@ -235,24 +232,24 @@ M.polish_hl = {
 		-- Tabs colors handled by base46 integrations
 
 		-- Folds
-		Folded = { bg = "#30323a", fg = base_30.grey_fg },
-		FoldColumn = { fg = base_30.grey_fg, bg = M.base_30.one_bg },
+		Folded = { bg = base_30.black2, fg = base_30.grey_fg },
+		FoldColumn = { fg = base_30.grey_fg, bg = base_30.one_bg },
 
 		-- Borders
-		FloatBorder = { fg = "#414550" }, -- editorWidget.border
-		NormalFloat = { bg = "#30323a" }, -- editorHoverWidget.background
+		FloatBorder = { fg = base_30.line }, -- editorWidget.border
+		NormalFloat = { bg = base_30.black2 }, -- editorHoverWidget.background
 
 		-- Links
 		Underlined = { fg = base_30.green, underline = true },
 	},
 
 	telescope = {
-		TelescopeSelection = { bg = "#3b3e48", fg = "None" },
+		TelescopeSelection = { bg = base_30.one_bg3, fg = "None" },
 		TelescopeMatching = { fg = base_30.green, bg = "None" }, -- highlightForeground
-		TelescopeBorder = { fg = "#414550", bg = base_30.black },
-		TelescopePromptBorder = { fg = "#414550", bg = base_30.black },
-		TelescopeResultsBorder = { fg = "#414550", bg = base_30.black },
-		TelescopePreviewBorder = { fg = "#414550", bg = base_30.black },
+		TelescopeBorder = { fg = base_30.line, bg = base_30.black },
+		TelescopePromptBorder = { fg = base_30.line, bg = base_30.black },
+		TelescopeResultsBorder = { fg = base_30.line, bg = base_30.black },
+		TelescopePreviewBorder = { fg = base_30.line, bg = base_30.black },
 		TelescopePromptPrefix = { fg = base_30.green },
 		TelescopeResultsTitle = { fg = base_30.blue, bg = base_30.black },
 		TelescopeNormal = { fg = base_30.white, bg = base_30.black },
@@ -277,9 +274,9 @@ M.polish_hl = {
 
 	git = {
 		-- Git signs in gutter
-		GitSignsAdd = { fg = base_30.green, bg = M.base_30.one_bg },
-		GitSignsChange = { fg = base_30.cyan, bg = M.base_30.one_bg },
-		GitSignsDelete = { fg = base_30.red, bg = M.base_30.one_bg },
+		GitSignsAdd = { fg = base_30.green, bg = base_30.one_bg },
+		GitSignsChange = { fg = base_30.cyan, bg = base_30.one_bg },
+		GitSignsDelete = { fg = base_30.red, bg = base_30.one_bg },
 
 		-- Git diff colors (in buffer)
 		DiffAdd = { fg = base_30.green },
@@ -290,8 +287,8 @@ M.polish_hl = {
 
 	trouble = {
 		-- Trouble.nvim colors
-		TroubleNormal = { bg = base_30.black, fg = M.base_30.white },
-		TroubleNormalNC = { bg = base_30.black, fg = M.base_30.white },
+		TroubleNormal = { bg = base_30.black, fg = base_30.white },
+		TroubleNormalNC = { bg = base_30.black, fg = base_30.white },
 
 		-- Text styling
 		TroubleText = { fg = base_30.white },
@@ -316,7 +313,7 @@ M.polish_hl = {
 		TroubleDirectory = { fg = base_30.blue },
 
 		-- Counts
-		TroubleCount = { fg = base_30.purple, bg = M.base_30.one_bg2 },
+		TroubleCount = { fg = base_30.purple, bg = base_30.one_bg2 },
 
 		-- Indents
 		TroubleIndent = { fg = base_30.line },
@@ -329,23 +326,23 @@ M.polish_hl = {
 }
 
 -- Terminal colors (ANSI)
-M.base46_terminal = {
-	[0] = "#414550", -- black
-	[1] = "#fc5d7c", -- red
-	[2] = "#9ed072", -- green
-	[3] = "#e7c664", -- yellow
-	[4] = "#76cce0", -- blue
-	[5] = "#b39df3", -- magenta
-	[6] = "#f39660", -- cyan (orange in Sonokai)
-	[7] = "#e2e2e3", -- white
-	[8] = "#414550", -- bright black
-	[9] = "#fc5d7c", -- bright red
-	[10] = "#9ed072", -- bright green
-	[11] = "#e7c664", -- bright yellow
-	[12] = "#76cce0", -- bright blue
-	[13] = "#b39df3", -- bright magenta
-	[14] = "#f39660", -- bright cyan (orange)
-	[15] = "#e2e2e3", -- bright white
+M.base_16_terminal = {
+	[0] = base_30.line, -- black
+	[1] = base_30.red, -- red
+	[2] = base_30.green, -- green
+	[3] = base_30.yellow, -- yellow
+	[4] = base_30.blue, -- blue
+	[5] = base_30.purple, -- magenta
+	[6] = base_30.orange, -- cyan (orange in Sonokai)
+	[7] = base_30.white, -- white
+	[8] = base_30.line, -- bright black
+	[9] = base_30.red, -- bright red
+	[10] = base_30.green, -- bright green
+	[11] = base_30.yellow, -- bright yellow
+	[12] = base_30.blue, -- bright blue
+	[13] = base_30.purple, -- bright magenta
+	[14] = base_30.orange, -- bright cyan (orange)
+	[15] = base_30.white, -- bright white
 }
 
 return M
