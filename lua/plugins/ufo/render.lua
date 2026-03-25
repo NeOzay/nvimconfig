@@ -1,10 +1,16 @@
 local api, fn = vim.api, vim.fn
 local strdisplaywidth = fn.strdisplaywidth
 
+local M = {}
+
 -- Constantes
-local ELLIPSIS = " ... "
-local SPACE = " "
+M.ELLIPSIS = " ... "
+M.SPACE = " "
+
 local LSP_PRIORITY, TS_PRIORITY = 2, 1
+
+-- Highlight pour le compteur de lignes des folds
+api.nvim_set_hl(0, "UfoFoldCount", { fg = require("colors_bank").get_hi_attr("Comment", "fg"), italic = true })
 
 -- Cache des namespaces LSP
 local lsp_ns_cache = nil
@@ -34,10 +40,6 @@ api.nvim_create_autocmd("LspTokenUpdate", {
 ---@field hl string
 ---@field priority number
 
--- ============================================================================
--- Utilitaires
--- ============================================================================
-
 --- Vérifie si un highlight group existe
 ---@param name string?
 ---@return boolean
@@ -52,7 +54,7 @@ end
 --- Calcule la largeur d'un texte virtuel
 ---@param chunks table[]
 ---@return number
-local function virt_width(chunks)
+function M.virt_width(chunks)
 	local w = 0
 	for _, c in ipairs(chunks) do
 		w = w + strdisplaywidth(c[1])
@@ -65,7 +67,7 @@ end
 ---@param max_w number
 ---@param truncate_fn function
 ---@return table[]
-local function truncate(chunks, max_w, truncate_fn)
+function M.truncate(chunks, max_w, truncate_fn)
 	local result, w = {}, 0
 	for _, chunk in ipairs(chunks) do
 		local text, hl = chunk[1], chunk[2]
@@ -83,10 +85,6 @@ local function truncate(chunks, max_w, truncate_fn)
 	end
 	return result
 end
-
--- ============================================================================
--- Highlights
--- ============================================================================
 
 --- Récupère les namespaces LSP (avec cache)
 ---@return table<string, integer>
@@ -172,17 +170,13 @@ local function get_highlights(bufnr, row)
 	return hl
 end
 
--- ============================================================================
--- Construction du texte virtuel
--- ============================================================================
-
 --- Construit le texte virtuel coloré pour une ligne
 ---@param bufnr integer
 ---@param row integer
 ---@param offset integer
 ---@param text string
 ---@return table[]
-local function build_virt_text(bufnr, row, offset, text)
+function M.build_virt_text(bufnr, row, offset, text)
 	local highlights = get_highlights(bufnr, row)
 	if #highlights == 0 then
 		return { { text, "Normal" } }
@@ -217,122 +211,12 @@ end
 ---@param row integer
 ---@return table[] virt_text
 ---@return number width
-local function get_line_virt(bufnr, row)
+function M.get_line_virt(bufnr, row)
 	local raw = api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1] or ""
 	local trimmed = vim.trim(raw)
 	local offset = #raw - #raw:gsub("^%s+", "")
-	local virt = build_virt_text(bufnr, row, offset, trimmed)
-	return virt, virt_width(virt)
+	local virt = M.build_virt_text(bufnr, row, offset, trimmed)
+	return virt, M.virt_width(virt)
 end
 
--- ============================================================================
--- Handler principal
--- ============================================================================
-
---- Handler pour le texte virtuel des folds
---- Format: Première ... Dernière (N lignes)
---- Format avec milieu: Première Milieu Dernière (2 lignes)
----@param virt_text table[]
----@param lnum integer
----@param end_lnum integer
----@param width integer
----@param truncate_fn function
----@return table[]
-local function fold_handler(virt_text, lnum, end_lnum, width, truncate_fn)
-	local bufnr = api.nvim_get_current_buf()
-	local num_lines = end_lnum - lnum
-
-	-- Éléments fixes
-	local suffix = (" (%d lignes)"):format(num_lines)
-	local suffix_w = strdisplaywidth(suffix)
-	local ellipsis_w = strdisplaywidth(ELLIPSIS)
-
-	-- Récupérer les lignes
-	local end_virt, end_w = get_line_virt(bufnr, end_lnum - 1)
-	local mid_virt, mid_w = nil, 0
-	if num_lines == 2 then
-		mid_virt, mid_w = get_line_virt(bufnr, lnum)
-	end
-
-	-- Calcul de l'espace
-	local available = width - suffix_w - ellipsis_w
-	local include_mid = mid_virt and (mid_w + end_w + 2 <= width - suffix_w)
-
-	if include_mid then
-		available = width - suffix_w - 2
-	end
-
-	local first_w = math.max(0, available - (include_mid and mid_w + end_w or end_w))
-
-	-- Assemblage
-	local result = truncate(virt_text, first_w, truncate_fn)
-
-	if include_mid then
-		result[#result + 1] = { SPACE, "Normal" }
-		vim.list_extend(result, truncate(mid_virt, available - virt_width(result), truncate_fn))
-		result[#result + 1] = { SPACE, "Normal" }
-		vim.list_extend(result, truncate(end_virt, available - virt_width(result), truncate_fn))
-	else
-		result[#result + 1] = { ELLIPSIS, "Comment" }
-		vim.list_extend(result, truncate(end_virt, available - virt_width(result) + ellipsis_w, truncate_fn))
-	end
-
-	result[#result + 1] = { suffix, "Comment" }
-	return result
-end
-
--- ============================================================================
--- Configuration du plugin
--- ============================================================================
-
----@type LazyPluginSpec
-return {
-	"kevinhwang91/nvim-ufo",
-	dependencies = { "kevinhwang91/promise-async" },
-	event = "User FilePost",
-	keys = {
-		{
-			"zR",
-			function()
-				require("ufo").openAllFolds()
-			end,
-			desc = "Open all folds",
-		},
-		{
-			"zM",
-			function()
-				require("ufo").closeAllFolds()
-			end,
-			desc = "Close all folds",
-		},
-		{
-			"zC",
-			function()
-				require("ufo").closeFoldsWith(0)
-			end,
-			desc = "Close folds ",
-		},
-		{
-			"zK",
-			function()
-				if not require("ufo").peekFoldedLinesUnderCursor() then
-					vim.lsp.buf.hover()
-				end
-			end,
-			desc = "Peek fold",
-		},
-	},
-	opts = {
-		provider_selector = function(_, _, buftype)
-			return buftype == "nofile" and "" or { "treesitter", "indent" }
-		end,
-		preview = {
-			win_config = {
-				border = "rounded",
-				winhighlight = "Normal:Folded",
-				winblend = 0,
-			},
-		},
-		fold_virt_text_handler = fold_handler,
-	},
-}
+return M
