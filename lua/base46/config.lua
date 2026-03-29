@@ -2,12 +2,26 @@
 -- Supports: palette names ("blue"), lightness tuples ({ "blue", -20 }),
 -- mix tuples ({ "orange", "line", 80 }), and direct hex values.
 
-local field = "#A6A67C"
-
 ---@type Base46Config
 return {
 	theme = "sonokai",
 	integrations = "highlights",
+
+	--@type table<string, string|Base46MixedColor>
+	---@enum (key) Base46ExtendedPalette
+	extended_palette = {
+		Type = { "blue", -20 },
+		Enum = { { "blue", -20 }, "purple", 50 },
+		Field = "#A6A67C",
+
+		CodeDiffLineInsert = { "green", "black", 92 },
+		CodeDiffLineDelete = { "red", "black", 92 },
+		CodeDiffCharInsert = { "green", "black", 80 },
+		CodeDiffCharDelete = { "red", "black", 80 },
+
+		code_bg = { "one_bg2", "black", 100 },
+		scratch_desc = { "green", "black2", 85 },
+	},
 
 	hl_override = {
 		-- indent-blankline
@@ -17,14 +31,19 @@ return {
 		-- LSP semantic overrides
 		["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
 		["@lsp.typemod.class.declaration"] = { italic = true },
-		["@lsp.type.keyword.lua"] = { fg = "None" },
+		["@lsp.type.keyword"] = { fg = "None" },
 		["@lsp.type.operator.lua"] = { fg = "None" },
+		["@lsp.type.macro"] = { fg = "pink" },
 		["@lsp.mod.documentation.lua"] = { italic = true, fg = "blue" },
+		["@lsp.mod.defaultLibrary"] = { italic = true },
 		["@lsp.type.comment"] = { link = "@comment" },
-		["@lsp.type.property"] = { fg = field },
-		["@lsp.type.class"] = { fg = { "blue", -20 } },
-		["@lsp.type.namespace"] = { fg = { "blue", -20 } },
+		["@lsp.type.property"] = { fg = "Field" },
+		["@lsp.type.class"] = { fg = "Type" },
+		["@lsp.type.namespace"] = { fg = "Type" },
+		["@lsp.type.struct"] = { link = "@type" },
 		["@lsp"] = { fg = "NONE", bg = "NONE" },
+		["@lsp.type.variable"] = { link = "@lsp" },
+		["@lsp.type.enum"] = { fg = "Enum" },
 
 		-- Syntax overrides
 		["Comment"] = { link = "@comment" },
@@ -33,9 +52,9 @@ return {
 		["@keyword.function"] = { italic = true, fg = "blue" },
 		["@keyword.conditional"] = { fg = "red", italic = true },
 		["@keyword.return"] = { italic = true, fg = "blue" },
-		["@property"] = { fg = field },
-		["@variable.member"] = { fg = field },
-		["@type"] = { fg = { "blue", -20 } },
+		["@property"] = { fg = "Field" },
+		["@variable.member"] = { fg = "Field" },
+		["@type"] = { fg = "Type" },
 		["@string.delimitor"] = { link = "@comment" },
 		["@string.documentation"] = { link = "@comment" },
 		PmenuSel = { fg = "NONE" },

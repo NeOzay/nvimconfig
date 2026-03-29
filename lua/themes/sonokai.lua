@@ -198,7 +198,8 @@ M.polish_hl = {
 		LineNr = { fg = base_30.grey_fg, bg = base_30.one_bg }, -- editorLineNumber.foreground + darker gutterno
 		SignColumn = { bg = base_30.one_bg }, -- Gutter (Git signs, etc.)
 		Visual = { bg = base_30.one_bg3 }, -- editor.selectionBackground
-		MatchParen = { bg = base_30.line }, -- editorBracketMatch.background
+		MatchWord = { bg = base_30.line, fg = "NONE" },
+		MatchParen = { link = "MatchWord" }, -- editorBracketMatch.background
 		Search = { bg = base_30.red, fg = base_30.black }, -- editor.findMatchBackground
 		IncSearch = { bg = base_30.purple, fg = base_30.black },
 		EndOfBuffer = { bg = base_30.one_bg },

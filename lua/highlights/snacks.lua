@@ -2,7 +2,6 @@
 
 local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
 local mix = require("colors_bank").mix_colors_group
-local lightness = require("base46.colors").change_hex_lightness
 local bank = require("colors_bank").bank
 
 ---@type Base46HLTable
@@ -24,11 +23,11 @@ return {
 
 	SnacksPickerInputBorder = { fg = colors.one_bg3 },
 	SnacksPickerRow = { link = "LineNr" },
-	SnacksPickerCol = { fg = lightness(colors.green, -10), bg = colors.lightbg },
+	SnacksPickerCol = { fg = { colors.green, -10 }, bg = colors.lightbg },
 	SnacksPickerPrompt = { fg = colors.green, bg = colors.black },
 	SnacksPickerTotals = { fg = colors.green },
 	SnacksFooter = { link = "none" },
-	SnacksFooterDesc = { fg = colors.green, bg = bank.scratch_desc },
+	SnacksFooterDesc = { fg = colors.green, bg = "scratch_desc" },
 	SnacksFooterKey = { fg = colors.green, bg = colors.one_bg3 },
 
 	-- Explorer tree
@@ -48,4 +47,7 @@ return {
 	LspReferenceText = { underline = true },
 	LspReferenceRead = { underdotted = true },
 	LspReferenceWrite = { underdashed = true },
+
+	-- Input
+	SnacksInputIcon = { fg = colors.green, bg = colors.black },
 }

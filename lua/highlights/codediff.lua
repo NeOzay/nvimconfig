@@ -5,12 +5,12 @@ local bank = require("colors_bank").bank
 
 return {
 	-- Diff: line-level
-	CodeDiffLineInsert = { bg = bank.CodeDiffLineInsert },
-	CodeDiffLineDelete = { bg = bank.CodeDiffLineDelete },
+	CodeDiffLineInsert = { bg = "CodeDiffLineInsert" },
+	CodeDiffLineDelete = { bg = "CodeDiffLineDelete" },
 
 	-- Diff: character-level (brighter)
-	CodeDiffCharInsert = { bg = bank.CodeDiffCharInsert },
-	CodeDiffCharDelete = { bg = bank.CodeDiffCharDelete },
+	CodeDiffCharInsert = { bg = "CodeDiffCharInsert" },
+	CodeDiffCharDelete = { bg = "CodeDiffCharDelete" },
 
 	-- Filler lines
 	CodeDiffFiller = { fg = colors.grey_fg },

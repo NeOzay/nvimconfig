@@ -78,16 +78,4 @@ function M.mix_colors_group(group1, group2, strength, ground)
 	return mix(color1, color2, strength)
 end
 
----@class ColorsBank
-M.bank = {
-	CodeDiffLineInsert = mix(colors.green, colors.black, 92),
-	CodeDiffLineDelete = mix(colors.red, colors.black, 92),
-
-	CodeDiffCharInsert = mix(colors.green, colors.black, 80),
-	CodeDiffCharDelete = mix(colors.red, colors.black, 80),
-
-	code_bg = mix(colors.one_bg2, colors.black, 100),
-	scratch_desc = mix(colors.green, colors.black2, 85),
-}
-
 return M

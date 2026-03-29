@@ -1,18 +1,33 @@
 ---@meta
 
----@alias Base46MixedColor  [Base46Colors, integer]|[Base46Colors, Base46Colors, integer]
+---@class Base46MixedColor.2
+---@field [1] Base46ExtendedColors|Base46MixedColor
+---@field [2] integer
+
+---@class Base46MixedColor.4
+---@field [1] Base46ExtendedColors|Base46MixedColor
+---@field [2] Base46ExtendedColors|Base46MixedColor
+---@field [3] integer
+---@field [4] integer?
+
+---@alias Base46MixedColor  Base46MixedColor.2|Base46MixedColor.4
 
 ---@class Base46HLGroups : vim.api.keyset.highlight
----@field fg? string|Base46MixedColor|Base46Colors|"NONE"
----@field bg? string|Base46MixedColor|Base46Colors|"NONE"
+---@field fg? Base46MixedColor|Base46ExtendedColors|"NONE"
+---@field bg? Base46MixedColor|Base46ExtendedColors|"NONE"
 --- Color name or hex code that will be used for underline colors
 --- - If sp is `NONE`, use transparent color for special
 --- - If sp is `bg` or `background`, use normal background color
 --- - If sp is `fg` or `foreground`, use normal foreground color
 --- See :h guisp for more information
----@field sp? string|Base46MixedColor|Base46Colors|"NONE"|"bg"|"background"|"fg"|"foreground"
+---@field sp? Base46MixedColor|Base46ExtendedColors|"NONE"|"bg"|"background"|"fg"|"foreground"
 
 ---@alias Base46HLTable table<string, Base46HLGroups>
+
+---@alias Base46ExtendedColors
+---| Base46Colors
+---| Base46ExtendedPalette
+---| string
 
 ---@alias Base46Colors
 ---| Base30Colors
@@ -28,9 +43,6 @@
 ---@field base_16_terminal? Base16TerminalTable colors to be used in terminal
 ---@field type "dark"|"light" Denoting value to set for `vim.opt.bg`
 ---@field polish_hl? table<string, Base46HLTable> highlight groups to be changed from the default color
-
----@class Base46Theme : Base46Theme
----@field add_hl Base46HLTable
 
 ---@class Base16Table
 ---@field base00 string Neovim Default Background

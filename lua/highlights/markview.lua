@@ -1,7 +1,6 @@
 -- Markview highlights for Sonokai theme
 
 local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
-local code_bg = require("colors_bank").bank.code_bg
 
 return {
 	-- Palette (background + foreground)
@@ -38,10 +37,10 @@ return {
 	MarkviewHeading6Sign = { fg = colors.purple },
 
 	-- Code blocks
-	MarkviewCode = { bg = code_bg },
+	MarkviewCode = { bg = "code_bg" },
 	MarkviewCodeInfo = { fg = colors.grey_fg, bg = colors.one_bg },
 	MarkviewCodeFg = { fg = colors.cyan },
-	MarkviewInlineCode = { bg = code_bg, fg = colors.cyan },
+	MarkviewInlineCode = { bg = "code_bg", fg = colors.cyan },
 
 	-- Block quotes
 	MarkviewBlockQuoteDefault = { fg = colors.grey_fg },
