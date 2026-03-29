@@ -20,7 +20,7 @@ end
 ---@type LazySpec
 return {
 	"lewis6991/hover.nvim",
-	enabled = false,
+	-- enabled = false,
 	event = "VimEnter",
 	opts = {
 		--- List of modules names to load as providers.

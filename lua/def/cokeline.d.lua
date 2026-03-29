@@ -17,7 +17,7 @@
 ---@field  devicon { icon : string, color : string }
 ---@field  diagnostics { errors : integer, warnings : integer, infos : integer, hints : integer }
 
----@class Cokeline.Component
+---@class Cokeline.BufferComponent
 ---@field text?  string|fun(cx: Cokeline.Buffer): string
 ---@field style?  string|fun(cx: Cokeline.Buffer): string
 ---@field fg?  string|fun(cx: Cokeline.Buffer): string

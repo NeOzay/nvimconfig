@@ -1,7 +1,7 @@
 ---@type LazySpec
 return {
 	"lewis6991/satellite.nvim",
-	enabled = false,
+	-- enabled = false,
 	event = "BufReadPre",
 	opts = {
 		current_only = false,
@@ -35,7 +35,7 @@ return {
 				-- - SatelliteDiagnosticHint (default links to DiagnosticHint)
 			},
 			gitsigns = {
-				enable = true,
+				enable = false,
 				signs = { -- can only be a single character (multibyte is okay)
 					add = "│",
 					change = "│",

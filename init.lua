@@ -45,7 +45,7 @@ vim.keymap.set = require("utils").wrap(vim.keymap.set, function(keymap_set)
 			return keymap_set(modes, lhs, rhs, opts)
 		end
 
-		for i, mode in ipairs(modes) do
+		for _, mode in ipairs(modes) do
 			if mode_to_replace[mode] then
 				keymap_set(mode, azerty_lhs, rhs, opts)
 			end
@@ -68,60 +68,58 @@ vim.opt.rtp:prepend(lazypath)
 ---@type LazyConfig
 local lazy_config = require("lazy-conf")
 
--- load plugins
-require("lazy").setup(
-	{
-		"nvim-lua/plenary.nvim",
-		{
-			"nvim-tree/nvim-web-devicons",
-			opts = {},
-		},
-		{ import = "plugins.aerial" },
-		{ import = "plugins.auto-pairs" },
-		{ import = "plugins.blink-cmp" },
-		{ import = "plugins.cokeline" },
-		{ import = "plugins.conform" },
-		{ import = "plugins.copilot" },
-		{ import = "plugins.docstring-highlight" },
-		{ import = "plugins.dap" },
-		{ import = "plugins.codediff" },
-		{ import = "plugins.claudecode" },
-		{ import = "plugins.codecompanion" },
-		{ import = "plugins.fidget" },
-		{ import = "plugins.gitsigns" },
-		{ import = "plugins.harpoon" },
-		{ import = "plugins.hover" },
-		{ import = "plugins.hover-translator" },
-		-- { import = "plugins.illuminate" },
-		{ import = "plugins.indent-blankline" },
-		{ import = "plugins.lspconfig" },
-		{ import = "plugins.lsp-endhints" },
-		{ import = "plugins.which-key" },
-		{ import = "plugins.navic" },
-		{ import = "plugins.markview" },
-		{ import = "plugins.neo-tree" },
-		{ import = "plugins.neogit" },
-		{ import = "plugins.nvim-cmp" },
-		{ import = "plugins.persistence" },
-		{ import = "plugins.satellite" },
-		{ import = "plugins.schemastore" },
-		{ import = "plugins.statuscol.init" },
-		{ import = "plugins.telescope" },
-		{ import = "plugins.treesitter" },
-		{ import = "plugins.treesitter-context" },
-		{ import = "plugins.treesitter-textobjects" },
-		{ import = "plugins.trouble" },
-		{ import = "plugins.lualine" },
-		{ import = "plugins.snacks.init" },
-		{ import = "plugins.ufo.init" },
-		{ "lambdalisue/vim-suda", lazy = false },
-		{ import = "plugins.wezterm-types" },
-	},
-	lazy_config
-)
-
 -- load theme
-require("base46").setup(require("base46.config"))
+require("base46").setup()
+
+-- load plugins
+require("lazy").setup({
+	"nvim-lua/plenary.nvim",
+	{
+		"nvim-tree/nvim-web-devicons",
+		opts = {},
+	},
+	{ import = "plugins.aerial" },
+	{ import = "plugins.auto-pairs" },
+	{ import = "plugins.blink-cmp" },
+	{ import = "plugins.cokeline" },
+	{ import = "plugins.conform" },
+	{ import = "plugins.copilot" },
+	{ import = "plugins.docstring-highlight" },
+	{ import = "plugins.dap" },
+	{ import = "plugins.codediff" },
+	{ import = "plugins.claudecode" },
+	{ import = "plugins.codecompanion" },
+	{ import = "plugins.fidget" },
+	{ import = "plugins.gitsigns" },
+	{ import = "plugins.harpoon" },
+	-- { import = "plugins.hover" },
+	{ import = "plugins.hover-translator" },
+	-- { import = "plugins.illuminate" },
+	{ import = "plugins.indent-blankline" },
+	{ import = "plugins.lspconfig" },
+	{ import = "plugins.lsp-endhints" },
+	{ import = "plugins.which-key" },
+	{ import = "plugins.navic" },
+	{ import = "plugins.markview" },
+	{ import = "plugins.mason" },
+	-- { import = "plugins.neo-tree" },
+	{ import = "plugins.neogit" },
+	-- { import = "plugins.nvim-cmp" },
+	{ import = "plugins.persistence" },
+	{ import = "plugins.satellite" },
+	{ import = "plugins.schemastore" },
+	{ import = "plugins.statuscol.init" },
+	-- { import = "plugins.telescope" },
+	{ import = "plugins.treesitter" },
+	{ import = "plugins.treesitter-context" },
+	{ import = "plugins.treesitter-textobjects" },
+	{ import = "plugins.trouble" },
+	{ import = "plugins.lualine" },
+	{ import = "plugins.snacks.init" },
+	{ import = "plugins.ufo.init" },
+	{ "lambdalisue/vim-suda", lazy = false },
+	{ import = "plugins.wezterm-types" },
+}, lazy_config)
 
 require("options")
 require("autocmds")

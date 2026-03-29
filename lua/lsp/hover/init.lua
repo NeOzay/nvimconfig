@@ -150,6 +150,7 @@ lsp_hover.hover = function(error, result, context, _)
 		require("markview.actions").render(lsp_hover.window.buf, { enable = true, hybrid_mode = false }, {
 			markdown = {
 				block_quotes = { enable = false },
+				code_blocks = { style = "simple" },
 			},
 			markdown_inline = {
 				inline_codes = { padding_right = "", padding_left = "" },

@@ -19,10 +19,10 @@ local function gen_keymaps()
 		{
 			"<C-e>",
 			function()
-				require("pickers.harpoon")()
+				require("pickers.harpoon_snacks")()
 			end,
 			mode = "n",
-			desc = "Harpoon: Telescope",
+			desc = "Harpoon: Snacks picker",
 		},
 		{
 			"<leader>hm",
@@ -58,6 +58,15 @@ local function gen_keymaps()
 			end,
 			mode = "n",
 		})
+
+		table.insert(keys, {
+			("<leader><C-%s>"):format(key),
+			function()
+				print("Adding to harpoon list at index " .. i)
+				require("harpoon"):list():insert_at(nil, i)
+			end,
+			mode = "n",
+		})
 	end
 	return keys
 end
@@ -80,6 +89,19 @@ return {
 				sync_on_ui_close = true,
 			},
 		} --[[@as HarpoonPartialConfig ]])
+
+		-- Compacter la liste après chaque suppression pour garder les indices continus
+		harpoon:extend({
+			REMOVE = function(ctx)
+				local list = ctx.list
+				local compacted = {}
+				for _, item in pairs(list.items) do
+					table.insert(compacted, item)
+				end
+				list.items = compacted
+				list._length = #compacted
+			end,
+		})
 	end,
 	keys = gen_keymaps(),
 }

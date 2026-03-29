@@ -77,33 +77,33 @@ end
 ---@type LazyPluginSpec
 return {
 	"nvim-telescope/telescope.nvim",
-	-- enabled = false,
+	enabled = false,
 	opts = opts,
-	-- keys = {
-	-- 	{ "<leader>fw", pick("live_grep"), desc = "telescope live grep" },
-	-- 	{ "<leader>fb", pick("buffers"), desc = "telescope find buffers" },
-	-- 	{ "<leader>fh", pick("help_tags"), desc = "telescope help page" },
-	-- 	{ "<leader>ma", pick("marks"), desc = "telescope find marks" },
-	-- 	{ "<leader>fo", pick("oldfiles"), desc = "telescope find oldfiles" },
-	-- 	{ "<leader>fz", pick("current_buffer_fuzzy_find"), desc = "telescope find in current buffer" },
-	-- 	{ "<leader>cm", pick("git_commits"), desc = "telescope git commits" },
-	-- 	{ "<leader>gt", pick("git_status"), desc = "telescope git status" },
-	-- 	{ "<leader>pt", "<cmd>Telescope terms<CR>", desc = "telescope pick hidden term" },
-	-- 	{ "<leader>ff", pick("find_files"), desc = "telescope find files" },
-	-- 	{
-	-- 		"<leader>fa",
-	-- 		pick("find_files", { follow = true, no_ignore = true, hidden = true }),
-	-- 		desc = "telescope find all files",
-	-- 	},
-	-- 	{ "<F3>", pick("find_files"), desc = "telescope find files" },
-	-- 	{
-	-- 		"<leader>fj",
-	-- 		function()
-	-- 			require("pickers").jumplist()
-	-- 		end,
-	-- 		desc = "Telescope jumplist",
-	-- 	},
-	-- },
+	keys = {
+		{ "<leader>fw", pick("live_grep"), desc = "telescope live grep" },
+		{ "<leader>fb", pick("buffers"), desc = "telescope find buffers" },
+		{ "<leader>fh", pick("help_tags"), desc = "telescope help page" },
+		{ "<leader>ma", pick("marks"), desc = "telescope find marks" },
+		{ "<leader>fo", pick("oldfiles"), desc = "telescope find oldfiles" },
+		{ "<leader>fz", pick("current_buffer_fuzzy_find"), desc = "telescope find in current buffer" },
+		{ "<leader>cm", pick("git_commits"), desc = "telescope git commits" },
+		{ "<leader>gt", pick("git_status"), desc = "telescope git status" },
+		{ "<leader>pt", "<cmd>Telescope terms<CR>", desc = "telescope pick hidden term" },
+		{ "<leader>ff", pick("find_files"), desc = "telescope find files" },
+		{
+			"<leader>fa",
+			pick("find_files", { follow = true, no_ignore = true, hidden = true }),
+			desc = "telescope find all files",
+		},
+		{ "<F3>", pick("find_files"), desc = "telescope find files" },
+		{
+			"<leader>fj",
+			function()
+				require("pickers").jumplist()
+			end,
+			desc = "Telescope jumplist",
+		},
+	},
 	config = function(_, _opts)
 		local telescope = require("telescope")
 		-- vim.schedule(function()

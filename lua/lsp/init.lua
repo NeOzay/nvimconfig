@@ -6,6 +6,7 @@ M.lsp_configs = {
 	"python",
 	"json",
 	"typescript",
+	"rust",
 	-- Ajoutez d'autres configurations LSP ici
 }
 

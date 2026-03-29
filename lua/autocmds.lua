@@ -105,45 +105,48 @@ Userautocmd("CursorMoved", {
 })
 
 local function refresh_diagnostics(bufnr)
-	local clients = vim.lsp.get_clients({ bufnr = bufnr })
-	for _, client in ipairs(clients) do
-		if client:supports_method("textDocument/diagnostic") then
-			vim.lsp.buf_request(
-				bufnr,
-				"textDocument/diagnostic",
-				{ textDocument = vim.lsp.util.make_text_document_params(bufnr) },
-				nil
-			)
-		end
+	vim.lsp.diagnostic._refresh(bufnr)
+end
+
+local function refresh_current_buf()
+	local bufnr = vim.api.nvim_get_current_buf()
+	if vim.api.nvim_buf_is_loaded(bufnr) then
+		refresh_diagnostics(bufnr)
 	end
 end
 
--- Rafraîchir les diagnostics de tous les buffers ouverts après sauvegarde
+local diag_timer = nil
+
+local function debounced_refresh()
+	if diag_timer then
+		diag_timer:stop()
+	end
+	diag_timer = vim.defer_fn(refresh_current_buf, 500)
+end
+
+-- Rafraîchir les diagnostics 300ms après la dernière modification
+Userautocmd({ "TextChanged", "TextChangedI" }, {
+	callback = debounced_refresh,
+})
+
+-- Rafraîchir les diagnostics après sauvegarde du buffer courant
 Userautocmd("BufWritePost", {
 	callback = function()
-		-- Petit délai pour laisser le LSP traiter le fichier sauvegardé
-		vim.defer_fn(function()
-			-- Rafraîchir les diagnostics pour tous les buffers chargés
-			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-				if vim.api.nvim_buf_is_loaded(bufnr) then
-					-- Demander les diagnostics pour ce buffer
-					refresh_diagnostics(bufnr)
-				end
-			end
-		end, 500) -- 500ms de délai
+		vim.defer_fn(refresh_current_buf, 300)
+	end,
+})
+
+-- Rafraîchir les diagnostics en quittant le mode insertion
+Userautocmd("InsertLeave", {
+	callback = function()
+		vim.defer_fn(refresh_current_buf, 100)
 	end,
 })
 
 -- Rafraîchir les diagnostics lors de l'entrée dans un buffer
 Userautocmd("BufEnter", {
 	callback = function()
-		vim.defer_fn(function()
-			local bufnr = vim.api.nvim_get_current_buf()
-			if not vim.api.nvim_buf_is_loaded(bufnr) then
-				return
-			end
-			refresh_diagnostics(bufnr)
-		end, 500)
+		vim.defer_fn(refresh_current_buf, 300)
 	end,
 })
 

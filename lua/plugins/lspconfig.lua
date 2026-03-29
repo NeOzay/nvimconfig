@@ -94,11 +94,16 @@ local function config()
 
 	setup_floating_preview()
 
+	Userautocmd("LspAttach", {
+		callback = function(args)
+			on_attach(vim.lsp.get_client_by_id(args.data.client_id), args.buf)
+		end,
+	})
+
 	local capabilities = setup_capabilities()
 	vim.lsp.config("*", {
 		capabilities = capabilities,
 		on_init = on_init,
-		on_attach = on_attach,
 		root_dir = root_dir,
 	})
 

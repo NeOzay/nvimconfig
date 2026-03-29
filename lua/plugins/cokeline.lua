@@ -79,7 +79,6 @@ end
 -- 	states.has_separtor = false
 -- end
 
----@type table<string, Cokeline.Component>
 local components = {}
 
 -- components.reset_states = {
@@ -92,27 +91,36 @@ local components = {}
 -- }
 -- Indicateur gauche (harpon ou barre)
 
+---@type Cokeline.BufferComponent
 components.separator = {
+	text = function(buffer)
+		return "▎"
+	end,
+	fg = function(buffer)
+		if buffer.diagnostics and buffer.diagnostics.errors > 0 then
+			return colors.red
+		end
+		return buffer.diagnostics and buffer.diagnostics.warnings > 0 and colors.yellow or colors.blue
+	end,
+	bold = function(buffer)
+		return get_harpoon_index(buffer) ~= nil
+	end,
+}
+
+---@type Cokeline.BufferComponent
+components.index = {
 	text = function(buffer)
 		local idx = get_harpoon_index(buffer)
 		if idx then
-			return " " .. idx .. " "
+			return idx .. " "
 		end
-		-- if not states.pass_harpoon then
-		-- 	states.pass_harpoon = true
-		-- 	return "▎"
-		-- end
 		return " "
 	end,
 	fg = function(buffer)
 		local idx = get_harpoon_index(buffer)
 		if idx then
-			return buffer.is_focused and colors.cyan or colors.blue
+			return buffer.is_focused and colors.blue or colors.orange
 		end
-		if buffer.diagnostics and buffer.diagnostics.errors > 0 then
-			return colors.red
-		end
-		return buffer.is_modified and colors.yellow or colors.grey_fg
 	end,
 	bold = function(buffer)
 		return get_harpoon_index(buffer) ~= nil
@@ -120,6 +128,7 @@ components.separator = {
 }
 
 -- Icône fichier
+---@type Cokeline.BufferComponent
 components.icon = {
 	text = function(buffer)
 		return buffer.devicon.icon
@@ -131,6 +140,7 @@ components.icon = {
 
 local mixed_red = require("base46.colors").mix(colors.red, colors.grey, 40)
 -- Nom du fichier
+---@type Cokeline.BufferComponent
 components.filename = {
 	text = function(buffer)
 		return vim.fn.fnamemodify(buffer.filename, ":r") .. " "
@@ -147,6 +157,7 @@ components.filename = {
 }
 
 -- Préfixe unique
+---@type Cokeline.BufferComponent
 components.prefix = {
 	text = function(buffer)
 		return buffer.unique_prefix
@@ -155,6 +166,7 @@ components.prefix = {
 	italic = true,
 }
 -- Bouton fermer/unharpoon (affiche ● si modifié)
+---@type Cokeline.BufferComponent
 components.close = {
 	text = function(buffer)
 		return buffer.is_modified and "●" or "󰅖"
@@ -177,6 +189,7 @@ components.close = {
 	end,
 }
 
+---@type Cokeline.BufferComponent
 components.space = {
 	text = " ",
 }
@@ -201,7 +214,7 @@ local function config()
 	})
 
 	require("cokeline").setup({
-		show_if_buffers_are_at_least = 1,
+		show_if_buffers_are_at_least = 0,
 
 		buffers = {
 			filter_valid = function(buffer)
@@ -209,6 +222,7 @@ local function config()
 				return get_harpoon_index(buffer) ~= nil
 			end,
 			new_buffers_position = "last",
+			delete_on_right_click = false,
 		},
 
 		fill_hl = "TabLineFill",
@@ -229,6 +243,7 @@ local function config()
 		components = {
 			-- components.reset_states,
 			components.separator,
+			components.index,
 			components.icon,
 			components.prefix,
 			components.filename,

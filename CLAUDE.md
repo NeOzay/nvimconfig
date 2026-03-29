@@ -28,6 +28,10 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 - `pRequire(mod)` — Protected require, returns nil on failure
 - `Userautocmd(event, opts)` — Creates autocmd in group `UserAutocmds`
 
+## API Preferences
+- Préférer `vim.api.*` et `vim.fs.*` à `vim.fn.*` — les fonctions `vim.fn` sont des wrappers Vimscript plus lents et moins idiomatiques en Lua.
+- Exemples : `vim.api.nvim_buf_get_name()` plutôt que `vim.fn.bufname()`, `vim.fs.joinpath()` plutôt que `vim.fn.fnamemodify()`.
+
 # Startup Sequence
 
 `init.lua` controls the load order:
@@ -60,6 +64,8 @@ Palette: Red `#fc5d7c` · Green `#9ed072` · Yellow `#e7c664` · Cyan `#76cce0` 
 
 Detailed documentation for each plugin lives in `docs/plugins/<name>.md`.
 When working on a plugin, **read its doc first** and **update it with any discoveries**.
+
+Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.md`](docs/plugins/snacks-picker-custom.md)
 
 | Plugin | Config file | Notes |
 |---|---|---|
