@@ -3,7 +3,7 @@ local M = {}
 M.FOLD_END = "╰"
 
 M.indent_hls = {
-	"IblScopeChar",
+	"RainbowScopeGray",
 	"RainbowScopeRed",
 	"RainbowScopeYellow",
 	"RainbowScopeBlue",
@@ -15,7 +15,7 @@ M.indent_hls = {
 
 function M.setup_hl()
 	vim.api.nvim_set_hl(0, "CursorLineFold", { link = "Normal" })
-	vim.api.nvim_set_hl(0, "FoldColumn", { link = "IblChar" })
+	vim.api.nvim_set_hl(0, "FoldColumn", { link = "RainbowScopeGray" })
 end
 
 ---@param args statuscol.text.arg

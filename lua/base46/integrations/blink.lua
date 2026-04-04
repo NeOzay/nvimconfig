@@ -1,131 +1,135 @@
-local base16 = require("base46").get_theme_tb "base_16"
-local colors = require("base46").get_theme_tb "base_30"
+local palette = require("base46").get_palette()
 local mixcolors = require("base46.colors").mix
 local generate_color = require("base46.colors").change_hex_lightness
+local colors = require("base46.colors")
 
-local black2_l = generate_color(colors.black2, 6)
-local black2_d = generate_color(colors.black2, -6)
+local black2_l = generate_color(palette.black2, 6)
+local black2_d = generate_color(palette.black2, -6)
 
 local highlights = {
-  BlinkCmpMenu = { bg = colors.black },
-  BlinkCmpMenuBorder = { fg = colors.grey_fg },
-  BlinkCmpMenuSelection = { link = "PmenuSel", bold = true },
-  BlinkCmpScrollBarThumb = { bg = colors.grey },
-  BlinkCmpScrollBarGutter = { bg = colors.black2 },
-  BlinkCmpLabel = { fg = colors.white },
-  BlinkCmpLabelDeprecated = { fg = colors.red, strikethrough = true },
-  BlinkCmpLabelMatch = { fg = colors.blue, bold = true },
-  BlinkCmpLabelDetail = { fg = colors.light_grey },
-  BlinkCmpLabelDescription = { fg = colors.light_grey },
-  BlinkCmpSource = { fg = colors.grey_fg },
-  BlinkCmpGhostText = { fg = colors.grey_fg },
-  BlinkCmpDoc = { bg = colors.black },
-  BlinkCmpDocBorder = { fg = colors.grey_fg },
-  BlinkCmpDocSeparator = { fg = colors.grey },
-  BlinkCmpDocCursorLine = { bg = colors.one_bg },
-  BlinkCmpSignatureHelp = { bg = colors.black },
-  BlinkCmpSignatureHelpBorder = { fg = colors.grey_fg },
-  BlinkCmpSignatureHelpActiveParameter = { fg = colors.blue, bold = true },
+	BlinkCmpMenu = { bg = palette.black },
+	BlinkCmpMenuBorder = { fg = palette.grey_fg },
+	BlinkCmpMenuSelection = { link = "PmenuSel" },
+	BlinkCmpScrollBarThumb = { bg = palette.grey },
+	BlinkCmpScrollBarGutter = { bg = palette.black2 },
+	BlinkCmpLabel = { fg = palette.white },
+	BlinkCmpLabelDeprecated = { fg = palette.red, strikethrough = true },
+	BlinkCmpLabelMatch = { fg = palette.blue, bold = true },
+	BlinkCmpLabelDetail = { fg = palette.light_grey },
+	BlinkCmpLabelDescription = { fg = palette.light_grey },
+	BlinkCmpSource = { fg = palette.grey_fg },
+	BlinkCmpGhostText = { fg = palette.grey_fg },
+	BlinkCmpDoc = { bg = palette.black },
+	BlinkCmpDocBorder = { fg = palette.grey_fg },
+	BlinkCmpDocSeparator = { fg = palette.grey },
+	BlinkCmpDocCursorLine = { bg = palette.one_bg },
+	BlinkCmpSignatureHelp = { bg = palette.black },
+	BlinkCmpSignatureHelpBorder = { fg = palette.grey_fg },
+	BlinkCmpSignatureHelpActiveParameter = { fg = palette.blue, bold = true },
 }
 
 -- Kind highlights
 local kinds = {
-  Constant = base16.base09,
-  Function = base16.base0D,
-  Identifier = base16.base08,
-  Field = base16.base08,
-  Variable = base16.base0E,
-  Snippet = colors.red,
-  Text = base16.base0B,
-  Structure = base16.base0E,
-  Type = base16.base0A,
-  Keyword = base16.base07,
-  Method = base16.base0D,
-  Constructor = colors.blue,
-  Folder = base16.base07,
-  Module = base16.base0A,
-  Property = base16.base08,
-  Enum = colors.blue,
-  Unit = base16.base0E,
-  Class = colors.teal,
-  File = base16.base07,
-  Interface = colors.green,
-  Color = colors.white,
-  Reference = base16.base05,
-  EnumMember = colors.purple,
-  Struct = base16.base0E,
-  Value = colors.cyan,
-  Event = colors.yellow,
-  Operator = base16.base05,
-  TypeParameter = base16.base08,
-  Copilot = colors.green,
-  Codeium = colors.vibrant_green,
-  TabNine = colors.baby_pink,
-  SuperMaven = colors.yellow,
+	Constant = "@constant",
+	Function = "@function",
+	Identifier = palette.red,
+	Field = "@variable.member",
+	Variable = "@variable",
+	Snippet = palette.yellow,
+	Text = palette.green,
+	Structure = "Structure",
+	Type = "@type",
+	Keyword = "@keyword",
+	Method = "@function.method",
+	Constructor = "@constructor",
+	Folder = palette.pure_white,
+	Module = "@module",
+	Property = "@property",
+	Enum = "@lsp.type.enum",
+	Unit = palette.purple,
+	Class = "@lsp.type.class",
+	File = palette.pure_white,
+	Interface = "@lsp.type.interface",
+	Color = palette.white,
+	Reference = palette.white,
+	EnumMember = "@lsp.type.enumMember",
+	Struct = "@lsp.type.struct",
+	Value = palette.cyan,
+	Event = "@lsp.type.event",
+	Operator = "Operator",
+	TypeParameter = "@lsp.type.typeParameter",
+	Copilot = palette.green,
+	Codeium = palette.vibrant_green,
+	TabNine = palette.baby_pink,
+	SuperMaven = palette.yellow,
 }
 
 for kind, color in pairs(kinds) do
-  highlights["BlinkCmpKind" .. kind] = { fg = color }
+	if vim.startswith(color, "#") then
+		highlights["BlinkCmpKind" .. kind] = { fg = color, italic = true, bold = false }
+	else
+		highlights["BlinkCmpKind" .. kind] = colors.override_group(color, { italic = true, bold = false })
+	end
 end
 
 -- style-specific overrides
-local cmp_ui = require("nvconfig").ui.cmp
+-- local cmp_ui = require("nvconfig").ui.cmp
 
 local styles = {
-  default = {
-    BlinkCmpMenuBorder = { fg = colors.grey_fg },
-  },
+	default = {
+		BlinkCmpMenuBorder = { fg = palette.grey_fg },
+	},
 
-  atom = {
-    BlinkCmpMenu = { bg = colors.black2 },
-    BlinkCmpDoc = { bg = colors.darker_black },
-    BlinkCmpDocBorder = { fg = colors.darker_black, bg = colors.darker_black },
-  },
+	atom = {
+		BlinkCmpMenu = { bg = palette.black2 },
+		BlinkCmpDoc = { bg = palette.darker_black },
+		BlinkCmpDocBorder = { fg = palette.darker_black, bg = palette.darker_black },
+	},
 
-  atom_colored = {
-    BlinkCmpMenu = { bg = colors.black2 },
-    BlinkCmpDoc = { bg = colors.darker_black },
-    BlinkCmpDocBorder = { fg = colors.darker_black, bg = colors.darker_black },
-  },
+	atom_colored = {
+		BlinkCmpMenu = { bg = palette.black2 },
+		BlinkCmpDoc = { bg = palette.darker_black },
+		BlinkCmpDocBorder = { fg = palette.darker_black, bg = palette.darker_black },
+	},
 
-  flat_light = {
-    BlinkCmpMenu = { bg = colors.black2 },
-    BlinkCmpDoc = { bg = colors.darker_black },
-    BlinkCmpMenuBorder = { fg = colors.black2, bg = colors.black2 },
-    BlinkCmpDocBorder = { fg = colors.darker_black, bg = colors.darker_black },
-  },
+	flat_light = {
+		BlinkCmpMenu = { bg = palette.black2 },
+		BlinkCmpDoc = { bg = palette.darker_black },
+		BlinkCmpMenuBorder = { fg = palette.black2, bg = palette.black2 },
+		BlinkCmpDocBorder = { fg = palette.darker_black, bg = palette.darker_black },
+	},
 
-  flat_dark = {
-    BlinkCmpMenu = { bg = colors.darker_black },
-    BlinkCmpDoc = { bg = colors.black2 },
-    BlinkCmpMenuBorder = { fg = colors.darker_black, bg = colors.darker_black },
-    BlinkCmpDocBorder = { fg = colors.black2, bg = colors.black2 },
-  },
+	flat_dark = {
+		BlinkCmpMenu = { bg = palette.darker_black },
+		BlinkCmpDoc = { bg = palette.black2 },
+		BlinkCmpMenuBorder = { fg = palette.darker_black, bg = palette.darker_black },
+		BlinkCmpDocBorder = { fg = palette.black2, bg = palette.black2 },
+	},
 }
 
--- atom style: add bg to kinds
-if cmp_ui.style == "atom" then
-  for kind, _ in pairs(kinds) do
-    local hl_name = "BlinkCmpKind" .. kind
-    highlights[hl_name] = vim.tbl_deep_extend("force", highlights[hl_name] or {}, {
-      bg = vim.o.bg == "dark" and black2_l or black2_d,
-    })
-  end
-end
-
--- atom_colored: mix fg with black for bg
-if cmp_ui.style == "atom_colored" then
-  for kind, _ in pairs(kinds) do
-    local hl_name = "BlinkCmpKind" .. kind
-    local fg = highlights[hl_name] and highlights[hl_name].fg or colors.white
-    highlights[hl_name] = {
-      fg = fg,
-      bg = mixcolors(fg, colors.black, 70),
-    }
-  end
-end
+-- -- atom style: add bg to kinds
+-- if cmp_ui.style == "atom" then
+--   for kind, _ in pairs(kinds) do
+--     local hl_name = "BlinkCmpKind" .. kind
+--     highlights[hl_name] = vim.tbl_deep_extend("force", highlights[hl_name] or {}, {
+--       bg = vim.o.bg == "dark" and black2_l or black2_d,
+--     })
+--   end
+-- end
+--
+-- -- atom_colored: mix fg with black for bg
+-- if cmp_ui.style == "atom_colored" then
+--   for kind, _ in pairs(kinds) do
+--     local hl_name = "BlinkCmpKind" .. kind
+--     local fg = highlights[hl_name] and highlights[hl_name].fg or colors.white
+--     highlights[hl_name] = {
+--       fg = fg,
+--       bg = mixcolors(fg, colors.black, 70),
+--     }
+--   end
+-- end
 
 -- merge style overrides
-highlights = vim.tbl_deep_extend("force", highlights, styles[cmp_ui.style] or {})
+-- highlights = vim.tbl_deep_extend("force", highlights , styles[cmp_ui.style] or {})
 
 return highlights

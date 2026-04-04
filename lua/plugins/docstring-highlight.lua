@@ -1,8 +1,8 @@
 local function opts()
-	local mix = require("colors_bank").mix_colors_group
-	local attr = require("colors_bank").get_hi_attr
+	local mix = require("base46.colors").mix_colors_group
+	local attr = require("base46.colors").get_hi_attr
 	local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
-	local code_bg = require("colors_bank").bank.code_bg
+	local code_bg = require("base46.colors").bank.code_bg
 	---@type docstring-highlight.config
 	return {
 		hl = {

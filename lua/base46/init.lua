@@ -32,10 +32,16 @@ local set_hl = vim.api.nvim_set_hl
 ---@overload fun(tb_type: "base_30"): Base30Table
 ---@overload fun(tb_type: "base_16"): Base16Table
 ---@overload fun(tb_type: "base_16_terminal"): Base16TerminalTable?
+---@overload fun(tb_type: "extended_palette"): table<string, string>?
 ---@overload fun(tb_type: "polish_hl"): table<string, Base46HLTable>?
 ---@overload fun(tb_type: "type"): "dark"|"light"
 function M.get_theme_tb(tb_type)
 	return require("themes.sonokai")[tb_type]
+end
+
+---@return Base46ExtendedTable
+function M.get_palette()
+	return require("base46.palette").get_palette()
 end
 
 --- Résout la syntaxe spéciale de couleurs dans une table de highlights.

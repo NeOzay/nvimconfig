@@ -1,4 +1,5 @@
----@type LazySpec
+---@diagnostic disable:missing-fields
+---@type LazyPluginSpec
 return {
 	"saghen/blink.cmp",
 	event = "InsertEnter",
@@ -28,12 +29,17 @@ return {
 			preset = "luasnip",
 		},
 
+		---@type blink.cmp.SourceConfigPartial
 		sources = {
+			min_keyword_length = function(a)
+				return vim.bo.filetype == "markdown" and 2 or 0
+			end,
 			default = { "lsp", "copilot", "snippets", "path", "buffer" },
 			per_filetype = {
 				AvanteInput = { "avante_commands", "avante_mentions", "avante_files", "avante_shortcuts" },
 				codecompanion = { "codecompanion" },
 			},
+			---@type table<string, blink.cmp.SourceProviderConfig>
 			providers = {
 				copilot = {
 					name = "copilot",
@@ -75,8 +81,9 @@ return {
 				-- },
 			},
 		},
-
+		---@type blink.cmp.CompletionConfig
 		completion = {
+			keyword = { range = "full" },
 			accept = {
 				auto_brackets = {
 					enabled = true,
@@ -84,7 +91,7 @@ return {
 			},
 			menu = {
 				draw = {
-					columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
+					columns = { { "kind_icon" }, { "label", "label_description", gap = 1 }, { "kind" } },
 				},
 			},
 			documentation = {
@@ -132,7 +139,14 @@ return {
 				Copilot = "",
 			},
 		},
-
+		---@type blink.cmp.CmdlineConfigPartial
+		cmdline = {
+			completion = {
+				menu = {
+					auto_show = true,
+				},
+			},
+		},
 		signature = {
 			enabled = false,
 			window = {

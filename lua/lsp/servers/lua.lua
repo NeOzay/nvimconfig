@@ -6,6 +6,7 @@ M.name = "emmylua_ls"
 M.filetypes = { "lua" }
 
 M.cmd = { "/var/home/Benoit/projects/emmylua-analyzer-rust/target/release/emmylua_ls" }
+-- M.cmd = { "emmylua_ls" }
 
 -- M.root_dir = function(bufnr, on_dir)
 -- 	local fname = vim.api.nvim_buf_get_name(bufnr)
@@ -81,9 +82,69 @@ local function add_nvim_libs(settings)
 end
 
 local black_list = {
-	["claudecode.nvim"] = true,
-	["promise-async"] = true,
+	-- ["claudecode.nvim"] = true,
+	-- ["promise-async"] = true,
 }
+
+local type_skip = {
+	lua = true,
+	plugin = true,
+	doc = true,
+	tests = true,
+	test = true,
+	spec = true,
+	bench = true,
+	[".git"] = true,
+	[".github"] = true,
+}
+
+local function has_meta_file(subdir)
+	local handle = vim.uv.fs_scandir(subdir)
+	if not handle then
+		return false
+	end
+	while true do
+		local fname, ftype = vim.uv.fs_scandir_next(handle)
+		if not fname then
+			return false
+		end
+		if ftype ~= "file" or not fname:match("%.lua$") then
+			goto next
+		end
+		local f = io.open(vim.fs.joinpath(subdir, fname))
+		if not f then
+			goto next
+		end
+		local first = f:read("*l")
+		f:close()
+		if first and first:match("^%-%-%-%s*@meta") then
+			return true
+		end
+		::next::
+	end
+end
+
+local function add_type_dirs(lib, dir)
+	local handle = vim.uv.fs_scandir(dir)
+	if not handle then
+		return
+	end
+	while true do
+		local name, kind = vim.uv.fs_scandir_next(handle)
+		if not name then
+			return
+		end
+		if kind ~= "directory" or type_skip[name] then
+			goto next
+		end
+		local subdir = vim.fs.joinpath(dir, name)
+		if has_meta_file(subdir) then
+			vim.print("Adding type directory to EmmyLua workspace:", subdir)
+			table.insert(lib, subdir)
+		end
+		::next::
+	end
+end
 
 local function add_plugins_to_lib(settings, whitelist)
 	local lib = settings.Lua.workspace.library
@@ -110,7 +171,12 @@ local function add_plugins_to_lib(settings, whitelist)
 		if plugin.enabled == false or black_list[name] or not is_whitelisted(name) then
 			goto continue
 		end
-		table.insert(lib, vim.fn.resolve(plugin.dir))
+		local dir = vim.fn.resolve(plugin.dir)
+		local lua_path = vim.fs.joinpath(dir, "lua")
+		if vim.uv.fs_stat(lua_path) then
+			table.insert(lib, lua_path)
+		end
+		add_type_dirs(lib, dir)
 
 		::continue::
 	end

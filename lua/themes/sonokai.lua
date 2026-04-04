@@ -37,15 +37,24 @@ M.base_30 = {
 
 local base_30 = M.base_30
 
+---@class (partial) Base46ExtendedPalette
+M.extended_palette = {
+	lighter_black = "#33353f", -- between black and black2
+	off_white = "#e8e8e9", -- light foreground (rarely used)
+	pure_white = "#eeeeef", -- lightest foreground (rarely used)
+}
+
+local ext = M.extended_palette
+
 M.base_16 = {
 	base00 = base_30.black,
-	base01 = "#33353f",
+	base01 = ext.lighter_black,
 	base02 = base_30.one_bg2,
 	base03 = base_30.one_bg3,
 	base04 = base_30.grey_fg,
 	base05 = base_30.white,
-	base06 = "#e8e8e9",
-	base07 = "#eeeeef",
+	base06 = ext.off_white,
+	base07 = ext.pure_white,
 	base08 = base_30.red,
 	base09 = base_30.purple,
 	base0A = base_30.yellow,

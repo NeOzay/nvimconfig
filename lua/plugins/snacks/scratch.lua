@@ -1,4 +1,4 @@
-local colors = require("colors_bank")
+local colors = require("base46.colors")
 
 local cmd = vim.api.nvim_create_user_command
 
@@ -6,7 +6,7 @@ local function default_ft()
 	if vim.bo.buftype == "" and vim.bo.filetype ~= "" then
 		return vim.bo.filetype
 	end
-	return "markdown"
+	return "markdo"
 end
 
 local subcommands = { "list", "last", "new" }

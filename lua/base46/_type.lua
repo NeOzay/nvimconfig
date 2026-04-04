@@ -26,7 +26,7 @@
 
 ---@alias Base46ExtendedColors
 ---| Base46Colors
----| Base46ExtendedPalette
+---| keyof Base46ExtendedPalette
 ---| string
 
 ---@alias Base46Colors
@@ -43,6 +43,7 @@
 ---@field base_16_terminal? Base16TerminalTable colors to be used in terminal
 ---@field type "dark"|"light" Denoting value to set for `vim.opt.bg`
 ---@field polish_hl? table<string, Base46HLTable> highlight groups to be changed from the default color
+---@field extended_palette? table<string, string> theme-specific non-standard colors
 
 ---@class Base16Table
 ---@field base00 string Neovim Default Background
@@ -111,3 +112,5 @@
 ---@field lightbg string Statusline Components
 ---@field pmenu_bg string Pop-up Menu Selection
 ---@field folder_bg string Nvimtree Items
+
+---@class Base46ExtendedTable: Base30Table, Base16Table, Base46ExtendedPalette

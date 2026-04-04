@@ -65,6 +65,10 @@ function M.load_integration(name)
 	end
 
 	if not (ok_default or ok_user) or type(hl) ~= "table" then
+		vim.notify("Impossible de charger " .. name, vim.log.levels.WARN)
+		return
+	end
+	if vim.tbl_isempty(hl) then
 		return
 	end
 
@@ -93,6 +97,7 @@ function M.load_matching(plugin_name)
 		for _, name in ipairs(list) do
 			if plugin_name:find(escape(name)) then
 				M.load_integration(name)
+				return
 			end
 		end
 	end
@@ -111,8 +116,8 @@ function M.setup_autocmds(config)
 		once = true,
 		callback = function()
 			for _, plugin in ipairs(require("lazy").plugins()) do
-				if plugin._.loaded then
-					M.load_matching(plugin.name)
+				if plugin._.loaded and plugin.enabled then
+					--M.load_matching(plugin.name)
 				end
 			end
 		end,

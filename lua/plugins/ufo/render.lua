@@ -10,7 +10,7 @@ M.SPACE = " "
 local LSP_PRIORITY, TS_PRIORITY = 2, 1
 
 -- Highlight pour le compteur de lignes des folds
-api.nvim_set_hl(0, "UfoFoldCount", { fg = require("colors_bank").get_hi_attr("Comment", "fg"), italic = true })
+api.nvim_set_hl(0, "UfoFoldCount", { fg = require("base46.colors").get_hi_attr("Comment", "fg"), italic = true })
 
 -- Cache des namespaces LSP
 local lsp_ns_cache = nil
@@ -20,19 +20,19 @@ api.nvim_create_autocmd("LspAttach", {
 		lsp_ns_cache = nil
 	end,
 })
-
--- Rafraîchir les folds quand les semantic tokens sont mis à jour
-api.nvim_create_autocmd("LspTokenUpdate", {
-	callback = function(args)
-		lsp_ns_cache = nil
-		local ufo, ok = pRequire("ufo")
-		if ok then
-			ufo.disableFold(args.buf)
-			ufo.enableFold(args.buf)
-		end
-	end,
-	once = true,
-})
+--
+-- -- Rafraîchir les folds quand les semantic tokens sont mis à jour
+-- api.nvim_create_autocmd("LspTokenUpdate", {
+-- 	callback = function(args)
+-- 		lsp_ns_cache = nil
+-- 		local ufo, ok = pRequire("ufo")
+-- 		if ok then
+-- 			ufo.disableFold(args.buf)
+-- 			ufo.enableFold(args.buf)
+-- 		end
+-- 	end,
+-- 	once = true,
+-- })
 
 ---@class FoldHighlight
 ---@field start_col number

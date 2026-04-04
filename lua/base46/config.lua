@@ -1,3 +1,4 @@
+---@diagnostic disable:missing-fields
 -- User highlight overrides for base46.
 -- Supports: palette names ("blue"), lightness tuples ({ "blue", -20 }),
 -- mix tuples ({ "orange", "line", 80 }), and direct hex values.
@@ -8,7 +9,7 @@ return {
 	integrations = "highlights",
 
 	--@type table<string, string|Base46MixedColor>
-	---@enum (key) Base46ExtendedPalette
+	---@class (partial) Base46ExtendedPalette
 	extended_palette = {
 		Type = { "blue", -20 },
 		Enum = { { "blue", -20 }, "purple", 50 },
@@ -19,14 +20,11 @@ return {
 		CodeDiffCharInsert = { "green", "black", 80 },
 		CodeDiffCharDelete = { "red", "black", 80 },
 
-		code_bg = { "one_bg2", "black", 100 },
+		code_bg = { "one_bg2", "black", 80 },
 		scratch_desc = { "green", "black2", 85 },
 	},
 
 	hl_override = {
-		-- indent-blankline
-		IblChar = { fg = "line" },
-		IblScopeChar = { fg = "grey" },
 
 		-- LSP semantic overrides
 		["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
@@ -62,6 +60,7 @@ return {
 		DiagnosticUnderlineError = { sp = "red", undercurl = true },
 
 		-- Rainbow indent colors
+		RainbowIndentGray = { fg = "line" },
 		RainbowIndentRed = { fg = { "red", "line", 80 } },
 		RainbowIndentYellow = { fg = { "yellow", "line", 80 } },
 		RainbowIndentBlue = { fg = { "blue", "line", 80 } },
@@ -70,6 +69,7 @@ return {
 		RainbowIndentViolet = { fg = { "purple", "line", 80 } },
 		RainbowIndentCyan = { fg = { "cyan", "line", 80 } },
 
+		RainbowScopeGray = { fg = "grey" },
 		RainbowScopeRed = { fg = { "red", "grey", 50 } },
 		RainbowScopeYellow = { fg = { "yellow", "grey", 50 } },
 		RainbowScopeBlue = { fg = { "blue", "grey", 50 } },
@@ -85,34 +85,6 @@ return {
 		-- Treesitter context
 		TreesitterContext = { bg = "black" },
 		TreesitterContextBottom = { fg = "NONE", bg = "none" },
-
-		-- Blink.cmp kind colors
-		BlinkCmpKindText = { link = "@text" },
-		BlinkCmpKindMethod = { link = "@function.method" },
-		BlinkCmpKindFunction = { link = "@function" },
-		BlinkCmpKindConstructor = { link = "@constructor" },
-		BlinkCmpKindField = { link = "@variable.member" },
-		BlinkCmpKindVariable = { link = "@variable" },
-		BlinkCmpKindClass = { link = "@type" },
-		BlinkCmpKindInterface = { link = "@type" },
-		BlinkCmpKindModule = { link = "@module" },
-		BlinkCmpKindProperty = { link = "@property" },
-		BlinkCmpKindUnit = { link = "@number" },
-		BlinkCmpKindValue = { link = "@number" },
-		BlinkCmpKindEnum = { link = "@type" },
-		BlinkCmpKindKeyword = { link = "@keyword" },
-		BlinkCmpKindSnippet = { link = "@string" },
-		BlinkCmpKindColor = { link = "@constant" },
-		BlinkCmpKindFile = { link = "@string.special.path" },
-		BlinkCmpKindReference = { link = "@variable.parameter.reference" },
-		BlinkCmpKindFolder = { link = "@string.special.path" },
-		BlinkCmpKindEnumMember = { link = "@constant" },
-		BlinkCmpKindConstant = { link = "@constant" },
-		BlinkCmpKindStruct = { link = "@type" },
-		BlinkCmpKindEvent = { link = "@type" },
-		BlinkCmpKindOperator = { link = "@operator" },
-		BlinkCmpKindTypeParameter = { link = "@type" },
-		BlinkCmpKindCopilot = { fg = "green" },
 
 		-- DAP (debugger) signs
 		DapBreakpoint = { fg = "red" },

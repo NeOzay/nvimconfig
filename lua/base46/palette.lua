@@ -9,7 +9,12 @@ local M = {}
 ---@return table<string, string>
 function M.get_palette()
 	local base46 = require("base46")
-	local palette = vim.tbl_extend("force", base46.get_theme_tb("base_30"), base46.get_theme_tb("base_16"))
+	local palette = vim.tbl_extend(
+		"force",
+		base46.get_theme_tb("base_30"),
+		base46.get_theme_tb("base_16"),
+		base46.get_theme_tb("extended_palette") or {}
+	)
 	for name, color in pairs(base46.config.extended_palette or {}) do
 		palette[name] = M.resolve_color(color, palette)
 	end

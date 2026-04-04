@@ -1,7 +1,6 @@
 -- CodeDiff highlights for Sonokai theme
 
 local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
-local bank = require("colors_bank").bank
 
 return {
 	-- Diff: line-level

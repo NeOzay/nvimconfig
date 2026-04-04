@@ -1,8 +1,7 @@
 -- Snacks picker highlights for Sonokai theme
 
 local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
-local mix = require("colors_bank").mix_colors_group
-local bank = require("colors_bank").bank
+local mix = require("base46.colors").mix_colors_group
 
 ---@type Base46HLTable
 return {

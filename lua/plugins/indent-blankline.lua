@@ -10,7 +10,7 @@ return {
 			tab_char = "▎",
 			smart_indent_cap = true,
 			highlight = {
-				"IblChar",
+				"RainbowIndentGray",
 				"RainbowIndentRed",
 				"RainbowIndentYellow",
 				"RainbowIndentBlue",
@@ -26,7 +26,7 @@ return {
 			enabled = true,
 			show_start = true,
 			highlight = {
-				"IblScopeChar",
+				"RainbowScopeGray",
 				"RainbowScopeRed",
 				"RainbowScopeYellow",
 				"RainbowScopeBlue",
