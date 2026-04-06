@@ -2,8 +2,18 @@ local api = vim.api
 
 local M = {}
 
+---@class Ozay.UfoFoldRange
+---@field startLine integer
+---@field endLine integer
+
+---@class Ozay.UfoFoldBuffer
+---@field foldRanges Ozay.UfoFoldRange[]
+---@field closeFold fun(self: Ozay.UfoFoldBuffer, lnum: integer, end_lnum: integer)
+---@field openFold fun(self: Ozay.UfoFoldBuffer, lnum: integer)
+
 --- Trouve le fold cible et ses enfants pour le curseur actuel
----@return table|nil fb, table|nil folds (triés par taille croissante)
+---@return Ozay.UfoFoldBuffer? fb
+---@return Ozay.UfoFoldRange[]? folds triés par taille croissante
 function M.get_cursor_fold_tree()
 	local bufnr = api.nvim_get_current_buf()
 	local row = api.nvim_win_get_cursor(0)[1] - 1
