@@ -117,6 +117,7 @@ require("lazy").setup({
 	{ import = "plugins.lualine" },
 	{ import = "plugins.snacks.init" },
 	{ import = "plugins.ufo.init" },
+	{ import = "plugins.uv" },
 	{ "lambdalisue/vim-suda", lazy = false },
 	{ import = "plugins.wezterm-types" },
 }, lazy_config)
