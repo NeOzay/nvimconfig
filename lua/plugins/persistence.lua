@@ -1,3 +1,17 @@
+-- Fermer les fenêtres nofile (Trouble, quickfix, etc.) avant la sauvegarde
+Userautocmd("User", {
+	pattern = "PersistenceSavePre",
+	callback = function()
+		for _, win in ipairs(vim.api.nvim_list_wins()) do
+			local buf = vim.api.nvim_win_get_buf(win)
+			local bt = vim.api.nvim_get_option_value("buftype", { buf = buf })
+			if bt ~= "" and bt ~= "help" then
+				vim.api.nvim_win_close(win, false)
+			end
+		end
+	end,
+})
+
 -- Restaurer automatiquement la session au démarrag
 Userautocmd("VimEnter", {
 	nested = true,

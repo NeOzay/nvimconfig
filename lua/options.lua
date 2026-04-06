@@ -52,6 +52,9 @@ o.autoindent = true
 o.clipboard = "unnamed"
 -- vim.g.clipboard = "wl-copy"
 
+-- Session : ne restaurer que les buffers visibles dans une fenêtre
+vim.opt.sessionoptions:remove("buffers")
+
 -- Options pour nvim-ufo (folding)
 o.foldcolumn = "1"
 o.foldlevel = 99
