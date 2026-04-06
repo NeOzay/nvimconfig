@@ -85,7 +85,7 @@ require("lazy").setup({
 	{ import = "plugins.conform" },
 	{ import = "plugins.copilot" },
 	{ import = "plugins.docstring-highlight" },
-	{ import = "plugins.dap" },
+	{ import = "plugins.dap.init" },
 	{ import = "plugins.codediff" },
 	{ import = "plugins.claudecode" },
 	{ import = "plugins.codecompanion" },
