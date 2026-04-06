@@ -142,6 +142,12 @@ return {
 		---@type blink.cmp.CmdlineConfigPartial
 		cmdline = {
 			completion = {
+				list = {
+					selection = {
+						preselect = false,
+						auto_insert = true,
+					},
+				},
 				menu = {
 					auto_show = true,
 				},

@@ -59,12 +59,13 @@ local function load_harpoon_buffers()
 	for _, item in pairs(list.items) do
 		local path = vim.fs.abspath(item.value)
 		if vim.fn.filereadable(path) == 1 and vim.fn.bufnr(path) == -1 then
-			-- 1. Créer un nouveau buffer (pas forcément listé ou chargé)
-			local bufnr = vim.api.nvim_create_buf(true, false)
-			-- 2. Définir le nom du fichier pour ce buffer
-			vim.api.nvim_buf_set_name(bufnr, path)
-			-- 3. Charger le contenu du fichier sur le disque
+			local bufnr = vim.fn.bufadd(path)
 			vim.fn.bufload(bufnr)
+			vim.api.nvim_set_option_value("buflisted", true, { buf = bufnr })
+			local ft = vim.filetype.match({ buf = bufnr, filename = path })
+			if ft then
+				vim.api.nvim_set_option_value("filetype", ft, { buf = bufnr })
+			end
 		end
 	end
 end

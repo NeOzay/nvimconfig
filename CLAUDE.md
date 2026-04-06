@@ -32,6 +32,11 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 - Préférer `vim.api.*` et `vim.fs.*` à `vim.fn.*` — les fonctions `vim.fn` sont des wrappers Vimscript plus lents et moins idiomatiques en Lua.
 - Exemples : `vim.api.nvim_buf_get_name()` plutôt que `vim.fn.bufname()`, `vim.fs.joinpath()` plutôt que `vim.fn.fnamemodify()`.
 
+## Annotations de types Emmylua
+- Tout nouveau type déclaré avec `---@class`, `---@alias` ou `---@enum` doit être préfixé par `Ozay.` pour éviter les collisions avec les types d'autres plugins.
+- Exemple : `---@class Ozay.MyType`, `---@alias Ozay.MyAlias string`, `---@enum Ozay.MyEnum`.
+- Alternative : utiliser `---@namespace Ozay` en tête de fichier pour préfixer implicitement tous les types du fichier (évite la répétition du préfixe sur chaque déclaration).
+
 # Startup Sequence
 
 `init.lua` controls the load order:

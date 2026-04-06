@@ -1,17 +1,16 @@
 local function opts()
 	local mix = require("base46.colors").mix_colors_group
 	local attr = require("base46.colors").get_hi_attr
-	local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
-	local code_bg = require("base46.colors").bank.code_bg
+	local colors = require("base46").get_palette()
 	---@type docstring-highlight.config
 	return {
 		hl = {
-			DocstringSection = { bold = true, fg = mix(colors.purple, "@comment", 45) },
-			DocstringParam = { bold = true, fg = mix("@variable.parameter", "@comment", 45) },
+			DocstringSection = { bold = true, fg = mix(colors.purple, "@comment", 0) },
+			DocstringParam = { bold = true, fg = mix("@variable.parameter", "@comment", 0) },
 			DocstringCodeBlock = { fg = attr("Comment", "fg"), bg = colors.one_bg2 },
 		},
 		-- codeblock_blend = 50,
-		bg = code_bg,
+		bg = colors.code_bg,
 	}
 end
 

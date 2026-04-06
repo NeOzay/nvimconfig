@@ -242,5 +242,9 @@ local keys = {
 	desc = "picker highlights",
 }
 
+vim.api.nvim_create_user_command("Pickers", function()
+	Snacks.picker.pickers()
+end, { desc = "list pickers" })
+
 ---@type SnacksSubmodule
 return { opts = opts, keys = keys }

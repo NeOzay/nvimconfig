@@ -11,7 +11,7 @@ end
 
 function M.setup()
 	vim.opt_global.laststatus = 2
-	local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
+	local colors = require("base46").get_palette()
 	local bg = colors.statusline_bg
 
 	local theme = {
@@ -160,6 +160,9 @@ function M.setup()
 			end,
 			color = { bg = colors.red, fg = bg },
 			padding = { left = 0, right = 0 },
+			cond = function(ctx)
+				return check_win_width(ctx.winid, 85)
+			end,
 		},
 		{
 			function()

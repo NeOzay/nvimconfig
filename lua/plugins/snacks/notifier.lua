@@ -69,5 +69,9 @@ local opts = {
 ---@type LazyKeysSpec[]
 local keys = {}
 
+vim.api.nvim_create_user_command("Notifi", function()
+	Snacks.picker.notifications()
+end, { desc = "list notifications" })
+
 ---@type SnacksSubmodule
 return { opts = opts, keys = keys }
