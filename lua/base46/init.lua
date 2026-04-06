@@ -18,7 +18,7 @@ M.loaded_integrations = {}
 
 ---@type Base46Config
 M.config = {
-	theme = "sonokai",
+	theme = "themes.sonokai",
 	transparency = false,
 	hl_override = {},
 	integrations = "highlights",
@@ -36,7 +36,7 @@ local set_hl = vim.api.nvim_set_hl
 ---@overload fun(tb_type: "polish_hl"): table<string, Base46HLTable>?
 ---@overload fun(tb_type: "type"): "dark"|"light"
 function M.get_theme_tb(tb_type)
-	return require("themes.sonokai")[tb_type]
+	return require(M.config.theme)[tb_type]
 end
 
 ---@return Base46ExtendedTable
@@ -109,6 +109,7 @@ function M.reload()
 	end
 	package.loaded["base46.integrations.defaults"] = nil
 	package.loaded["base46.config"] = nil
+	package.loaded[M.config.theme] = nil
 
 	-- Reset état
 	loader.reset_cache()

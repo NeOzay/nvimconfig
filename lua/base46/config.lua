@@ -5,14 +5,14 @@
 
 ---@type Base46Config
 return {
-	theme = "sonokai",
+	theme = "themes.sonokai",
 	integrations = "highlights",
 
-	--@type table<string, string|Base46MixedColor>
+	---@type table<string, string|Base46MixedColor>
 	---@class (partial) Base46ExtendedPalette
 	extended_palette = {
 		Type = { "blue", -20 },
-		Enum = { { "blue", -20 }, "purple", 50 },
+		Enum = { { "orange", -15 }, "purple", 60 },
 		Field = "#A6A67C",
 
 		CodeDiffLineInsert = { "green", "black", 92 },
@@ -20,7 +20,7 @@ return {
 		CodeDiffCharInsert = { "green", "black", 80 },
 		CodeDiffCharDelete = { "red", "black", 80 },
 
-		code_bg = { "one_bg2", "black", 80 },
+		code_bg = { "one_bg2", "black", 50 },
 		scratch_desc = { "green", "black2", 85 },
 	},
 
@@ -37,8 +37,9 @@ return {
 		["@lsp.type.comment"] = { link = "@comment" },
 		["@lsp.type.property"] = { fg = "Field" },
 		["@lsp.type.class"] = { fg = "Type" },
-		["@lsp.type.namespace"] = { fg = "Type" },
+		["@lsp.type.namespace"] = { fg = "purple" },
 		["@lsp.type.struct"] = { link = "@type" },
+		["@lsp.type.typeParameter"] = { fg = "red" },
 		["@lsp"] = { fg = "NONE", bg = "NONE" },
 		["@lsp.type.variable"] = { link = "@lsp" },
 		["@lsp.type.enum"] = { fg = "Enum" },
@@ -46,10 +47,11 @@ return {
 		-- Syntax overrides
 		["Comment"] = { link = "@comment" },
 		["@comment"] = { italic = false },
-		["@keyword"] = { italic = true, fg = "blue" },
-		["@keyword.function"] = { italic = true, fg = "blue" },
+		["@keyword"] = { fg = "blue", italic = true },
+		["@keyword.function"] = { fg = "blue", italic = true },
 		["@keyword.conditional"] = { fg = "red", italic = true },
-		["@keyword.return"] = { italic = true, fg = "blue" },
+		["@keyword.return"] = { fg = "blue", italic = true },
+		["@keyword.exception"] = { fg = "blue", italic = true },
 		["@property"] = { fg = "Field" },
 		["@variable.member"] = { fg = "Field" },
 		["@type"] = { fg = "Type" },

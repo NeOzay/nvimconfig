@@ -168,7 +168,7 @@ M.polish_hl = {
 		["@lsp.type.function"] = { fg = base_30.green },
 		["@lsp.type.method"] = { fg = base_30.green },
 		["@lsp.type.macro"] = { fg = base_30.purple },
-		["@lsp.type.decorator"] = { fg = base_30.cyan },
+		["@lsp.type.decorator"] = { fg = base_30.purple },
 		["@lsp.type.comment"] = { fg = base_30.grey_fg },
 	},
 
