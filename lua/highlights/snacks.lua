@@ -8,6 +8,8 @@ return {
 	SnacksNormal = { fg = colors.white, bg = colors.black },
 	SnacksNormalNC = { fg = colors.white, bg = colors.black },
 
+	SnacksDebugPrint = { fg = colors.one_bg3, bg = colors.one_bg },
+
 	-- Picker
 	SnacksPicker = { link = "SnacksNormal" },
 	SnacksPickerBorder = { fg = colors.line },
@@ -29,6 +31,10 @@ return {
 	SnacksFooterDesc = { fg = colors.green, bg = "scratch_desc" },
 	SnacksFooterKey = { fg = colors.green, bg = colors.one_bg3 },
 
+	-- Dashboard
+	SnacksDashboardDir = { fg = mix("comment", "Normal", 60) },
+	SnacksDashboardKey = { fg = colors.green },
+
 	-- Explorer tree
 	SnacksPickerTree = { fg = colors.grey },
 
@@ -49,4 +55,5 @@ return {
 
 	-- Input
 	SnacksInputIcon = { fg = colors.green, bg = colors.black },
+	SnacksPickerInputSearch = { fg = colors.blue, bg = colors.black, italic = true },
 }

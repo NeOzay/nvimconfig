@@ -11,6 +11,7 @@ local modules = {
 	require("plugins.snacks.scratch"),
 	require("plugins.snacks.picker"),
 	require("plugins.snacks.explorer"),
+	require("plugins.snacks.dashboard"),
 }
 
 ---@type snacks.Config

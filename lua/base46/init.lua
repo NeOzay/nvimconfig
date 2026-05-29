@@ -25,6 +25,9 @@ M.config = {
 	extended_palette = {},
 }
 
+---@type Partial<Base46Config>
+M.opts = {}
+
 local set_hl = vim.api.nvim_set_hl
 
 ---@param tb_type keyof Base46Theme
@@ -54,10 +57,8 @@ end
 
 -- ── Setup ───────────────────────────────────────────────────────────
 
---- Configure et applique le thème, enregistre les autocmds d'intégrations.
----@param opts? Partial<Base46Config>
-function M.setup(opts)
-	M.config = vim.tbl_deep_extend("force", M.config, require("base46.config"), opts or {})
+local function load()
+	M.config = vim.tbl_deep_extend("force", M.config, require("base46.config"), M.opts)
 
 	vim.o.termguicolors = true
 	vim.o.background = M.get_theme_tb("type") or "dark"
@@ -93,6 +94,13 @@ function M.setup(opts)
 	require("base46.loader").setup_autocmds(M.config)
 end
 
+--- Configure et applique le thème, enregistre les autocmds d'intégrations.
+---@param opts? Partial<Base46Config>
+function M.setup(opts)
+	M.opts = opts or M.opts
+	load()
+end
+
 -- ── Reload ──────────────────────────────────────────────────────────
 
 --- Vide tous les caches et recharge l'ensemble des highlights + intégrations.
@@ -116,7 +124,7 @@ function M.reload()
 	M.loaded_integrations = {}
 
 	-- Réappliquer via setup (highlights + autocmds idempotents)
-	M.setup()
+	load()
 
 	-- Recharger les intégrations pour les plugins déjà actifs
 	for _, plugin in ipairs(require("lazy").plugins()) do

@@ -3,7 +3,9 @@ local M = {}
 -- Liste des fichiers de configuration LSP à charger
 M.lsp_configs = {
 	"lua",
-	"python",
+	-- python
+	"basedpyright",
+	-- "ty",
 	"json",
 	"typescript",
 	"rust",

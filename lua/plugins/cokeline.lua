@@ -1,4 +1,3 @@
-local format = require("blink-cmp-copilot.format")
 local colors = require("base46").get_theme_tb("base_30") ---@type Base30Table
 ---@diagnostic disable
 
@@ -198,7 +197,7 @@ components.space = {
 local function config()
 	local harpoon = require("harpoon")
 
-	load_harpoon_buffers()
+	pcall(load_harpoon_buffers)
 
 	-- Rafraîchir cokeline quand harpoon change
 	harpoon:extend({
@@ -294,9 +293,9 @@ return {
 	event = "User FilePost",
 	config = config,
 	keys = {
-		{ "<Tab>", "<Plug>(cokeline-focus-next)", mode = "n", desc = "Buffer suivant" },
-		{ "<leader>bp", "<Plug>(cokeline-pick-focus)", mode = "n", desc = "Pick buffer" },
-		{ "<leader>bc", "<Plug>(cokeline-pick-close)", mode = "n", desc = "Pick close buffer" },
-		{ "<leader><M-d>", "<Plug>(cokeline-pick-close)", mode = "n", desc = "Pick close buffer" },
+		-- { "<Tab>", "<Plug>(cokeline-focus-next)", mode = "n", desc = "Buffer suivant" },
+		-- { "<leader>bp", "<Plug>(cokeline-pick-focus)", mode = "n", desc = "Pick buffer" },
+		-- { "<leader>bc", "<Plug>(cokeline-pick-close)", mode = "n", desc = "Pick close buffer" },
+		-- { "<leader><M-d>", "<Plug>(cokeline-pick-close)", mode = "n", desc = "Pick close buffer" },
 	},
 }

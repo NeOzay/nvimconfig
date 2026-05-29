@@ -27,6 +27,7 @@ return {
 	hl_override = {
 
 		-- LSP semantic overrides
+		["@lsp"] = { fg = "NONE", bg = "NONE" },
 		["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
 		["@lsp.typemod.class.declaration"] = { italic = true },
 		["@lsp.type.keyword"] = { fg = "None" },
@@ -40,14 +41,17 @@ return {
 		["@lsp.type.namespace"] = { fg = "purple" },
 		["@lsp.type.struct"] = { link = "@type" },
 		["@lsp.type.typeParameter"] = { fg = "red" },
-		["@lsp"] = { fg = "NONE", bg = "NONE" },
 		["@lsp.type.variable"] = { link = "@lsp" },
 		["@lsp.type.enum"] = { fg = "Enum" },
+		["@lsp.type.string"] = { fg = "NONE" },
+		["@lsp.type.modifier"] = { fg = "NONE" },
+		["@lsp.type.annotation"] = { fg = "purple" },
 
 		-- Syntax overrides
 		["Comment"] = { link = "@comment" },
 		["@comment"] = { italic = false },
 		["@keyword"] = { fg = "blue", italic = true },
+		["@keyword.import"] = { fg = "red", italic = true, link = "" },
 		["@keyword.function"] = { fg = "blue", italic = true },
 		["@keyword.conditional"] = { fg = "red", italic = true },
 		["@keyword.return"] = { fg = "blue", italic = true },
@@ -57,6 +61,7 @@ return {
 		["@type"] = { fg = "Type" },
 		["@string.delimitor"] = { link = "@comment" },
 		["@string.documentation"] = { link = "@comment" },
+		["@module"] = { fg = "purple" },
 		PmenuSel = { fg = "NONE" },
 		Bold = { bold = true },
 		DiagnosticUnderlineError = { sp = "red", undercurl = true },

@@ -5,6 +5,48 @@ local markview_fts = { "markdown", "Avante", "codecompanion", "snacks_notif" }
 ---@type snacks.Config
 local opts = {
 	notifier = { enabled = true, timeout = 5000 },
+	picker = {
+		sources = {
+			notifications = {
+				layout = {
+					reverse = false,
+					layout = {
+						box = "horizontal",
+						backdrop = false,
+						width = 0.8,
+						height = 0.9,
+						border = "none",
+						{
+							box = "vertical",
+							border = "none",
+							width = 0.40,
+							{
+								win = "input",
+								height = 1,
+								border = true,
+								title = "{title} {live} {flags}",
+								title_pos = "center",
+							},
+							{
+								win = "list",
+								border = true,
+								title = " Results ",
+								title_pos = "center",
+								-- wo = { wrap = true },
+							},
+						},
+						{
+							win = "preview",
+							title = "{preview:Preview}",
+							border = true,
+							title_pos = "center",
+							wo = { number = false, foldcolumn = "0", signcolumn = "no", wrap = true },
+						},
+					},
+				},
+			},
+		},
+	},
 	styles = {
 		notification = {
 			wo = {
@@ -27,13 +69,14 @@ local opts = {
 					"LineNr:" .. suffix,
 				}
 				vim.wo[self.win].winhighlight = whl .. "," .. table.concat(extra, ",")
+				vim.wo[self.win].concealcursor = "n"
 
 				vim.schedule(function()
 					if not vim.api.nvim_buf_is_valid(self.buf) or not vim.api.nvim_win_is_valid(self.win) then
 						return
 					end
 					local ft = vim.bo[self.buf].filetype
-					if vim.tbl_contains(markview_fts, ft) then
+					if vim.tbl_contains(markview_fts, ft) and package.loaded["markview"] then
 						-- Register snacks_notif → markdown so get_parser(buf) resolves correctly
 						vim.treesitter.language.register("markdown", ft)
 						require("markview.actions").render(self.buf, nil, {

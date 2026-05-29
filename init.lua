@@ -15,17 +15,18 @@ end
 
 local UserAutocmds = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
 
----@param event vim.api.keyset.events|vim.api.keyset.events[]
----@param opts vim.api.keyset.create_autocmd
----@return integer
-function Userautocmd(event, opts)
-	opts = opts or {}
-	opts.group = opts.group or UserAutocmds
-	return vim.api.nvim_create_autocmd(event, opts)
-end
+local wrap = require("utils").wrap
+
+Userautocmd = wrap(vim.api.nvim_create_autocmd, function(create_autocmd)
+	return function(event, opts)
+		opts = opts or {}
+		opts.group = opts.group or UserAutocmds
+		return create_autocmd(event, opts)
+	end
+end)
 
 -- Notre wrapper personnalisé
-vim.keymap.set = require("utils").wrap(vim.keymap.set, function(keymap_set)
+vim.keymap.set = wrap(vim.keymap.set, function(keymap_set)
 	return function(modes, lhs, rhs, opts)
 		local mode_to_replace = { n = true, v = true, o = true } ---@type table<string, boolean>
 		opts = opts or {}
@@ -100,6 +101,7 @@ require("lazy").setup({
 	{ import = "plugins.lsp-endhints" },
 	{ import = "plugins.which-key" },
 	{ import = "plugins.navic" },
+	{ import = "plugins.neodim" },
 	{ import = "plugins.markview" },
 	{ import = "plugins.mason" },
 	-- { import = "plugins.neo-tree" },
@@ -112,14 +114,17 @@ require("lazy").setup({
 	-- { import = "plugins.telescope" },
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.treesitter-context" },
+	{ import = "plugins.tree-sitter-manager" },
 	{ import = "plugins.treesitter-textobjects" },
 	{ import = "plugins.trouble" },
 	{ import = "plugins.lualine" },
 	{ import = "plugins.snacks.init" },
 	{ import = "plugins.ufo.init" },
+	{ import = "plugins.java" },
 	{ import = "plugins.uv" },
 	{ "lambdalisue/vim-suda", lazy = false },
 	{ import = "plugins.wezterm-types" },
+	{ import = "plugins.workspace-diagnostics" },
 }, lazy_config)
 
 require("options")

@@ -6,7 +6,7 @@ local function check_win_width(winid, min)
 	if winid then
 		return vim.api.nvim_win_get_width(winid) > min
 	end
-	return vim.o.columns > 100
+	return vim.o.columns > min
 end
 
 function M.setup()
@@ -230,7 +230,7 @@ function M.setup()
 						return ""
 					end,
 					color = { fg = colors.grey },
-					padding = { left = 0, right = 0 },
+					padding = { left = 0, right = 1 },
 					separator = { left = "", right = "" },
 				},
 				{
@@ -240,11 +240,13 @@ function M.setup()
 					icon = { align = "left" }, -- Display filetype icon on the right hand side
 					-- icon =    {'X', align='right'}
 					-- Icon string ^ in table is ignored in filetype component
-					padding = { left = 1, right = 0 },
+					padding = { left = 0, right = 0 },
+					cond = function(ctx)
+						return check_win_width(ctx.winid, 85)
+					end,
 				},
 				{
 					function()
-						local name = vim.fn.expand("%:t")
 						local dir = vim.fn.expand("%:p:h:t")
 						if dir == "" or dir == "." then
 							return ""
@@ -253,6 +255,9 @@ function M.setup()
 					end,
 					color = { fg = colors.grey_fg },
 					padding = { left = 0, right = 0 },
+					cond = function(ctx)
+						return check_win_width(ctx.winid, 85)
+					end,
 				},
 				{
 					"filename",

@@ -12,29 +12,41 @@ Userautocmd("User", {
 	end,
 })
 
--- Restaurer automatiquement la session au démarrag
-Userautocmd("VimEnter", {
-	nested = true,
-	callback = function()
-		-- Ne pas restaurer si des arguments ont été passés (fichiers ouverts)
-		if vim.fn.argc() == 0 and not vim.g.started_with_stdin then
-			local persistence, ok = pRequire("persistence")
-			if ok then
-				persistence.load()
-			end
-		end
-	end,
-})
-
 ---@type LazySpec
 return {
 	"folke/persistence.nvim",
 	event = "BufReadPre",
+	init = function()
+		vim.api.nvim_create_autocmd("VimEnter", {
+			nested = true,
+			once = true,
+			callback = function()
+				if vim.fn.argc(-1) ~= 0 then
+					return
+				end
+				local persistence = require("persistence")
+				local session = persistence.current()
+				if vim.uv.fs_stat(session) then
+					persistence.load()
+					-- Échec silencieux → buf sans nom → UIEnter ouvre le dashboard naturellement
+				else
+					persistence.stop()
+				end
+			end,
+		})
+	end,
 	opts = {
 		dir = vim.fn.stdpath("state") .. "/sessions/",
 		need = 1,
 		branch = true,
 	},
+	config = function(_, opts)
+		local persistence = require("persistence")
+		persistence.setup(opts)
+		if vim.fn.argc(-1) > 0 then
+			persistence.stop()
+		end
+	end,
 	keys = {
 		{
 			"<leader>qs",

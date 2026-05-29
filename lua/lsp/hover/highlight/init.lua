@@ -24,13 +24,13 @@ end
 local function find_first_code_block(bufnr)
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-	local lang = lines[1] and lines[1]:match("^```(%w+)")
+	local lang = lines[1] and lines[1]:match("^%s*```(%w+)")
 	if not lang then
 		return nil
 	end
 
 	for i = 2, #lines do
-		if lines[i]:match("^```%s*$") then
+		if lines[i]:match("^%s*```%s*$") then
 			return { lang = lang, end_line = i - 1 } -- 0-indexed, exclusive
 		end
 	end
@@ -56,7 +56,7 @@ function M.apply(bufnr)
 		tok.highlight(bufnr, ns, 1, block.end_line)
 
 		-- Replace language-tagged fences with plain fences (prevents TS injection)
-		vim.api.nvim_buf_set_lines(bufnr, 0, 1, false, { "```" })
+		-- vim.api.nvim_buf_set_lines(bufnr, 0, 1, false, { "```" })
 		-- Conceal both fence lines
 		vim.api.nvim_buf_set_extmark(bufnr, ns, 0, 0, { conceal_lines = "" })
 		vim.api.nvim_buf_set_extmark(bufnr, ns, block.end_line, 0, { conceal_lines = "" })

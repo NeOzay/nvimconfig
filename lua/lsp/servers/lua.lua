@@ -5,7 +5,7 @@ M.name = "emmylua_ls"
 
 M.filetypes = { "lua" }
 
-M.cmd = { "/var/home/Benoit/projects/emmylua-analyzer-rust/target/release/emmylua_ls" }
+-- M.cmd = { "/var/home/Benoit/projects/emmylua-analyzer-rust/target/release/emmylua_ls" }
 -- M.cmd = { "emmylua_ls" }
 
 -- M.root_dir = function(bufnr, on_dir)
@@ -41,6 +41,7 @@ M.settings = {
 		},
 		diagnostics = {
 			enable = true,
+			disable = {},
 		},
 		hint = {
 			enable = true,
@@ -72,11 +73,13 @@ local function add_nvim_libs(settings)
 	local lib = settings.Lua.workspace.library
 	local runtime = settings.Lua.runtime
 	local workspace = settings.Lua.workspace
+	local diagnostics = settings.Lua.diagnostics
 
 	runtime.version = "LuaJIT"
 	runtime.requireLikeFunction = { "pRequire" }
 	runtime.requirePattern = { "?.lua", "?/init.lua", "lua/?.lua", "lua/?/init.lua" }
-	-- workspace.ignoreDir = { "spec" }
+
+	diagnostics.disable = { "unnecessary-if" }
 
 	table.insert(lib, vim.fn.expand("$VIMRUNTIME/lua"))
 end

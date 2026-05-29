@@ -227,7 +227,7 @@ end
 function M.build_virt_text(bufnr, row, offset, text)
 	local highlights = get_highlights(bufnr, row)
 	if #highlights == 0 then
-		return { { text, "Normal" } }
+		return { { text, "UfoFoldedFg" } }
 	end
 
 	local n = #text
@@ -254,7 +254,7 @@ function M.build_virt_text(bufnr, row, offset, text)
 	for i = 0, n - 1 do
 		local hls = char_hls[i]
 		if not hls then
-			resolved[i] = "Normal"
+			resolved[i] = "UfoFoldedFg"
 		elseif #hls == 1 then
 			resolved[i] = hls[1].hl
 		else
@@ -265,9 +265,9 @@ function M.build_virt_text(bufnr, row, offset, text)
 	-- Construire les chunks de texte virtuel (positions consécutives de même hl)
 	local result = {}
 	local seg_start = 0
-	local cur_hl = resolved[0] or "Normal"
+	local cur_hl = resolved[0] or "UfoFoldedFg"
 	for i = 1, n - 1 do
-		local h = resolved[i] or "Normal"
+		local h = resolved[i] or "UfoFoldedFg"
 		if h ~= cur_hl then
 			result[#result + 1] = { text:sub(seg_start + 1, i), cur_hl }
 			seg_start = i
@@ -276,7 +276,7 @@ function M.build_virt_text(bufnr, row, offset, text)
 	end
 	result[#result + 1] = { text:sub(seg_start + 1), cur_hl }
 
-	return #result > 0 and result or { { text, "Normal" } }
+	return #result > 0 and result or { { text, "UfoFoldedFg" } }
 end
 
 --- Récupère le texte virtuel coloré d'une ligne avec sa largeur

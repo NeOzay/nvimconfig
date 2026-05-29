@@ -25,7 +25,7 @@ local highlights = {
 	BlinkCmpDocCursorLine = { bg = palette.one_bg },
 	BlinkCmpSignatureHelp = { bg = palette.black },
 	BlinkCmpSignatureHelpBorder = { fg = palette.grey_fg },
-	BlinkCmpSignatureHelpActiveParameter = { fg = palette.blue, bold = true },
+	BlinkCmpSignatureHelpActiveParameter = { fg = palette.black, bg = palette.green },
 }
 
 -- Kind highlights

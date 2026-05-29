@@ -11,7 +11,7 @@ local function regen_first_line(bufnr, lnum)
 	local indent = raw:match("^(%s*)") or ""
 	local virt = render.get_line_virt(bufnr, lnum - 1)
 	if #indent > 0 then
-		table.insert(virt, 1, { indent, "Normal" })
+		table.insert(virt, 1, { indent, "UfoFoldedFg" })
 	end
 	return virt
 end

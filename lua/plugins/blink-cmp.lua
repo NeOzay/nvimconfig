@@ -7,22 +7,40 @@ return {
 	dependencies = {
 		"L3MON4D3/LuaSnip",
 		"rafamadriz/friendly-snippets",
-		"giuxtaposition/blink-cmp-copilot",
-		-- { "saghen/blink.compat", opts = {} },
+		"fang2hou/blink-copilot",
 	},
 
 	---@module 'blink.cmp'
 	---@type blink.cmp.Config
 	opts = {
 		keymap = {
-			preset = "default",
+			preset = "super-tab",
 			["<Up>"] = { "select_prev", "fallback" },
 			["<Down>"] = { "select_next", "fallback" },
 			["<S-Tab>"] = { "select_prev", "fallback" },
-			["<Tab>"] = { "select_next", "fallback" },
+			["<Tab>"] = {
+				function(cmp)
+					if cmp.snippet_active() then
+						return cmp.accept()
+					else
+						return cmp.select_next()
+					end
+				end,
+				"snippet_forward",
+				function(cmp)
+					if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+						return (
+							require("copilot-lsp.nes").apply_pending_nes()
+							and require("copilot-lsp.nes").walk_cursor_end_edit()
+						)
+					end
+				end,
+				"fallback",
+			},
 			["<CR>"] = { "accept", "fallback" },
 			["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 			["<C-e>"] = { "hide", "fallback" },
+			-- ["<esc>"] = { "hide", "fallback" },
 		},
 
 		snippets = {
@@ -34,7 +52,7 @@ return {
 			min_keyword_length = function(a)
 				return vim.bo.filetype == "markdown" and 2 or 0
 			end,
-			default = { "lsp", "copilot", "snippets", "path", "buffer" },
+			default = { "lsp", "copilot", "snippets", "path", "path_cwd", "buffer" },
 			per_filetype = {
 				AvanteInput = { "avante_commands", "avante_mentions", "avante_files", "avante_shortcuts" },
 				codecompanion = { "codecompanion" },
@@ -43,10 +61,13 @@ return {
 			providers = {
 				copilot = {
 					name = "copilot",
-					module = "blink-cmp-copilot",
+					module = "blink-copilot",
 					score_offset = -3,
 					async = true,
 					timeout_ms = 2000,
+					opts = {
+						kind_hl = "BlinkCmpKindCopilot",
+					},
 				},
 				buffer = {
 					max_items = 5,
@@ -55,30 +76,15 @@ return {
 				lsp = {
 					timeout_ms = 2000,
 				},
-				-- avante_commands = {
-				-- 	name = "avante_commands",
-				-- 	module = "blink.compat.source",
-				-- 	score_offset = 90,
-				-- 	opts = {},
-				-- },
-				-- avante_files = {
-				-- 	name = "avante_files",
-				-- 	module = "blink.compat.source",
-				-- 	score_offset = 100,
-				-- 	opts = {},
-				-- },
-				-- avante_mentions = {
-				-- 	name = "avante_mentions",
-				-- 	module = "blink.compat.source",
-				-- 	score_offset = 1000,
-				-- 	opts = {},
-				-- },
-				-- avante_shortcuts = {
-				-- 	name = "avante_shortcuts",
-				-- 	module = "blink.compat.source",
-				-- 	score_offset = 1000,
-				-- 	opts = {},
-				-- },
+				path_cwd = {
+					name = "Path (cwd)",
+					module = "blink.cmp.sources.path",
+					opts = {
+						get_cwd = function(_ctx)
+							return vim.uv.cwd()
+						end,
+					},
+				},
 			},
 		},
 		---@type blink.cmp.CompletionConfig
@@ -89,7 +95,14 @@ return {
 					enabled = true,
 				},
 			},
+			list = {
+				selection = {
+					preselect = false,
+					auto_insert = true,
+				},
+			},
 			menu = {
+				auto_show = true,
 				draw = {
 					columns = { { "kind_icon" }, { "label", "label_description", gap = 1 }, { "kind" } },
 				},
@@ -109,7 +122,7 @@ return {
 
 		appearance = {
 			use_nvim_cmp_as_default = false,
-			nerd_font_variant = "mono",
+			-- nerd_font_variant = "mono",
 			kind_icons = {
 				Text = "󰉿",
 				Method = "󰊕",
@@ -153,10 +166,13 @@ return {
 				},
 			},
 		},
+		---@type blink.cmp.SignatureConfig
 		signature = {
-			enabled = false,
+			enabled = true,
 			window = {
+				treesitter_highlighting = true,
 				border = "rounded",
+				show_documentation = true,
 			},
 		},
 	},

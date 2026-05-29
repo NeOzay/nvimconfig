@@ -3,6 +3,7 @@ local M = {}
 
 M.name = "basedpyright"
 M.filetypes = { "python" }
+M.cmd = { "node", "/var/home/Benoit/projects/basedpyright/packages/pyright/langserver.index.js", "--stdio" }
 
 -- Détection automatique de l'environnement virtuel (Poetry, venv, etc.)
 local function get_python_path()

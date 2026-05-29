@@ -24,6 +24,12 @@ local function on_attach(client, bufnr)
 		return { buffer = bufnr, desc = "LSP " .. desc }
 	end
 
+	if client:supports_method("workspace/diagnostic", bufnr) then
+		vim.lsp.buf.workspace_diagnostics({ client_id = client.id })
+	else
+		require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+	end
+
 	map("n", "gD", wrapTrouble("lsp_declarations"), opts("Go to declaration"))
 	map("n", "gd", wrapTrouble("lsp_definitions"), opts("Go to definition"))
 	map("n", "grr", wrapTrouble("lsp_references"), opts("Go to references"))
@@ -63,6 +69,8 @@ local function setup_capabilities()
 	end
 	capabilities.textDocument = capabilities.textDocument or {}
 	capabilities.textDocument.diagnostic = capabilities.textDocument.diagnostic or {}
+	capabilities.textDocument.hover = capabilities.textDocument.hover or {}
+	-- capabilities.textDocument.hover.contentFormat = { "plaintext" }
 
 	capabilities.textDocument.diagnostic.dynamicRegistration = true
 
@@ -80,16 +88,37 @@ end
 
 local function config()
 	local x = vim.diagnostic.severity
-	vim.diagnostic.config({
-		virtual_text = { prefix = "" },
-		signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
-		underline = true,
-	})
+
+	local sign_icons = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" }
 
 	vim.diagnostic.config({
-		float = {
-			border = "rounded",
+		virtual_text = {
+			-- Affiche "icône count" une seule fois par sévérité par ligne.
+			-- `seen` est réinitialisé à chaque ligne (i == 1 marque le début d'une nouvelle ligne).
+			prefix = function(diagnostic, i, _total)
+				local severity = diagnostic.severity
+				local buf_key = diagnostic.bufnr .. ":" .. diagnostic.lnum
+
+				if i == 1 then
+					vim.b[diagnostic.bufnr]._diag_seen = {}
+				end
+				local seen = vim.b[diagnostic.bufnr]._diag_seen or {}
+
+				if seen[severity] then
+					return ""
+				end
+				seen[severity] = true
+				vim.b[diagnostic.bufnr]._diag_seen = seen
+
+				local count = #vim.diagnostic.get(diagnostic.bufnr, { severity = severity, lnum = diagnostic.lnum })
+				local icon = sign_icons[severity] or ""
+				return string.format("%s %d ", icon, count)
+			end,
+			hl_mode = "combine",
 		},
+		signs = { text = sign_icons },
+		underline = true,
+		float = { border = "rounded" },
 	})
 
 	setup_floating_preview()

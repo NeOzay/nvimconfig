@@ -48,7 +48,7 @@ autocmd("LspAttach", {
 			if client then
 				local signatureProvider = client.server_capabilities.signatureHelpProvider
 				if signatureProvider and signatureProvider.triggerCharacters then
-					require("lsp.signature").setup(client, args.buf)
+					-- require("lsp.signature").setup(client, args.buf)
 				end
 			end
 		end)
@@ -61,6 +61,21 @@ Userautocmd("FileType", {
 		vim.opt_local.wrap = true
 		vim.opt_local.linebreak = true
 		vim.opt_local.breakindent = true
+	end,
+})
+
+-- Harpoon charge ses données depuis sha256(startup_cwd).json une seule fois.
+-- Après tout changement de cwd (dashboard, persistence, :cd…), on force la
+-- relecture depuis le JSON du nouveau projet pour éviter l'écrasement des harpons.
+autocmd("DirChanged", {
+	group = vim.api.nvim_create_augroup("HarpoonReloadOnCwd", { clear = true }),
+	callback = function()
+		local h = pRequire("harpoon")
+		if not h then
+			return
+		end
+		h.data = require("harpoon.data").Data:new(h.config)
+		h.lists = {}
 	end,
 })
 

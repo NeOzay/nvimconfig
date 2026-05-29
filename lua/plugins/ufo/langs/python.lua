@@ -141,6 +141,7 @@ function M.fold_docstrings()
 	if not tree then
 		return
 	end
+
 	local query = vim.treesitter.query.parse("python", "(expression_statement (string) @docstring)")
 	local fb = require("ufo.fold").get(bufnr)
 	local cmds = {}

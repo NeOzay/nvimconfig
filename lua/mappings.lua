@@ -18,6 +18,8 @@ map("i", "<C-k>", "<Up>", { desc = "move up" })
 
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
+map({ "n", "x" }, "Y", '"+y', { desc = "yank vers le presse-papier système" })
+
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
 -- map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
 
@@ -37,7 +39,6 @@ map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 -- nvimtree
 -- map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 -- map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window" })
-
 
 -- whichkey
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
@@ -94,6 +95,23 @@ map("n", "A", function()
 	end
 end, { expr = true, desc = "Append fin de ligne avec auto-indent" })
 
+-- Auto-indent après paste dans un buffer fichier réel
+local function paste_with_indent(key)
+	return function()
+		if vim.bo.buftype == "" and vim.api.nvim_buf_get_name(0) ~= "" then
+			return key .. "`[=`]"
+		end
+		return key
+	end
+end
+
+map("n", "p", paste_with_indent("p"), { expr = true, desc = "Paste avec auto-indent" })
+map("n", "P", paste_with_indent("P"), { expr = true, desc = "Paste avant avec auto-indent" })
+
+-- Indentation en mode visuel
+map("v", "<Tab>", ">gv", { desc = "Indenter la sélection" })
+map("v", "<S-Tab>", "<gv", { desc = "Désindenter la sélection" })
+
 map("i", "<tab>", function()
 	if utils.current_line_is_blanc() then
 		return [[<C-O>"_cc]]
@@ -116,3 +134,46 @@ map({ "n", "v", "o" }, "à", "]", recursive_map)
 -- Le pont pour les accolades (Paragraphes et structures)
 map({ "n", "v", "o" }, "é", "{", recursive_map)
 map({ "n", "v", "o" }, "è", "}", recursive_map)
+
+local function char_type(c)
+	if c == "" or c:match("%s") then
+		return "space"
+	end
+	if c:match("[%w_]") then
+		return "word"
+	end
+	return "punct"
+end
+
+map({ "n", "v", "o", "i" }, "<S-Right>", function()
+	local mode = vim.api.nvim_get_mode().mode
+	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+	local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
+	-- En insert le curseur est après col, donc on recule d'un cran
+	local off = mode == "i" and 0 or 1
+	local cur = line:sub(col + off, col + off)
+	local nxt = line:sub(col + off + 1, col + off + 1)
+	-- À la fin d'un mot : char non-espace dont la catégorie diffère du suivant (ou fin de ligne)
+	local at_word_end = char_type(cur) ~= "space" and char_type(cur) ~= char_type(nxt)
+	if mode == "i" then
+		-- <C-o>w : début du mot suivant (position correcte en insert)
+		-- <Esc>ea : fin du mot + append (repositionne après le dernier char, re-entre en insert)
+		return at_word_end and "\x0fw" or "\x1bea"
+	end
+	return at_word_end and "w" or "e"
+end, { expr = true })
+
+map({ "n", "v", "o", "i" }, "<S-Left>", function()
+	local mode = vim.api.nvim_get_mode().mode
+	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+	local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
+	-- En insert le curseur est après col, donc on recule d'un cran
+	local off = mode == "i" and 0 or 1
+	local cur = line:sub(col + off, col + off)
+	local prv = (col + off > 1) and line:sub(col + off - 1, col + off - 1) or ""
+	-- Au début d'un mot : char non-espace dont la catégorie diffère du précédent (ou début de ligne)
+	local at_word_start = char_type(cur) ~= "space" and char_type(cur) ~= char_type(prv)
+	local key = at_word_start and "ge" or "b"
+	local prefix = mode == "i" and "\x0f" or ""
+	return prefix .. key
+end, { expr = true })

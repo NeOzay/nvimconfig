@@ -1,13 +1,17 @@
+---@diagnostic disable: missing-fields, param-type-mismatch
+
 ---@namespace Ozay.Hover
 --- Slightly *fancier* LSP hover handler.
 local hover_config = require("lsp.hover.config")
 local format = require("lsp.hover.format")
 local position = require("lsp.hover.position")
 local hover_hl = require("lsp.hover.highlight")
+local scrollbar_mod = require("lsp.hover.scrollbar")
 
 local lsp_hover = {}
 
 lsp_hover.config = hover_config.config
+lsp_hover.scrollbar = scrollbar_mod.new()
 
 --- Initializes the hover buffer & window.
 ---@param config Partial<snacks.win.Config>
@@ -33,17 +37,32 @@ local function parse_content(content)
 	return vim.split(content.value or "", "\n", { trimempty = true }), content.kind
 end
 
+--- Nombre de lignes qui seront cachées via conceal_lines (fences de code).
+---@param lines string[]
+---@return integer
+local function count_concealed(lines)
+	if not (lines[1] and lines[1]:match("^%s*```%w")) then
+		return 0
+	end
+	for i = 2, #lines do
+		if lines[i]:match("^%s*```%s*$") then
+			return 2
+		end
+	end
+	return 0
+end
+
 --- Compute dimensions from formatted lines.
 ---@param lines string[]
 ---@param config opts
 ---@return integer w, integer h
 local function compute_dimensions(lines, config)
-	local w = config.min_width or 20
-	local max_width = config.max_width or 60
-	local max_height = config.max_height or 10
+	local w = config.min_width
+	local max_width = config.max_width
+	local max_height = config.max_height
 
 	for _, line in ipairs(lines) do
-		local lw = vim.fn.strdisplaywidth(line)
+		local lw = format.visual_width(line)
 		if lw >= max_width then
 			w = max_width
 			break
@@ -52,7 +71,8 @@ local function compute_dimensions(lines, config)
 		end
 	end
 
-	local h = math.max(math.min(#lines, max_height), config.min_height or 1)
+	local concealed = count_concealed(lines)
+	local h = math.max(math.min(#lines - concealed, max_height), config.min_height or 1)
 	return w, h
 end
 
@@ -117,7 +137,10 @@ lsp_hover.hover = function(error, result, context, _)
 			conceallevel = 3,
 			concealcursor = "n",
 			signcolumn = "no",
-			wrap = true,
+			wrap = false,
+		},
+		b = {
+			markview = true,
 		},
 
 		max_height = config.max_height,
@@ -132,6 +155,7 @@ lsp_hover.hover = function(error, result, context, _)
 
 		keys = {
 			["q"] = function(self)
+				lsp_hover.scrollbar:hide()
 				self:hide()
 			end,
 		},
@@ -145,23 +169,19 @@ lsp_hover.hover = function(error, result, context, _)
 		vim.api.nvim_buf_set_lines(lsp_hover.window.buf, 0, -1, false, lines)
 	end
 
+	hover_hl.apply(lsp_hover.window.buf)
 	lsp_hover.window:show()
+	lsp_hover.scrollbar:attach(lsp_hover.window.win)
 	if package.loaded["markview"] and package.loaded["markview"].render then
 		require("markview.actions").render(lsp_hover.window.buf, { enable = true, hybrid_mode = false }, {
 			markdown = {
 				block_quotes = { enable = false },
-				code_blocks = { style = "simple" },
-			},
-			markdown_inline = {
-				inline_codes = { padding_right = "", padding_left = "" },
+				list_items = {
+					shift_width = 1,
+					indent_size = 1,
+				},
 			},
 		})
-	end
-
-	local removed = hover_hl.apply(lsp_hover.window.buf)
-	if removed > 0 then
-		local new_h = math.max(h - removed, config.min_height or 1)
-		vim.api.nvim_win_set_height(lsp_hover.window.win, new_h)
 	end
 end
 
@@ -207,6 +227,7 @@ lsp_hover.setup = function(config)
 			if event.buf == lsp_hover.window.buf then
 				return
 			elseif not lsp_hover.window.closed then
+				lsp_hover.scrollbar:hide()
 				lsp_hover.window:hide()
 			end
 		end,
