@@ -41,8 +41,9 @@ end
 --- Apply syntax highlighting extmarks on the first code block,
 --- strip the language from fences and conceal them.
 ---@param bufnr integer
+---@param hide_fence boolean? whether to conceal the fence lines
 ---@return integer removed  number of fence lines concealed
-function M.apply(bufnr)
+function M.apply(bufnr, hide_fence)
 	vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
 
 	local block = find_first_code_block(bufnr)
@@ -58,9 +59,11 @@ function M.apply(bufnr)
 		-- Replace language-tagged fences with plain fences (prevents TS injection)
 		-- vim.api.nvim_buf_set_lines(bufnr, 0, 1, false, { "```" })
 		-- Conceal both fence lines
-		vim.api.nvim_buf_set_extmark(bufnr, ns, 0, 0, { conceal_lines = "" })
-		vim.api.nvim_buf_set_extmark(bufnr, ns, block.end_line, 0, { conceal_lines = "" })
-		return 2
+		if hide_fence then
+			vim.api.nvim_buf_set_extmark(bufnr, ns, 0, 0, { conceal_lines = "" })
+			vim.api.nvim_buf_set_extmark(bufnr, ns, block.end_line, 0, { conceal_lines = "" })
+			return 2
+		end
 	end
 
 	return 0

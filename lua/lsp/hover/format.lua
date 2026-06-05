@@ -24,11 +24,19 @@ local function decode_html_entities(line)
 	line = line:gsub("&%a+;", HTML_ENTITIES)
 	-- Entités numériques décimales (ex: &#160;)
 	line = line:gsub("&#(%d+);", function(n)
-		return utf8.char(tonumber(n))
+		local _n = tonumber(n)
+		if not _n then
+			return "&#" .. n .. ";"
+		end
+		return vim.fn.nr2char(math.floor(_n))
 	end)
 	-- Entités numériques hexadécimales (ex: &#x00A0;)
 	line = line:gsub("&#x(%x+);", function(h)
-		return utf8.char(tonumber(h, 16))
+		local _h = tonumber(h, 16)
+		if not _h then
+			return "&#x" .. h .. ";"
+		end
+		return vim.fn.nr2char(math.floor(_h))
 	end)
 	-- Espaces insécables unicode résiduels
 	for entity, replacement in pairs(HTML_ENTITIES) do
@@ -37,12 +45,18 @@ local function decode_html_entities(line)
 		end
 	end
 
-	local s, _, broken_fence = line:find("^%s*``(%w*)$")
-	if s then
-		line = "```" .. broken_fence or ""
+	local _, _, broken_fence = line:find("^%s*``(%w*)$")
+	if broken_fence ~= nil then
+		line = "```" .. (broken_fence or "")
 	end
 
 	return line
+end
+
+---@param line string
+---@return boolean
+local function is_fence(line)
+	return line:match("^```") ~= nil or line:match("^~~~") ~= nil
 end
 
 local function is_markdown_block(line)
@@ -73,52 +87,33 @@ local function join_sentence_lines(lines)
 		if current == "" then
 			return
 		end
-		table.insert(result, current)
+		result[#result + 1] = current
 		current = ""
 	end
 
 	for _, line in ipairs(lines) do
-		if line:match("^```") or line:match("^~~~") then
+		if is_fence(line) then
 			flush()
 			in_code_block = not in_code_block
-			table.insert(result, line)
-			goto continue
-		end
-
-		if in_code_block then
-			line = line:gsub("\\([^\\])", "%1")
-			table.insert(result, line)
-			goto continue
-		end
-
-		if line:match("^%s*$") then
+			result[#result + 1] = line
+		elseif in_code_block then
+			result[#result + 1] = line:gsub("\\([^\\])", "%1") -- déséchapper les backslashes dans les blocs de code
+		elseif line:match("^%s*$") then
 			flush()
-			table.insert(result, "")
-			goto continue
-		end
-
-		if line:match("^%s*%w+:") then
+			result[#result + 1] = ""
+		elseif line:match("^%s*%w+:") or is_markdown_block(line) then
 			flush()
-			table.insert(result, line)
-			goto continue
+			result[#result + 1] = line
+		else
+			current = current == "" and line or (current .. " " .. line:gsub("^%s+", ""))
+			if ends_sentence(line) then
+				flush()
+			end
 		end
-
-		if is_markdown_block(line) then
-			flush()
-			table.insert(result, line)
-			goto continue
-		end
-
-		current = current == "" and line or (current .. " " .. line:gsub("^%s+", ""))
-		if ends_sentence(line) then
-			flush()
-		end
-
-		::continue::
 	end
 
 	if current ~= "" then
-		table.insert(result, current)
+		result[#result + 1] = current
 	end
 
 	return result
@@ -130,6 +125,99 @@ local function decode_lines(lines)
 	local result = {}
 	for _, line in ipairs(lines) do
 		result[#result + 1] = decode_html_entities(line)
+	end
+	return result
+end
+
+--- Convertit `|word|` en inline code, en ignorant les blocs fencés.
+---@param lines string[]
+---@return string[]
+local function convert_vimhelp_links(lines)
+	local result = {}
+	local in_code_block = false
+	for _, line in ipairs(lines) do
+		if is_fence(line) then
+			in_code_block = not in_code_block
+			result[#result + 1] = line
+		elseif in_code_block then
+			result[#result + 1] = line
+		else
+			result[#result + 1] = line:gsub("|([^|%s]+)|", "`%1`")
+		end
+	end
+	return result
+end
+
+---@param result string[]
+---@param before string
+---@param lang string
+---@return true
+local function vimhelp_open(result, before, lang)
+	if before:match("%S") then
+		result[#result + 1] = before
+	end
+	result[#result + 1] = "```" .. lang
+	return true
+end
+
+--- Détecte un marqueur d'ouverture Vim help sur `line`.
+--- Valide uniquement `>lang` en début de ligne ou après `:`.
+---@param line string
+---@return string? before
+---@return string? lang
+local function vimhelp_block_start(line)
+	local lang = line:match("^%s*>(%w*)%s*$")
+	if lang ~= nil then
+		return "", lang
+	end
+	return line:match("^(.+:%s*)>(%w*)%s*$")
+end
+
+--- Détecte un marqueur de fermeture Vim help.
+--- `<` seul, `< contenu`, ou `<texte: >lang` (close+reopen).
+---@param line string
+---@return boolean
+local function is_vimhelp_close(line)
+	if line:match("^<$") or line:match("^<%s") then
+		return true
+	end
+	local rest = line:match("^<(.+)$")
+	return rest ~= nil and rest:match("^.+:%s*>%w*%s*$") ~= nil
+end
+
+--- Convertit les blocs Vim help (`>lang ... <`) en blocs fencés markdown.
+---@param lines string[]
+---@return string[]
+local function convert_vimhelp_blocks(lines)
+	local result = {}
+	local in_block = false
+	for _, line in ipairs(lines) do
+		if not in_block then
+			local before, lang = vimhelp_block_start(line)
+			if before ~= nil then
+				in_block = vimhelp_open(result, before, lang)
+			else
+				result[#result + 1] = line
+			end
+		elseif not is_vimhelp_close(line) then
+			result[#result + 1] = line
+		else
+			result[#result + 1] = "```"
+			in_block = false
+			local rest = line:match("^<(.+)$")
+			if rest and rest:match("%S") then
+				local before, lang = rest:match("^(.-)%s*>(%w*)%s*$")
+				lang = lang or ""
+				if before ~= nil then
+					in_block = vimhelp_open(result, before, lang)
+				else
+					result[#result + 1] = rest
+				end
+			end
+		end
+	end
+	if in_block then
+		result[#result + 1] = "```"
 	end
 	return result
 end
@@ -175,6 +263,17 @@ local function advance_cols(text, start, width, skip_chars)
 	return pos, cols
 end
 
+---@param chunk string
+---@param breakset table<string, true>
+---@return integer?
+local function find_break_pos(chunk, breakset)
+	for i = #chunk, 1, -1 do
+		if breakset[chunk:sub(i, i)] then
+			return i
+		end
+	end
+end
+
 ---@param text_list string[]
 ---@param width integer
 ---@param opts? { linebreak?: boolean, breakat?: string, skip_chars?: table<string, true> }
@@ -193,51 +292,37 @@ local function wrap_string(text_list, width, opts)
 		breakset[c] = true
 	end
 
-	local in_code_block = false
-
 	for _, text in ipairs(text_list) do
-		local pos = 1
-		local n = #text
 		if text:match("^%s*$") then
-			table.insert(lines, "")
-			goto continue
-		end
-		while pos <= n do
-			local end_byte, consumed = advance_cols(text, pos, width, skip_chars)
-			local chunk = text:sub(pos, end_byte - 1)
+			lines[#lines + 1] = ""
+		else
+			local pos = 1
+			local n = #text
+			while pos <= n do
+				local end_byte, consumed = advance_cols(text, pos, width, skip_chars)
+				local chunk = text:sub(pos, end_byte - 1)
 
-			if consumed < width then
-				-- Fin du texte : le reste tient dans la largeur
-				table.insert(lines, chunk)
-				break
-			end
+				if consumed < width then
+					-- Fin du texte : le reste tient dans la largeur
+					lines[#lines + 1] = chunk
+					break
+				end
 
-			-- Cherche un point de coupure en remontant depuis la fin du chunk
-			local break_pos = nil
-			if linebreak then
-				for i = #chunk, 1, -1 do
-					if breakset[chunk:sub(i, i)] then
-						break_pos = i
-						break
-					end
+				local break_pos = linebreak and find_break_pos(chunk, breakset)
+				if break_pos then
+					lines[#lines + 1] = chunk:sub(1, break_pos)
+					pos = pos + break_pos
+				else
+					lines[#lines + 1] = chunk
+					pos = end_byte
+				end
+
+				-- Saute les espaces en début du prochain chunk
+				while pos <= n and text:sub(pos, pos):match("%s") do
+					pos = pos + 1
 				end
 			end
-
-			if break_pos then
-				table.insert(lines, chunk:sub(1, break_pos))
-				pos = pos + break_pos
-			else
-				table.insert(lines, chunk)
-				pos = end_byte
-			end
-
-			-- Saute les espaces en début du prochain chunk
-			while pos <= n and text:sub(pos, pos):match("%s") do
-				pos = pos + 1
-			end
 		end
-
-		::continue::
 	end
 
 	for i, line in ipairs(lines) do
@@ -271,20 +356,15 @@ end
 ---@param max_width integer
 function M.format_string(ss, max_width)
 	local formatted = {}
-	local wrapped = wrap_string(join_sentence_lines(decode_lines(ss)), max_width)
+	local wrapped =
+		wrap_string(join_sentence_lines(convert_vimhelp_links(convert_vimhelp_blocks(decode_lines(ss)))), max_width)
 
-	local trim = vim.trim
 	for i, s in ipairs(wrapped) do
-		if trim(s) == "" and (trim(wrapped[i + 1] or "") == "" or (wrapped[i + 1] or ""):find("^---$")) then
-			goto continue
+		local next = wrapped[i + 1] or ""
+		local is_double_blank = vim.trim(s) == "" and (vim.trim(next) == "" or next:find("^---$"))
+		if not is_double_blank then
+			formatted[#formatted + 1] = s:find("^%s*---$") and " ___" or s
 		end
-
-		local line = s
-		if line:find("^%s*---$") then
-			line = " ___"
-		end
-		table.insert(formatted, line)
-		::continue::
 	end
 
 	return formatted

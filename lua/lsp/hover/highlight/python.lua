@@ -5,9 +5,10 @@
 local M = {}
 
 -- stylua: ignore start
-local KEYWORD     = "@keyword"
-local FUNC        = "@function"
-local FUNC_METHOD = "@function.method"
+local KEYWORD     = "@keyword.python"
+local FUNC        = "@function.python"
+local FUNC_METHOD = "@function.method.python"
+local PARAM       = "@variable.parameter.python"
 -- stylua: ignore end
 
 ---@type table<string, true>
@@ -42,6 +43,19 @@ function M.highlight(bufnr, ns, start_line, end_line)
 				priority = 200,
 			})
 			is_method = (label == "method")
+
+			-- 1b. Nom du paramètre après "(parameter) "
+			if label == "parameter" then
+				local name = line:sub(le + 1):match("^%s*([%a_][%w_]*)")
+				if name then
+					local name_col = le + (line:sub(le + 1):find("[%a_]") or 1) - 1
+					vim.api.nvim_buf_set_extmark(bufnr, ns, row, name_col, {
+						end_col = name_col + #name,
+						hl_group = PARAM,
+						priority = 200,
+					})
+				end
+			end
 		end
 
 		-- 2. Nom de la fonction/méthode après `def`

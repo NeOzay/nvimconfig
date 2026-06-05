@@ -10,6 +10,8 @@ local scrollbar_mod = require("lsp.hover.scrollbar")
 
 local lsp_hover = {}
 
+local REMOVE_FENCE = false
+
 lsp_hover.config = hover_config.config
 lsp_hover.scrollbar = scrollbar_mod.new()
 
@@ -41,6 +43,10 @@ end
 ---@param lines string[]
 ---@return integer
 local function count_concealed(lines)
+	if REMOVE_FENCE == false then
+		return 0
+	end
+
 	if not (lines[1] and lines[1]:match("^%s*```%w")) then
 		return 0
 	end
@@ -169,7 +175,7 @@ lsp_hover.hover = function(error, result, context, _)
 		vim.api.nvim_buf_set_lines(lsp_hover.window.buf, 0, -1, false, lines)
 	end
 
-	hover_hl.apply(lsp_hover.window.buf)
+	hover_hl.apply(lsp_hover.window.buf, REMOVE_FENCE)
 	lsp_hover.window:show()
 	lsp_hover.scrollbar:attach(lsp_hover.window.win)
 	if package.loaded["markview"] and package.loaded["markview"].render then
@@ -213,11 +219,26 @@ lsp_hover.setup = function(config)
 						end
 					end,
 				})
+				vim.api.nvim_buf_set_keymap(ev.buf, "n", "<c-K>", "", {
+					callback = function()
+						local window = vim.api.nvim_get_current_win()
+
+						if lsp_hover.window and not lsp_hover.window.closed then
+							lsp_hover.window:focus()
+						else
+							vim.lsp.buf_request(
+								0,
+								"textDocument/hover",
+								vim.lsp.util.make_position_params(window, "utf-8")
+							)
+						end
+					end,
+				})
 			end,
 		})
+	else
+		vim.lsp.handlers["textDocument/hover"] = lsp_hover.hover
 	end
-
-	vim.lsp.handlers["textDocument/hover"] = lsp_hover.hover
 
 	vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
 		callback = function(event)
