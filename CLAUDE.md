@@ -20,9 +20,12 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 
 ## LSP Architecture (Neovim 0.11+ native API)
 - Uses `vim.lsp.config()` / `vim.lsp.enable()` — **NOT** nvim-lspconfig `setup()`
-- Server configs in `lua/lsp/servers/` loaded via global `pRequire()`
+- Server configs in `lsp/` (root) — **NOT** `lua/lsp/servers/` (supprimé)
 - Capabilities from `blink.cmp.get_lsp_capabilities()`
-- Servers: lua_ls, basedpyright, jsonls (+ schemastore), ts_ls
+- Servers: `emmylua_ls`, `basedpyright`, `jsonls`, `ts_ls`, `rust_analyzer`, `zshcs`
+- `jdtls` activé séparément dans `lua/plugins/java.lua`
+- `copilot_ls` activé dans `lua/plugins/copilot.lua`
+- Full doc: [`docs/plugins/lsp.md`](docs/plugins/lsp.md)
 
 ## Global Helpers (init.lua)
 - `pRequire(mod)` — Protected require, returns nil on failure
@@ -56,8 +59,7 @@ All plugin specs are explicitly imported in `init.lua` — not auto-discovered f
 Applied in this order (last wins):
 1. **Integration defaults** (`lua/base46/integrations/`) — base highlights for editor, syntax, treesitter, LSP, git.
 2. **Theme polish** (`lua/themes/sonokai.lua` → `polish_hl`) — sonokai-specific overrides per category.
-3. **Chadrc overrides** (`lua/chadrc.lua` → `hl_add` / `hl_override`) — base46 syntax: `{ "blue", -20 }` (lightness), `{ "red", "line", 80 }` (mix).
-4. **Per-plugin highlights** (`lua/highlights/<plugin>.lua`) — each returns a **function**, loaded dynamically on `VeryLazy`/`LazyLoad`/`BufWritePost` (hot-reload).
+3. **Per-plugin highlights** (`lua/highlights/<plugin>.lua`) — each returns a **function**, loaded dynamically on `VeryLazy`/`LazyLoad`/`BufWritePost` (hot-reload).
 
 Color mixing system (`lua/base46/init.lua` → `turn_str_to_color`): resolves palette names, lightness tuples, and mix tuples to hex values.
 
@@ -72,33 +74,35 @@ When working on a plugin, **read its doc first** and **update it with any discov
 
 Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.md`](docs/plugins/snacks-picker-custom.md)
 
-| Plugin | Config file | Notes |
+| Plugin | Config file | Doc |
 |---|---|---|
-| blink.cmp | `plugins/blink-cmp.lua` | Completion + copilot + ghost text |
-| cokeline | `plugins/cokeline.lua` | Fork NeOzay, harpoon-integrated bufferline |
-| codediff | `plugins/codediff.lua` | Replaces diffview |
-| dap | `plugins/dap.lua` | + dap-ui, OSV; shared state in shared_data.lua |
-| gitsigns | `plugins/gitsigns.lua` | |
-| harpoon | `plugins/harpoon.lua` | Fork NeOzay, branch harpoon2 |
+| blink.cmp | `plugins/blink-cmp.lua` | [`blink-cmp.md`](docs/plugins/blink-cmp.md) |
+| cokeline | `plugins/cokeline.lua` | [`cokeline.md`](docs/plugins/cokeline.md) |
+| codediff | `plugins/codediff.lua` | [`codediff.md`](docs/plugins/codediff.md) |
+| dap | `plugins/dap/` | [`dap.md`](docs/plugins/dap.md) |
+| gitsigns | `plugins/gitsigns.lua` | [`gitsigns.md`](docs/plugins/gitsigns.md) |
+| harpoon | `plugins/harpoon.lua` | [`harpoon.md`](docs/plugins/harpoon.md) |
 | lualine | `plugins/lualine.lua` + `lualine-conf.lua` | Fork NeOzay, per-window statusline |
-| snacks | `plugins/snacks/` | Terminal, scratch, picker, explorer, notifier |
-| statuscol | `plugins/statuscol/` | Modular: segments, DAP handler, folds |
-| telescope | `plugins/telescope.lua` + `pickers/` | Custom pickers: harpoon, jumplist |
-| ufo | `plugins/ufo/` | Modular: handler, render, actions |
-| claudecode | `plugins/claudecode.lua` | Claude Code integration |
-| codecompanion | `plugins/codecompanion.lua` | AI chat (copilot adapter) |
-| conform | `plugins/conform.lua` | Code formatting (ruff for Python) |
-| treesitter | `plugins/treesitter.lua` | + context, textobjects (separate specs) |
-| trouble | `plugins/trouble.lua` | Diagnostics list |
-| neogit | `plugins/neogit.lua` | Magit-style git UI |
-| markview | `plugins/markview.lua` | Markdown rendering |
-| copilot | `plugins/copilot.lua` | GitHub Copilot |
+| snacks | `plugins/snacks/` | [`snacks.md`](docs/plugins/snacks.md) |
+| statuscol | `plugins/statuscol/` | [`statuscol.md`](docs/plugins/statuscol.md) |
+| ufo | `plugins/ufo/` | [`ufo.md`](docs/plugins/ufo.md) |
+| claudecode | `plugins/claudecode.lua` | [`claudecode.md`](docs/plugins/claudecode.md) |
+| codecompanion | `plugins/codecompanion.lua` | [`codecompanion.md`](docs/plugins/codecompanion.md) |
+| conform | `plugins/conform.lua` | [`conform.md`](docs/plugins/conform.md) |
+| treesitter | `plugins/treesitter.lua` | [`treesitter.md`](docs/plugins/treesitter.md) |
+| trouble | `plugins/trouble.lua` | [`trouble.md`](docs/plugins/trouble.md) |
+| neogit | `plugins/neogit.lua` | [`neogit.md`](docs/plugins/neogit.md) |
+| markview | `plugins/markview.lua` | [`markview.md`](docs/plugins/markview.md) |
+| copilot | `plugins/copilot.lua` | [`copilot.md`](docs/plugins/copilot.md) |
+| persistence | `plugins/persistence.lua` | [`persistence.md`](docs/plugins/persistence.md) |
+| java | `plugins/java.lua` | [`java.md`](docs/plugins/java.md) |
+| lsp | `lsp/init.lua` + `lua/lsp/` | [`lsp.md`](docs/plugins/lsp.md) |
 | hover-translator | `plugins/hover-translator.lua` | Local dev plugin, FR translation |
 | docstring-highlight | `plugins/docstring-highlight.lua` | Local dev plugin, Python docstrings |
 
-Also loaded: aerial, auto-pairs, fidget, hover, illuminate, indent-blankline, lsp-endhints, navic, persistence, satellite, schemastore, which-key, wezterm-types, vim-suda.
+Also loaded: aerial, auto-pairs, fidget, hover, illuminate, indent-blankline, lsp-endhints, navic, satellite, schemastore, which-key, wezterm-types, vim-suda.
 
-Disabled: neo-tree (replaced by snacks explorer), avante, copilot-chat (replaced by codecompanion).
+Disabled: neo-tree (replaced by snacks explorer), telescope (replaced by snacks picker), avante, copilot-chat (replaced by codecompanion).
 
 # Documentation Maintenance
 
