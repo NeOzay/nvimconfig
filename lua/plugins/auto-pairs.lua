@@ -1,8 +1,22 @@
+-- Remplace la séquence CR par défaut (<CMD>normal! ====) qui déplace le curseur
+-- avec treesitter indent, causant {\n}\n| au lieu de {\n  |\n}.
+local function rules_cr_fix()
+	local autopairs = require("nvim-autopairs")
+	for _, pair in ipairs({ { "(", ")" }, { "[", "]" }, { "{", "}" }, { "```", "```" }, { "```.*$", "```" } }) do
+		for _, rule in ipairs(autopairs.get_rules(pair[1])) do
+			if rule.end_pair == pair[2] then
+				rule:replace_map_cr(function(_)
+					return "<c-g>u<CR><c-c>O"
+				end)
+			end
+		end
+	end
+end
+
 local function rules_brackets()
 	local autopairs = require("nvim-autopairs")
 	local Rule = require("nvim-autopairs.rule")
 	local cond = require("nvim-autopairs.conds")
-
 	local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
 	autopairs.add_rules({
 		-- Rule for a pair with left-side ' ' and right side ' '
@@ -104,6 +118,7 @@ end
 local function config(_, opts)
 	local autopairs = require("nvim-autopairs")
 	autopairs.setup(opts)
+	rules_cr_fix()
 	rules_brackets()
 	rules_no_unmatched_close()
 end

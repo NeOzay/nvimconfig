@@ -290,7 +290,7 @@ return {
 		"nvim-tree/nvim-web-devicons",
 		"ThePrimeagen/harpoon",
 	},
-	event = "User FilePost",
+	event = "VeryLazy",
 	config = config,
 	keys = {
 		-- { "<Tab>", "<Plug>(cokeline-focus-next)", mode = "n", desc = "Buffer suivant" },

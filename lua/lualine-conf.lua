@@ -281,6 +281,19 @@ function M.setup()
 			lualine_z = { location[1], location[2] },
 		},
 
+		-- winbar = {
+		-- 	lualine_c = {
+		-- 		{
+		-- 			function()
+		-- 				return require("nvim-navic").get_location()
+		-- 			end,
+		-- 			cond = function()
+		-- 				return require("nvim-navic").is_available()
+		-- 			end,
+		-- 		},
+		-- 	},
+		-- },
+
 		inactive_sections = {
 			lualine_a = {},
 			lualine_b = {},

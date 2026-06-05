@@ -65,7 +65,7 @@ function M.load_integration(name)
 	end
 
 	if not (ok_default or ok_user) or type(hl) ~= "table" then
-		vim.notify("Impossible de charger " .. name, vim.log.levels.WARN)
+		vim.notify("Impossible de charger " .. name .. "\n" .. hl, vim.log.levels.WARN)
 		return
 	end
 	if vim.tbl_isempty(hl) then

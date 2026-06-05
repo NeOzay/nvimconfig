@@ -14,13 +14,14 @@ local opts = {
 				follow_file = true,
 				git_status = true,
 				diagnostics = true,
+				---@type table<string, snacks.picker.Action.spec>
 				actions = {
 					explorer_open_recursive = function(picker, item)
 						if not item or not item.dir then
 							return
 						end
 						local Tree = require("snacks.explorer.tree")
-						local node = Tree:find(item.file)
+						local node = Tree:find(item.file or "")
 						if not node then
 							return
 						end
@@ -36,7 +37,7 @@ local opts = {
 							return
 						end
 						local Tree = require("snacks.explorer.tree")
-						local dir = Tree:dir(item.file)
+						local dir = Tree:dir(item.file or "")
 						local node = Tree:find(dir)
 						if not node then
 							return
@@ -47,6 +48,9 @@ local opts = {
 						require("snacks.explorer.actions").update(picker, { refresh = true })
 					end,
 					explorer_open_all = function(picker)
+						local list = picker.list
+						local current_file = list.items and list.items[list.cursor] and list.items[list.cursor].file
+
 						local Tree = require("snacks.explorer.tree")
 						local cwd = picker:cwd()
 						local root = Tree:find(cwd)
@@ -58,14 +62,15 @@ local opts = {
 								n.open = true
 							end
 						end, { all = true })
-						require("snacks.explorer.actions").update(picker, { refresh = true })
+						list:set_target()
+						require("snacks.explorer.actions").update(picker, { refresh = true, target = current_file })
 					end,
 					explorer_toggle_recursive = function(picker, item)
 						if not item or not item.dir then
 							return
 						end
 						local Tree = require("snacks.explorer.tree")
-						local node = Tree:find(item.file)
+						local node = Tree:find(item.file or "")
 						if not node then
 							return
 						end
@@ -77,29 +82,77 @@ local opts = {
 						end, { all = true })
 						require("snacks.explorer.actions").update(picker, { refresh = true })
 					end,
+					explorer_jump_parent = function(picker, item)
+						if not item then
+							return
+						end
+						local list = picker.list
+						local items = list.items
+						if not items then
+							return
+						end
+						local parent_path = vim.fs.dirname(item.file)
+						local pos = list.cursor or 1
+						for i = pos - 1, 1, -1 do
+							if items[i] and items[i].dir and items[i].file == parent_path then
+								list:move(i - pos)
+								return
+							end
+						end
+					end,
+					explorer_jump_next_parent = function(picker, item)
+						if not item then
+							return
+						end
+						local list = picker.list
+						local items = list.items
+						if not items then
+							return
+						end
+						local parent_depth = select(2, vim.fs.dirname(item.file):gsub("/", ""))
+						local pos = list.cursor or 1
+						for i = pos + 1, #items do
+							if items[i] and items[i].dir then
+								local depth = select(2, items[i].file:gsub("/", ""))
+								if depth == parent_depth then
+									list:move(i - pos)
+									return
+								end
+							end
+						end
+					end,
+					explorer_next_dir = function(picker)
+						local list = picker.list
+						local items = list.items
+						if not items then
+							return
+						end
+						local pos = list.cursor or 1
+						for i = pos + 1, #items do
+							if items[i] and items[i].dir then
+								list:move(i - pos)
+								return
+							end
+						end
+					end,
+					explorer_prev_dir = function(picker)
+						local list = picker.list
+						local items = list.items
+						if not items then
+							return
+						end
+						local pos = list.cursor or 1
+						for i = pos - 1, 1, -1 do
+							if items[i] and items[i].dir then
+								list:move(i - pos)
+								return
+							end
+						end
+					end,
 				},
 				layout = {
 					preview = true,
 					preset = "telescope",
-					-- or "vertical" with custom dimensions
-					-- layout = {
-					-- 	backdrop = false,
-					-- 	row = -2,
-					-- 	col = -1,
-					-- 	width = 40,
-					-- 	min_width = 40,
-					-- 	height = vim.o.lines - 3,
-					-- 	box = "vertical",
-					-- 	{
-					-- 		win = "input",
-					-- 		height = 1,
-					-- 		border = true,
-					-- 		title = "{title} {live} {flags}",
-					-- 		title_pos = "center",
-					-- 	},
-					-- 	{ win = "list", border = true, title = "Files" },
-					-- 	{ win = "preview", title = "{preview}", height = 0.4, border = "top" },
-					-- },
 				},
 				win = {
 					list = {
@@ -118,6 +171,10 @@ local opts = {
 							["R"] = "explorer_update",
 							["]d"] = "explorer_diagnostic_next",
 							["[d"] = "explorer_diagnostic_prev",
+							["<C-Down>"] = "explorer_next_dir",
+							["<C-Up>"] = "explorer_prev_dir",
+							["<S-C-Up>"] = "explorer_jump_parent",
+							["<S-C-Down>"] = "explorer_jump_next_parent",
 						},
 					},
 				},
@@ -140,7 +197,14 @@ local keys = {
 		function()
 			Snacks.explorer()
 		end,
-		desc = "Explorer (float)",
+		desc = "Explorer",
+	},
+	{
+		"<leader>ea",
+		function()
+			Snacks.explorer({ hidden = true, ignored = true })
+		end,
+		desc = "Explorer (all files)",
 	},
 	{
 		"<leader>ec",
@@ -152,16 +216,47 @@ local keys = {
 	{
 		"<leader>eb",
 		function()
-			Snacks.picker.buffers()
+			local cwd = vim.fs.normalize(vim.uv.cwd() or "")
+			local include_paths = {}
+			local seen = {}
+
+			for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+					local name = vim.api.nvim_buf_get_name(buf)
+					if name ~= "" then
+						name = vim.fs.normalize(name)
+						if vim.startswith(name, cwd .. "/") then
+							if not seen[name] then
+								seen[name] = true
+								table.insert(include_paths, name)
+							end
+							local dir = vim.fs.dirname(name)
+							while dir and not seen[dir] do
+								seen[dir] = true
+								table.insert(include_paths, dir)
+								if dir == cwd then
+									break
+								end
+								dir = vim.fs.dirname(dir)
+							end
+						end
+					end
+				end
+			end
+
+			Snacks.explorer({
+				include = include_paths,
+				exclude = { "**" },
+			})
 		end,
-		desc = "Buffers (replaces neo-tree buffers)",
+		desc = "Explorer (open buffers only)",
 	},
 	{
 		"<leader>eg",
 		function()
 			Snacks.picker.git_status()
 		end,
-		desc = "Git status (replaces neo-tree git)",
+		desc = "Explorer (git status)",
 	},
 }
 

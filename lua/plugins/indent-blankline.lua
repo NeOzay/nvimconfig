@@ -1,7 +1,7 @@
 ---@type LazySpec
 return {
 	"lukas-reineke/indent-blankline.nvim",
-	event = "User FilePost",
+	event = "VeryLazy",
 	-- enabled = false,
 	---@type ibl.config
 	opts = {

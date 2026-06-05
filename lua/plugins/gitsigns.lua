@@ -15,7 +15,7 @@ end
 ---@type LazySpec
 return {
 	"lewis6991/gitsigns.nvim",
-	event = "User FilePost",
+	event = "VeryLazy",
 	config = function(_, opts)
 		require("gitsigns").setup(opts)
 		setup_fold_hl()

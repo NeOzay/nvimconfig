@@ -70,6 +70,7 @@ return {
 			"jbyuki/one-small-step-for-vimkind",
 			DEBUGUI,
 		},
+		event = "VeryLazy",
 		init = init,
 		keys = {
 			-- Contrôles de débogage

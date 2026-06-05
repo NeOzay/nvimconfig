@@ -39,6 +39,7 @@ return {
 		modes = {
 			diagnostics = {
 				mode = "diagnostics",
+				format = "{severity_icon} {message} {item.source} {code} {pos}",
 				preview = {
 					type = "split",
 					relative = "win",

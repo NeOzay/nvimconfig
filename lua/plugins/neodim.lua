@@ -12,7 +12,7 @@ return {
 	config = function()
 		require("neodim").setup({
 			alpha = 0.45,
-			blend_color = string.format("#%x", get_hi("@comment", "fg")),
+			blend_color = get_hi("@comment", "fg"),
 			hide = {
 				virtual_text = false,
 				signs = false,

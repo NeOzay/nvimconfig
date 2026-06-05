@@ -220,23 +220,28 @@ Userautocmd("ColorScheme", {
 	end,
 })
 
+local function int_to_hex(n)
+	return "#" .. string.format("%06x", n)
+end
+
 ---@param group string @Highlight group name
 ---@param ... keyof vim.api.keyset.highlight @Highlight attributes to retrieve (e.g., "fg", "bg", "bold", etc.)
 ---@return any... @values of the requested attributes
 function M.get_hi_attr(group, ...)
 	local hl = api.nvim_get_hl(0, { name = group, link = false })
+	local serialized_data = { fg = true, bg = true, sp = true }
 	local results = {}
 	for _, attr in ipairs({ ... }) do
 		if not hl or hl[attr] == nil then
 			error("Highlight group '" .. group .. "' does not have attribute '" .. attr .. "'")
 		end
-		results[#results + 1] = hl[attr]
+		local value = hl[attr]
+		if serialized_data[attr] and type(value) == "number" then
+			value = int_to_hex(value)
+		end
+		results[#results + 1] = value
 	end
 	return unpack(results)
-end
-
-local function int_to_hex(n)
-	return "#" .. string.format("%06x", n)
 end
 
 ---@param group1 string @Highlight group name or hex color code

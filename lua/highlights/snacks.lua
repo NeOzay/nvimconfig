@@ -2,9 +2,11 @@
 
 local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
 local mix = require("base46.colors").mix_colors_group
+local colors_util = require("base46.colors")
 
 ---@type Base46HLTable
 return {
+	SnacksDir = { fg = mix("comment", "Normal", 60) },
 	SnacksNormal = { fg = colors.white, bg = colors.black },
 	SnacksNormalNC = { fg = colors.white, bg = colors.black },
 
@@ -14,7 +16,7 @@ return {
 	SnacksPicker = { link = "SnacksNormal" },
 	SnacksPickerBorder = { fg = colors.line },
 	SnacksPickerMatch = { fg = colors.green, bold = true },
-	SnacksPickerDir = { fg = mix("comment", "Normal", 60) },
+	SnacksPickerDir = { link = "SnacksDir" },
 	SnacksPickerListCursorLine = { bg = colors.one_bg3 },
 	SnacksPickerPreviewCursorLine = { bg = colors.one_bg3 },
 
@@ -32,7 +34,7 @@ return {
 	SnacksFooterKey = { fg = colors.green, bg = colors.one_bg3 },
 
 	-- Dashboard
-	SnacksDashboardDir = { fg = mix("comment", "Normal", 60) },
+	SnacksDashboardDir = { link = "SnacksDir" },
 	SnacksDashboardKey = { fg = colors.green },
 
 	-- Explorer tree

@@ -2,7 +2,6 @@
 
 ---@type string[]
 local markview_fts = { "markdown", "Avante", "codecompanion", "snacks_notif" }
-
 ---@type snacks.Config
 local opts = {
 	picker = {
@@ -32,32 +31,39 @@ local opts = {
 					if not self.buf or not self.win then
 						return
 					end
-					---@type string?
-					local last_ft
+					-- Timer créé une fois à l'ouverture du picker, réutilisé pour debouncer
+					-- les multiples on_lines déclenchés lors du chargement d'un même fichier.
+					local timer = assert(vim.uv.new_timer())
 					vim.api.nvim_buf_attach(self.buf, false, {
-						on_lines = function()
+						on_lines = function(_, bufnb)
 							if not vim.api.nvim_win_is_valid(self.win) then
+								timer:stop()
 								return true
 							end
-							vim.schedule(function()
-								if not vim.api.nvim_buf_is_valid(self.buf) then
-									return
-								end
-								vim.api.nvim_win_call(self.win, function()
-									require("ibl").setup_buffer(self.buf)
+							timer:stop()
+							timer:start(
+								10,
+								0,
+								vim.schedule_wrap(function()
+									if
+										not vim.api.nvim_buf_is_valid(bufnb)
+										or not vim.api.nvim_win_is_valid(self.win)
+									then
+										return
+									end
+									vim.api.nvim_win_call(self.win, function()
+										require("ibl").setup_buffer(bufnb)
+									end)
+									local ft = vim.split(vim.bo[bufnb].filetype, ".", { plain = true })[1]
+									if vim.tbl_contains(markview_fts, ft) then
+										vim.wo[self.win].conceallevel = 2
+										require("markview").render(bufnb)
+										require("markview.actions").set_query(bufnb)
+									else
+										vim.wo[self.win].conceallevel = 0
+									end
 								end)
-								local ft = vim.split(vim.bo[self.buf].filetype, ".", { plain = true })[1]
-								if ft == last_ft then
-									return
-								end
-								last_ft = ft
-								if vim.tbl_contains(markview_fts, ft) then
-									vim.wo[self.win].conceallevel = 2
-									require("markview").render(self.buf)
-								else
-									vim.wo[self.win].conceallevel = 0
-								end
-							end)
+							)
 						end,
 					})
 				end,

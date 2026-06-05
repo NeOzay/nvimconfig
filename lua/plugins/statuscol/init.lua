@@ -23,7 +23,10 @@
 ---@type LazyPluginSpec
 return {
 	"luukvbaal/statuscol.nvim",
-	event = "User FilePost",
+	event = "VeryLazy",
+	dependencies = {
+		"mfussenegger/nvim-dap",
+	},
 	-- enabled = false,
 	config = function()
 		local dap_handler = require("plugins.statuscol.dap_handler")
@@ -41,5 +44,9 @@ return {
 			FoldOther = folds.with_scroll_to_click(builtin.foldother_click),
 		}
 		require("statuscol").setup(opts)
+		-- Fire BufWinEnter to apply statuscol to already open buffers
+		vim.schedule(function()
+			vim.api.nvim_exec_autocmds("BufWinEnter", { buf = vim.api.nvim_get_current_buf() })
+		end)
 	end,
 }

@@ -3,4 +3,5 @@ local mix = require("base46.colors").mix_colors_group
 
 return {
 	TroubleDirectory = { fg = mix("comment", "Normal", 60) },
+	TroubleIconDirectory = { link = "Directory" },
 }

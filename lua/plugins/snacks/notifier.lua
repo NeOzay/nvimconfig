@@ -1,6 +1,4 @@
 ---@diagnostic disable:missing-fields, assign-type-mismatch, param-type-mismatch
----@type string[]
-local markview_fts = { "markdown", "Avante", "codecompanion", "snacks_notif" }
 
 ---@type snacks.Config
 local opts = {
@@ -41,6 +39,48 @@ local opts = {
 							border = true,
 							title_pos = "center",
 							wo = { number = false, foldcolumn = "0", signcolumn = "no", wrap = true },
+
+							---@param self snacks.win
+							on_win = function(self)
+								if not self.buf or not self.win then
+									return
+								end
+								---@type string?
+								local last_ft
+								vim.api.nvim_buf_attach(self.buf, false, {
+									on_lines = function()
+										if not vim.api.nvim_win_is_valid(self.win) then
+											return true
+										end
+										vim.schedule(function()
+											if not vim.api.nvim_buf_is_valid(self.buf) then
+												return
+											end
+											local ft = vim.split(vim.bo[self.buf].filetype, ".", { plain = true })[1]
+											-- if ft == last_ft then
+											-- 	return
+											-- end
+											last_ft = ft
+											vim.wo[self.win].conceallevel = 2
+											require("markview.actions").render(self.buf, nil, {
+												markdown = {
+													list_items = { indent_size = 1, shift_width = 1 },
+													code_blocks = {
+														label_direction = "right",
+														style = "simple",
+													},
+												},
+												markdown_inline = {
+													inline_codes = { padding_left = "", padding_right = "" },
+													hyperlinks = { enable = false },
+												},
+												preview = { ignore_buftypes = {} },
+											})
+											require("markview.actions").set_query(self.buf)
+										end)
+									end,
+								})
+							end,
 						},
 					},
 				},
@@ -76,14 +116,14 @@ local opts = {
 						return
 					end
 					local ft = vim.bo[self.buf].filetype
-					if vim.tbl_contains(markview_fts, ft) and package.loaded["markview"] then
+					if package.loaded["markview"] then
 						-- Register snacks_notif → markdown so get_parser(buf) resolves correctly
 						vim.treesitter.language.register("markdown", ft)
 						require("markview.actions").render(self.buf, nil, {
 							markdown = {
 								list_items = { indent_size = 1, shift_width = 1 },
 								code_blocks = {
-									label_direction = "right", --[[min_width = self:size().width - 4 ]]
+									label_direction = "right",
 									style = "simple",
 								},
 							},
@@ -93,15 +133,12 @@ local opts = {
 							},
 							preview = { ignore_buftypes = {} },
 						})
-						-- Supprimer les conceal_lines de treesitter (cache les lignes de fence entières)
-						-- tout en gardant les conceal classiques (**, `, etc.) intacts
-						local ts_ns = vim.api.nvim_create_namespace("nvim.treesitter.highlighter")
-						local marks = vim.api.nvim_buf_get_extmarks(self.buf, ts_ns, 0, -1, { details = true })
-						for _, mark in ipairs(marks) do
-							if mark[4].conceal_lines then
-								vim.api.nvim_buf_del_extmark(self.buf, ts_ns, mark[1])
-							end
-						end
+						-- Retire les conceal_lines des fence lines sans stopper treesitter :
+						-- set_query() remplace temporairement la query markdown pour supprimer
+						-- les directives conceal_lines, redémarre le highlighter sur ce buffer,
+						-- puis restaure la query globale. Les highlights d'injection (code blocks)
+						-- sont préservés.
+						require("markview.actions").set_query(self.buf)
 					end
 				end)
 			end,
