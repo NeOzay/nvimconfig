@@ -1,120 +1,130 @@
 # Theme & Highlights System
 
 ## Role
-Systeme de theming multi-couche base sur Sonokai, avec highlights per-plugin charges dynamiquement via lazy.nvim.
+Système de theming multi-couche basé sur Sonokai, avec highlights per-plugin chargés dynamiquement via lazy.nvim.
 
 ## Files
 - Theme: `lua/themes/sonokai.lua`
-- base46 local fork: `lua/base46/` (init, colors, load, integrations/)
-- Highlights loader: `lua/highlights/init.lua`
-- Color utilities: `lua/colors_bank.lua`
-- Overrides: `lua/chadrc.lua` (section `base46`)
-- Per-plugin highlights: `lua/highlights/<plugin>.lua`
+- base46 local fork: `lua/base46/` (init, colors, loader, palette, config, integrations/)
+- Config utilisateur: `lua/base46/config.lua` (remplace l'ancien `lua/chadrc.lua`)
+- User integrations: `lua/highlights/<plugin>.lua`
 
 ## Moment de chargement
 
-Dans `init.lua`, les highlights sont charges en **dernier**, via `vim.schedule` :
-1. `require("base46.load").apply()` charge les integrations, polish_hl, hl_add/hl_override, terminal colors (step 4)
-2. `require("highlights")` est appele dans `vim.schedule` (step 6), ce qui initialise le loader et les autocmds
-3. Les fichiers `highlights/*.lua` sont ensuite charges au fur et a mesure via les events `VeryLazy` et `LazyLoad`
+Dans `init.lua` :
+1. `require("base46.load").apply()` → `base46.setup()` applique les 3 premières couches (step 4)
+2. `loader.setup_autocmds()` enregistre les autocmds pour les intégrations per-plugin (step 4)
+3. Les intégrations user/base46 se chargent ensuite via `LazyLoad` et hot-reload
 
 ## Architecture
 
-### 4 couches de highlights (ordre d'application)
+### 3 couches appliquées en une passe dans `base46/init.lua → load()`
 
-1. **Integration defaults (`lua/base46/integrations/`)**
-   - `defaults.lua` : Normal, Pmenu, Cursor, Visual, Search, Lazy*, etc.
+1. **Integration defaults (`lua/base46/integrations/defaults/`)**
+   - `defaults.lua` : Normal, Pmenu, Cursor, Visual, Search, etc.
    - `syntax.lua` : Comment, Function, Keyword, String, Type, etc.
-   - `treesitter.lua` : @variable, @function, @keyword, @comment, etc.
-   - `lsp.lua` : LspReference*, Diagnostic*, LspInlayHint
-   - `git.lua` : DiffAdd, DiffDelete, gitcommit*, etc.
-   - Chaque fichier utilise la palette base_30/base_16 de sonokai.lua
+   - + autres fichiers dans `defaults/` (treesitter, lsp, git…)
+   - Tous mergés en une seule table `all_hl` avant application.
 
 2. **Theme polish (`lua/themes/sonokai.lua` → `polish_hl`)**
-   - Highlights groupes par categorie (`treesitter`, `lsp`, `syntax`, `defaults`, `telescope`, `cmp`, `git`, `trouble`)
-   - Surcharge les integrations defaults pour le style Sonokai specifique
-   - `base46_terminal` : couleurs ANSI pour les terminaux integres
+   - Highlights groupés par catégorie (`treesitter`, `lsp`, `syntax`, `defaults`, `git`, `trouble`…)
+   - Mergé avec `force` par-dessus les defaults.
 
-3. **Chadrc overrides (`lua/chadrc.lua` → `base46`)**
-   - `hl_add` : nouveaux groupes (BlinkCmp kinds, Rainbow indent, DAP signs, etc.)
-   - `hl_override` : surcharge de groupes existants (ex: `@keyword` → blue au lieu de red)
-   - Syntaxe speciale base46 : `fg = { "blue", -20 }` (lightness shift), `fg = { "red", "line", 80 }` (mix 2 couleurs)
+3. **User overrides (`lua/base46/config.lua` → `hl_override`)**
+   - Overrides de groupes existants (ex: `@keyword` → blue italic).
+   - Même syntaxe base46 : `"blue"`, `{ "blue", -20 }`, `{ "red", "line", 80 }`.
+   - **Pas de `hl_add`** — tout passe par `hl_override` (nouveaux groupes inclus).
+   - **`extended_palette`** : définit des couleurs nommées custom (ex: `Type`, `Field`, `code_bg`) utilisables dans `hl_override` et les intégrations.
 
-4. **Per-plugin highlights (`lua/highlights/*.lua`)**
-   - Fichiers autonomes, chacun retourne une **fonction** (pas une table)
-   - La fonction est appelee par `highlights/init.lua` via `loadfile()` + execution
-   - Accedent aux couleurs via `require("base46").get_theme_tb("base_30")`
-   - Appliquent les highlights avec `vim.api.nvim_set_hl(0, group, opts)`
+Les 3 couches sont résolues via `base46.palette.resolve()` puis appliquées d'un coup avec `nvim_set_hl`.
 
-### base46 local fork (`lua/base46/`)
+### Per-plugin integrations (couche 4)
 
-| Fichier | Role |
-|---|---|
-| `init.lua` | API principale : `get_theme_tb()`, `turn_str_to_color()`, `merge_tb()` |
-| `colors.lua` | Utilitaires couleur : `mix()`, `change_hex_lightness()`, `hex2rgb()`, etc. |
-| `load.lua` | Chargeur : applique integrations + polish_hl + chadrc overrides + terminal colors |
-| `integrations/` | Highlights de base par categorie (defaults, syntax, treesitter, lsp, git) |
+Chargées dynamiquement par `base46/loader.lua`. Deux sources :
+- **User** : `lua/highlights/<name>.lua` — prioritaire.
+- **Base46** : `lua/base46/integrations/<name>.lua` — fallback.
 
-Le systeme `turn_str_to_color` resout 3 syntaxes dans hl_add/hl_override :
-- `"blue"` → nom palette → hex
-- `{ "blue", -20 }` → changement de luminosite
-- `{ "orange", "line", 80 }` → fusion de 2 couleurs (20% orange + 80% line)
+Lors du chargement d'une intégration (`loader.load_integration(name)`) :
+1. Charge le fichier user ou base46 (retourne une **table** `Base46HLTable`).
+2. Merge `polish_hl[name]` du thème si présent (user → `keep`, base46 → `force`).
+3. Résout les couleurs palette.
+4. Applique avec `nvim_set_hl`.
 
-### Fichiers highlights existants
+#### Déclencheurs
+- **`LazyLoad`** : quand un plugin se charge, `load_matching(plugin_name)` cherche une intégration par sous-chaîne dans le nom.
+- **Hot-reload (`BufWritePost`)** : sauvegarde d'un fichier `lua/highlights/*.lua` → invalide le cache require et recharge instantanément.
+- **VeryLazy** : commenté (`--M.load_matching`) — non actif actuellement.
 
-| Fichier | Plugin cible | Particularites |
+### User integrations existantes (`lua/highlights/`)
+
+| Fichier | Plugin cible | Particularités |
 |---|---|---|
-| `codediff.lua` | codediff | Utilise `colors_bank.bank` pour les couleurs mixees |
-| `snacks.lua` | snacks.nvim | Utilise `mix_colors_group()` et `change_hex_lightness()` |
-| `markview.lua` | markview.nvim | Utilise `colors_bank.bank.code_bg` |
-| `neogit.lua` | neogit | ~130 groupes, le plus gros fichier highlights |
+| `codediff.lua` | codediff | |
+| `snacks.lua` | snacks.nvim | `mix_colors_group()`, `change_hex_lightness()` |
+| `markview.lua` | markview.nvim | |
+| `neogit.lua` | neogit | ~130 groupes |
 | `neo-tree.lua` | neo-tree.nvim | Git status, diagnostics, UI |
+| `trouble.lua` | trouble.nvim | |
 
-### Chargement dynamique (`lua/highlights/init.lua`)
+### base46 integrations (`lua/base46/integrations/`)
+~35 intégrations pré-construites : `blink`, `dap`, `navic`, `telescope`, `neogit`, `trouble`, `markview`, etc. Les intégrations user ont la priorité si elles portent le même nom.
 
-Le loader utilise 3 mecanismes complementaires :
+### base46 config (`lua/base46/config.lua`)
+Remplace `chadrc.lua`. Contient :
+- `theme` : chemin du thème (ex: `"themes.sonokai"`)
+- `integrations` : module path des intégrations user (`"highlights"`)
+- `extended_palette` : couleurs custom réutilisables dans tout le système
+- `hl_override` : overrides finaux (syntaxe base46 complète)
 
-1. **Au demarrage (`VeryLazy`)** : parcourt les plugins deja charges par lazy.nvim, matche leur nom contre les fichiers `highlights/*.lua` (sans extension), et charge les highlights correspondants.
+### Color utilities (`lua/base46/colors.lua`)
+- `hi_pathwork(fg, bg, opts?)` : groupe composite (fg d'un groupe + bg d'un autre). Caché, recalculé sur `ColorScheme`.
+- `mix_colors_group(group1, group2, strength?, ground?)` : mixe les couleurs de 2 groupes hl.
+- `mix(c1, c2, pct)`, `change_hex_lightness(hex, delta)` : utilitaires hex bas niveau.
 
-2. **Au chargement lazy (`LazyLoad`)** : ecoute l'evenement `User LazyLoad`, matche `opt.data` (nom du plugin charge) contre les fichiers highlights disponibles.
+### base46 palette (`lua/base46/palette.lua`)
+- `get_palette()` : fusionne `base_30` + `base_16` + `extended_palette` thème + `extended_palette` config.
+- `resolve_color(val, palette)` : résout récursivement `"name"`, `{"name", delta}`, `{"c1", "c2", pct}`.
+- `resolve(tb, palette)` : applique `resolve_color` sur fg/bg/sp de toute la table.
 
-3. **Hot-reload (`BufWritePost`)** : quand un fichier `lua/highlights/*.lua` est sauvegarde, recharge automatiquement ses highlights avec notification.
+## Syntaxe des couleurs (base46)
 
-Le matching se fait par sous-chaine : le nom du fichier highlight (sans `.lua`) est cherche dans le nom du plugin via `string.find()`. Ex: `neogit.lua` matche le plugin `neogit`.
+| Syntaxe | Effet |
+|---------|-------|
+| `"blue"` | Nom palette → hex |
+| `{ "blue", -20 }` | Lightness shift (négatif = plus sombre) |
+| `{ "orange", "line", 80 }` | Mix : 20% orange + 80% line |
+| `{ { "orange", -15 }, "purple", 60 }` | Mix récursif (orange assombri + purple) |
 
-### Color utilities (`lua/colors_bank.lua`)
-
-- `hi_pathwork(fg, bg, opts?)` : cree un groupe highlight composite (fg d'un groupe + bg d'un autre). Cache les resultats. Se re-applique automatiquement sur `ColorScheme`.
-- `get_hi_attr(group, attr)` : recupere un attribut (`fg`, `bg`, etc.) d'un groupe highlight.
-- `mix_colors_group(group1, group2, strength?, ground?)` : mixe les couleurs de 2 groupes (ou hex). Utilise `base46.colors.mix()`.
-- `bank` : table de couleurs pre-calculees (diffs, code_bg, scratch_desc) via `mix()` sur la palette base_30.
+## Commandes
+- `:Base46Reload` — recharge tous les highlights et intégrations (invalide tous les caches require).
+- `:Base46Integrations` — liste les intégrations chargées avec leur source (user/base46).
 
 ## Palette Sonokai (base_30)
 
 | Nom | Hex | Usage principal |
 |---|---|---|
-| `red` | `#fc5d7c` | Keywords, operateurs, erreurs |
-| `green` | `#9ed072` | Fonctions, ajouts, succes |
-| `yellow` | `#e7c664` | Strings, warnings, headings |
-| `cyan/blue` | `#76cce0` | Types, info, liens |
-| `purple` | `#b39df3` | Constantes, nombres, semantic tokens |
-| `orange` | `#f39660` | Parametres, builtins |
-| `grey_fg` | `#7f8490` | Commentaires, elements discrets |
-| `black` | `#2c2e34` | Background editeur |
+| `red` | `#fc5d7c` | Keywords conditionnels, erreurs |
+| `green` | `#9ed072` | Fonctions, ajouts, succès |
+| `yellow` | `#e7c664` | Strings, warnings |
+| `cyan/blue` | `#76cce0` | Types, keywords, info |
+| `purple` | `#b39df3` | Modules, namespaces, semantic tokens |
+| `orange` | `#f39660` | Paramètres, builtins |
+| `grey_fg` | `#7f8490` | Commentaires |
+| `black` | `#2c2e34` | Background éditeur |
 | `one_bg` | `#222327` | Background sidebar/gutter |
-| `one_bg2` | `#363944` | Selections, hover |
-| `one_bg3` | `#3b3e48` | Selections fortes |
+| `one_bg2` | `#363944` | Sélections, hover |
 | `line` | `#414550` | Bordures, indentation |
 
 ## Gotchas
 
-- **Ordre des couches** : integrations defaults → polish_hl → hl_add/hl_override → highlights/*.lua (dernier gagne).
-- **Matching par sous-chaine** : si un fichier highlight s'appelle `snacks.lua`, il matchera tout plugin dont le nom contient "snacks". Le `escape_pattern()` de utils.lua est utilise pour echapper les caracteres speciaux du nom de fichier.
-- **Les fichiers highlights retournent une fonction**, pas une table. Le loader utilise `loadfile()` puis execute le resultat. Si le fichier retourne autre chose qu'une fonction, rien n'est applique.
-- **Hot-reload** : la sauvegarde d'un fichier `highlights/*.lua` recharge instantanement les highlights — pas besoin de relancer Neovim.
-- **`hi_pathwork` est cache** : les groupes composites ne sont recalcules que sur `ColorScheme`. Si on change un highlight source sans changer de theme, le cache peut etre stale.
-- **chadrc utilise la syntaxe base46** pour les couleurs (noms string comme `"red"`, tuples `{ "blue", -20 }` pour lightness, tuples `{ "red", "line", 80 }` pour mix). Les fichiers `highlights/*.lua` utilisent directement les valeurs hex de `base_30`.
+- **Ordre** : defaults → polish_hl → hl_override (une passe) → puis intégrations per-plugin au LazyLoad (dernier gagne).
+- **User > base46** : une intégration `lua/highlights/neogit.lua` prend la priorité sur `base46/integrations/neogit.lua`.
+- **Les fichiers `highlights/*.lua` retournent une table** (plus une fonction) — le loader fait `require()` directement.
+- **VeryLazy commenté** : les intégrations ne se chargent pas au démarrage pour les plugins déjà chargés. Utiliser `:Base46Reload` pour forcer.
+- **`hi_pathwork` est caché** : recalculé uniquement sur `ColorScheme`, peut être stale si un highlight source change sans changement de thème.
+- **`extended_palette`** peut être défini dans config ET dans le thème — config écrase le thème pour les noms en collision.
 
 ## Changelog
-- 2026-03-22: Migration hors NvChad — fork local de base46 (init, colors, load, integrations). Suppression du systeme de cache/compilation.
-- 2026-03-20: Fiche initiale documentant l'architecture complete du systeme de theming.
+- 2026-06-05 : Réécriture complète. Suppression chadrc.lua → config.lua. Documentation extended_palette, loader deux sources (user/base46), tables vs fonctions, utils déplacés dans base46/colors.lua, commandes Base46Reload/Base46Integrations.
+- 2026-03-22 : Migration hors NvChad — fork local de base46.
+- 2026-03-20 : Fiche initiale.
