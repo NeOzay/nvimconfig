@@ -61,6 +61,7 @@ return {
 		["@type"] = { fg = "Type" },
 		["@string.delimitor"] = { link = "@comment" },
 		["@string.documentation"] = { link = "@comment" },
+		["@function.builtin"] = { fg = "green", italic = true },
 		["@module"] = { fg = "purple" },
 		PmenuSel = { fg = "NONE" },
 		Bold = { bold = true },

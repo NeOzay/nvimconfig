@@ -76,10 +76,10 @@ end
 
 ---@param settings table
 local function add_nvim_libs(settings)
-	local lib = settings.Lua.workspace.library
-	local runtime = settings.Lua.runtime
-	local workspace = settings.Lua.workspace
-	local diagnostics = settings.Lua.diagnostics
+	local lib = settings.emmylua.workspace.library
+	local runtime = settings.emmylua.runtime
+	local workspace = settings.emmylua.workspace
+	local diagnostics = settings.emmylua.diagnostics
 
 	workspace.ignoreGlobs = { "**/minit.lua", "**/busted.lua", "**/tests/**", "**/spec/**", "**/test/**" }
 	workspace.ignoreDir = { "deps" }
@@ -93,7 +93,7 @@ end
 ---@param settings table
 ---@param whitelist? string[]
 local function add_plugins_to_lib(settings, whitelist)
-	local lib = settings.Lua.workspace.library
+	local lib = settings.emmylua.workspace.library
 	local lazy_folder = vim.fn.stdpath("data") .. "/lazy/"
 
 	table.insert(lib, vim.fs.joinpath(lazy_folder, "lazy.nvim"))
@@ -129,7 +129,7 @@ local function before_init(params, config)
 	if vim.g.wezterm_types_loaded then
 		add_plugins_to_lib(config.settings, { "wezterm-types" })
 		---@diagnostic disable-next-line
-		config.settings.Lua.workspace.ignoreGlobs = { "wezterm.lua" }
+		config.settings.emmylua.workspace.ignoreGlobs = { "wezterm.lua" }
 	end
 
 	if params.workspaceFolders then
@@ -145,11 +145,10 @@ return {
 	filetypes = { "lua" },
 
 	settings = {
-		Lua = {
+		emmylua = {
 			runtime = {},
 			workspace = {
 				library = {},
-				checkThirdParty = false,
 				ignoreDir = {},
 				ignoreGlobs = {},
 			},
