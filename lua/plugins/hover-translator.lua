@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
 	dir = "~/projects/nvim-plugins/hover-translator",
+	enabled = vim.fn.isdirectory("~/projects/nvim-plugins/hover-translator") == 1,
 	lazy = false,
 	dev = true,
 	---@type Partial<hover-translator.config>

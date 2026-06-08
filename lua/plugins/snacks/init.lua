@@ -29,7 +29,7 @@ end
 
 ---@type LazyPluginSpec
 return {
-	"folke/snacks.nvim",
+	"NeOzay/snacks.nvim",
 	lazy = false,
 	-- enabled = false,
 	priority = 1000,
