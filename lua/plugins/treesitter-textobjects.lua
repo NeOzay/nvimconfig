@@ -22,7 +22,6 @@ end
 ---@type LazySpec
 return {
 	"nvim-treesitter/nvim-treesitter-textobjects",
-	dependencies = { "nvim-treesitter/nvim-treesitter" },
 	event = "BufEnter",
 	branch = "main",
 	init = init,

@@ -108,7 +108,6 @@ require("lazy").setup({
 	{ import = "plugins.satellite" },
 	{ import = "plugins.schemastore" },
 	{ import = "plugins.statuscol.init" },
-	{ import = "plugins.treesitter" },
 	{ import = "plugins.treesitter-context" },
 	{ import = "plugins.tree-sitter-manager" },
 	{ import = "plugins.treesitter-textobjects" },
@@ -121,6 +120,7 @@ require("lazy").setup({
 	{ "lambdalisue/vim-suda", lazy = false },
 	{ import = "plugins.wezterm-types" },
 	{ import = "plugins.workspace-diagnostics" },
+	{ import = "plugins.store" },
 }, lazy_config)
 
 require("options")

@@ -5,7 +5,7 @@ cmd("Format", function()
 end, {})
 
 cmd("TSInstalled", function()
-	print(table.concat(require("nvim-treesitter").get_installed(), ", "))
+	print(table.concat(require("utils").get_installed_parsers(), ", "))
 end, {})
 
 cmd("LspInfo", "checkhealth vim.lsp", {})

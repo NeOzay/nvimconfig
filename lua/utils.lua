@@ -78,6 +78,16 @@ function M.wrap(fn1, fn2)
 	return fn2(fn1)
 end
 
+---@return string[]
+function M.get_installed_parsers()
+	local files = api.nvim_get_runtime_file("parser/*.so", true)
+	local names = vim.tbl_map(function(p)
+		return vim.fn.fnamemodify(p, ":t:r")
+	end, files)
+	table.sort(names)
+	return names
+end
+
 ---@param text string
 function M.escape_pattern(text)
 	return text:gsub("[-%%^$*+?.()|%[%]{}]", "%%%1")
