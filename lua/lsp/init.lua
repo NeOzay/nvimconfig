@@ -2,12 +2,14 @@ local M = {}
 
 M.lsp_configs = {
 	"emmylua_ls",
+	"ruff",
 	"basedpyright",
 	-- "ty",
 	"jsonls",
 	"ts_ls",
 	"rust_analyzer",
 	"zshcs",
+	"marksman",
 }
 
 ---@param client vim.lsp.Client

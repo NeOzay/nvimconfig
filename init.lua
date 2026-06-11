@@ -56,6 +56,9 @@ vim.keymap.set = wrap(vim.keymap.set, function(keymap_set)
 	end
 end)
 
+-- load theme
+require("base46").setup()
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -68,9 +71,6 @@ vim.opt.rtp:prepend(lazypath)
 
 ---@type LazyConfig
 local lazy_config = require("lazy-conf")
-
--- load theme
-require("base46").setup()
 
 -- load plugins
 require("lazy").setup({
@@ -121,6 +121,7 @@ require("lazy").setup({
 	{ import = "plugins.wezterm-types" },
 	{ import = "plugins.workspace-diagnostics" },
 	{ import = "plugins.store" },
+	{ import = "plugins.lint" },
 }, lazy_config)
 
 require("options")

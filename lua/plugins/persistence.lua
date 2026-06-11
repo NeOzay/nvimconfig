@@ -12,6 +12,19 @@ Userautocmd("User", {
 	end,
 })
 
+vim.api.nvim_create_user_command("PersistenceStart", function()
+	require("persistence").start()
+end, { desc = "Start persistence (resume saving)" })
+
+vim.api.nvim_create_user_command("PersistenceDelete", function()
+	local persistence = require("persistence")
+	local session = persistence.current()
+	if session and vim.uv.fs_stat(session) then
+		vim.uv.fs_unlink(session, function() end)
+	end
+	persistence.stop()
+end, { desc = "Delete session and stop persistence" })
+
 ---@type LazySpec
 return {
 	"folke/persistence.nvim",
