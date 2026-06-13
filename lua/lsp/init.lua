@@ -21,7 +21,7 @@ local function on_attach(client, bufnr)
 
 	if client:supports_method("workspace/diagnostic", bufnr) then
 		vim.lsp.buf.workspace_diagnostics({ client_id = client.id })
-	elseif client.name ~= "copilot" and client.name ~= "basedpyright" then
+	elseif not string.find(client.name, "copilot") and client.name ~= "basedpyright" then
 		require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
 	end
 

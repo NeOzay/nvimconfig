@@ -1,65 +1,12 @@
--- ===== ANCIEN CODE (commenté) =====
---[[
-local function on_menu_opened()
-	vim.b.copilot_suggestion_hidden = true
-end
-
-local function on_menu_closed()
-	vim.b.copilot_suggestion_hidden = false
-end
-
-local function copilot_config()
-	require("copilot").setup()
-	local cmp = require("cmp")
-	cmp.event:on("menu_opened", on_menu_opened)
-	cmp.event:on("menu_closed", on_menu_closed)
-end
-
-local function copilot_cmp_config()
-	require("copilot_cmp").setup()
-end
-
----@type LazySpec[]
-return {
-	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		config = copilot_config,
-	},
-	{
-		"zbirenbaum/copilot-cmp",
-		dependencies = { "zbirenbaum/copilot.lua" },
-		event = "InsertEnter",
-		config = copilot_cmp_config,
-	},
-}
---]]
-
-local function setup(_, opts)
-	require("copilot").setup(opts)
-
-	vim.api.nvim_create_autocmd("User", {
-		pattern = "BlinkCmpMenuOpen",
-		callback = function()
-			vim.b.copilot_suggestion_hidden = true
-		end,
-	})
-
-	vim.api.nvim_create_autocmd("User", {
-		pattern = "BlinkCmpMenuClose",
-		callback = function()
-			vim.b.copilot_suggestion_hidden = false
-		end,
-	})
-end
-
 ---@type LazyPluginSpec[]
 return {
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
 		event = "InsertEnter",
+		build = function()
+			require("utils.copilot_termux_patch").patch()
+		end,
 		dependencies = {
 			{
 				"copilotlsp-nvim/copilot-lsp",
@@ -68,17 +15,13 @@ return {
 					vim.lsp.enable("copilot_ls")
 					vim.keymap.set("n", "<tab>", function()
 						local bufnr = vim.api.nvim_get_current_buf()
-						local state = vim.b[bufnr].nes_state
-						if state then
-							local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
-								or (
-									require("copilot-lsp.nes").apply_pending_nes()
-									and require("copilot-lsp.nes").walk_cursor_end_edit()
-								)
-							return nil
-						else
-							return "<C-i>"
+						if vim.b[bufnr].nes_state then
+							local nes = require("copilot-lsp.nes")
+							return nes.walk_cursor_start_edit()
+								or (nes.apply_pending_nes() and nes.walk_cursor_end_edit())
+								or nil
 						end
+						return "<C-i>"
 					end, { desc = "Accept Copilot NES suggestion", expr = true })
 				end,
 			},
@@ -99,7 +42,7 @@ return {
 			},
 			panel = { enabled = false },
 			nes = {
-				enabled = false,
+				enabled = true,
 				auto_trigger = true,
 				keymap = {
 					accept_and_goto = false,
@@ -108,7 +51,17 @@ return {
 				},
 			},
 		},
-		config = setup,
+		config = function(_, opts)
+			require("copilot").setup(opts)
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "BlinkCmpMenuOpen",
+				callback = function() vim.b.copilot_suggestion_hidden = true end,
+			})
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "BlinkCmpMenuClose",
+				callback = function() vim.b.copilot_suggestion_hidden = false end,
+			})
+		end,
 	},
 	{
 		"giuxtaposition/blink-cmp-copilot",
