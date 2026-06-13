@@ -6,82 +6,43 @@ local opts = {
 	picker = {
 		sources = {
 			notifications = {
-				layout = {
-					reverse = false,
-					layout = {
-						box = "horizontal",
-						backdrop = false,
-						width = 0.8,
-						height = 0.9,
-						border = "none",
-						{
-							box = "vertical",
-							border = "none",
-							width = 0.40,
-							{
-								win = "input",
-								height = 1,
-								border = true,
-								title = "{title} {live} {flags}",
-								title_pos = "center",
-							},
-							{
-								win = "list",
-								border = true,
-								title = " Results ",
-								title_pos = "center",
-								-- wo = { wrap = true },
-							},
-						},
-						{
-							win = "preview",
-							title = "{preview:Preview}",
-							border = true,
-							title_pos = "center",
-							wo = { number = false, foldcolumn = "0", signcolumn = "no", wrap = true },
-
-							---@param self snacks.win
-							on_win = function(self)
-								if not self.buf or not self.win then
-									return
-								end
-								---@type string?
-								local last_ft
-								vim.api.nvim_buf_attach(self.buf, false, {
-									on_lines = function()
-										if not vim.api.nvim_win_is_valid(self.win) then
-											return true
+				win = {
+					preview = {
+						wo = { wrap = true },
+						---@param self snacks.win
+						on_win = function(self)
+							if not self.buf or not self.win then
+								return
+							end
+							vim.api.nvim_buf_attach(self.buf, false, {
+								on_lines = function()
+									if not vim.api.nvim_win_is_valid(self.win) then
+										return true
+									end
+									vim.schedule(function()
+										if not vim.api.nvim_buf_is_valid(self.buf) then
+											return
 										end
-										vim.schedule(function()
-											if not vim.api.nvim_buf_is_valid(self.buf) then
-												return
-											end
-											local ft = vim.split(vim.bo[self.buf].filetype, ".", { plain = true })[1]
-											-- if ft == last_ft then
-											-- 	return
-											-- end
-											last_ft = ft
-											vim.wo[self.win].conceallevel = 2
-											require("markview.actions").render(self.buf, nil, {
-												markdown = {
-													list_items = { indent_size = 1, shift_width = 1 },
-													code_blocks = {
-														label_direction = "right",
-														style = "simple",
-													},
+										vim.wo[self.win].conceallevel = 2
+										require("markview.actions").render(self.buf, nil, {
+											markdown = {
+												list_items = { indent_size = 1, shift_width = 1 },
+												code_blocks = {
+													label_direction = "right",
+													style = "simple",
 												},
-												markdown_inline = {
-													inline_codes = { padding_left = "", padding_right = "" },
-													hyperlinks = { enable = false },
-												},
-												preview = { ignore_buftypes = {} },
-											})
-											require("markview.actions").set_query(self.buf)
-										end)
-									end,
-								})
-							end,
-						},
+											},
+											markdown_inline = {
+												inline_codes = { padding_left = "", padding_right = "" },
+												hyperlinks = { enable = false },
+											},
+											preview = { ignore_buftypes = {} },
+										})
+										require("markview.actions").set_query(self.buf)
+									end)
+								end,
+							})
+						end,
 					},
 				},
 			},
@@ -150,7 +111,7 @@ local opts = {
 local keys = {}
 
 vim.api.nvim_create_user_command("Notifi", function()
-	Snacks.picker.notifications()
+	Snacks.picker.notifications({ layout = { preset = "ivy_2" } })
 end, { desc = "list notifications" })
 
 ---@type SnacksSubmodule

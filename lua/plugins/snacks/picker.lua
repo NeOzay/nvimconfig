@@ -14,7 +14,12 @@ local opts = {
 			yank_text = { action = "yank", field = "text" },
 		},
 		layout = {
-			preset = "telescope",
+			preset = function()
+				if vim.o.columns < 120 then
+					return "ivy_2"
+				end
+				return "telescope"
+			end,
 		},
 		win = {
 			input = {
@@ -26,12 +31,6 @@ local opts = {
 			preview = {
 				wo = {
 					winhighlight = { EndOfBuffer = "SnacksNormal" },
-					-- La fenêtre de preview est un float : statuscol ignore les floats
-					-- (conditions.lua → `cfg.relative ~= ""`) et ne nettoie donc pas le
-					-- `statuscolumn` global hérité. On le neutralise ici, ce qui couvre
-					-- aussi le mode `preview = "main"` (où le `wo` du box n'est jamais
-					-- appliqué car la win est en `layout = false`).
-					statuscolumn = "",
 					number = false,
 					relativenumber = false,
 					foldcolumn = "0",
@@ -92,56 +91,19 @@ local opts = {
 		layouts = {
 			telescope = {
 				reverse = false,
-				-- Réévalué à l'ouverture du picker et sur VimResized.
-				-- Quand le terminal est trop étroit pour la preview en split
-				-- (< 120 colonnes), on bascule sur `preview = "main"` : la preview
-				-- s'affiche dans la fenêtre d'arrière-plan (le buffer courant). Le
-				-- picker devient alors un panneau compact en bas (hauteur 0.4) pour
-				-- laisser visible cet arrière-plan qui sert de preview.
-				-- NB : la win "preview" DOIT rester listée dans le box même en mode
-				-- `preview = "main"`. snacks la marque `layout = false` (relative =
-				-- "win") donc elle n'occupe aucune place, mais `get_wins` ne parcourt
-				-- que la structure du box : sans cette entrée, la fenêtre de preview
-				-- n'est jamais ouverte au premier affichage et la preview reste vide
-				-- jusqu'à un cycle de resize. C'est exactement ce que fait le preset
-				-- `ivy_split` fourni par snacks.
-				config = function(layout)
-					if vim.o.columns < 120 then
-						layout.preview = "main"
-						layout.layout = {
-							box = "vertical",
-							backdrop = false,
-							width = 0,
-							height = 0.4,
-							position = "bottom",
-							border = "none",
-							{
-								win = "input",
-								height = 1,
-								border = true,
-								title = "{title} {live} {flags}",
-								title_pos = "center",
-							},
-							{
-								win = "list",
-								border = true,
-								title = " Results ",
-								title_pos = "center",
-							},
-							{ win = "preview" },
-						}
-					end
-				end,
+				---@type snacks.layout.Box
 				layout = {
 					box = "horizontal",
 					backdrop = false,
-					width = 0.8,
-					height = 0.9,
+					width = 0.95,
+					max_width = 150,
+					height = 0.95,
 					border = "none",
 					{
 						box = "vertical",
 						border = "none",
 						width = 0.40,
+						max_width = 45,
 						{
 							win = "input",
 							height = 1,
@@ -165,6 +127,34 @@ local opts = {
 					},
 				},
 			},
+			ivy_2 = {
+				reverse = false,
+				layout = {
+					box = "vertical",
+					backdrop = false,
+					width = 0,
+					max_width = 100,
+					height = 0,
+					border = true,
+					title = "{preview:Preview}",
+					wo = { winhighlight = { FloatTitle = "SnacksPickerPreviewTitle" } },
+					{ win = "preview", border = false },
+					{
+						win = "input",
+						height = 1,
+						border = "top_bottom",
+						title = "{title} {live} {flags}",
+						title_pos = "center",
+					},
+					{
+						win = "list",
+						border = "bottom",
+						title_pos = "center",
+						height = 0.3,
+						max_height = 10,
+					},
+				},
+			},
 		},
 		icons = { ui = { selected = "+", unselected = " " } },
 	},
@@ -175,7 +165,7 @@ local keys = {
 	{
 		"<leader>fw",
 		function()
-			Snacks.picker.grep()
+			Snacks.picker.grep({ layout = { preset = "ivy_2" } })
 		end,
 		desc = "picker live grep",
 	},
@@ -287,15 +277,15 @@ local keys = {
 				},
 			})
 		end,
-		{
-			"<leader>th",
-			function()
-				Snacks.picker.colorschemes()
-			end,
-			desc = "themes",
-		},
+		desc = "picker highlights",
 	},
-	desc = "picker highlights",
+	{
+		"<leader>th",
+		function()
+			Snacks.picker.colorschemes()
+		end,
+		desc = "themes",
+	},
 }
 
 vim.api.nvim_create_user_command("Pickers", function()
