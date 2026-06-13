@@ -13,6 +13,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 
 ### Picker
 - Layout `telescope` custom (80% width, 90% height, horizontal split).
+- Preview responsive : la fonction `config` du layout `telescope` (réévaluée à l'ouverture et sur `VimResized`) bascule sur `preview = "main"` quand `vim.o.columns < 120`. La preview s'affiche alors dans la fenêtre d'arrière-plan (buffer courant) et le picker devient un panneau compact en bas (`box = "vertical"`, `height = 0.4`, `position = "bottom"`) pour garder l'arrière-plan visible. La win `preview` doit **rester listée dans le box** même dans ce mode : snacks la marque `layout = false` (`relative = "win"`) donc elle n'occupe pas de place, mais `get_wins` ne parcourt que la structure du box — sans cette entrée la fenêtre de preview n'est jamais ouverte au premier affichage et la preview reste vide jusqu'à un cycle de resize (cf. preset `ivy_split`).
 - Action `trouble_open` : envoie les résultats dans Trouble (`<c-q>`).
 - Action `yank_text` / `yank` : copie le texte (`<c-y>`).
 - Preview avec debounce 10ms qui appelle `ibl.setup_buffer` + markview si le filetype est markdown.
@@ -86,8 +87,12 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - `:Notifi` → ouvre le picker notifications.
 
 ## Gotchas
+- Mode `preview = "main"` : toujours garder `{ win = "preview" }` dans le box, sinon `get_wins` (`snacks/layout.lua`) n'ouvre jamais la fenêtre de preview au premier affichage (preview vide tant qu'on n'a pas redimensionné le terminal).
+- Le `wo` posé sur l'entrée `{ win = "preview" }` du box **n'est pas appliqué** en mode `preview = "main"` : la win est en `layout = false`, donc `update_win` (qui applique le `wo` du box) ne tourne jamais pour elle. Les options de fenêtre de la preview (statuscolumn, number…) doivent être posées sur `win.preview.wo` (config globale), pas sur le box.
+- La statuscolumn de statuscol s'affiche dans la preview car c'est un float et l'autocmd statuscol ignore les floats (`conditions.lua` → `cfg.relative ~= ""`). On la neutralise via `win.preview.wo.statuscolumn = ""`.
 - Le picker est configuré en mode `SnacksSubmodule` (retourne `{ opts, keys }`) — pas un `LazyPluginSpec` direct.
 - La vue "buffers seulement" dans l'explorer utilise `include`/`exclude` de snacks explorer, pas un filtre standard.
 
 ## Changelog
 - 2026-06-05 : Analyse initiale. Actions récursives explorer, intégrations markview/trouble documentées.
+- 2026-06-11 : Layout `telescope` rendu responsive — si `vim.o.columns < 120`, bascule sur `preview = "main"` (preview dans l'arrière-plan) + panneau compact en bas, via `config`.

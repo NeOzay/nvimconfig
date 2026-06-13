@@ -5,7 +5,7 @@ local opts = {
 		win = {
 			wo = {
 				winbar = "",
-				statuscolumn = "%#normal# ",
+				-- statuscolumn = "%#normal# ",
 			},
 			bo = {},
 			height = 0.2,
