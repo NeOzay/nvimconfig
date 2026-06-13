@@ -3,6 +3,23 @@ local M = {}
 local DapDisabledBreakpoints = require("shared_data").DapDisabledBreakpoints
 local disabled_ns = require("shared_data").disabled_ns
 
+--- Force le recalcul de la largeur `auto` des colonnes de signs. Sans ca, la
+--- colonne dap reste reservee apres le retrait du dernier breakpoint : sa
+--- largeur n'est recalculee (statuscol -> update_callargs) qu'au prochain redraw
+--- COMPLET de la statuscolumn. Retirer un breakpoint ne redessine que la ligne
+--- touchee, donc les autres lignes gardent l'ancienne largeur.
+---@param win integer
+local function refresh_statuscolumn(win)
+	vim.schedule(function()
+		if not vim.api.nvim_win_is_valid(win) then
+			return
+		end
+		if not pcall(vim.api.nvim__redraw, { win = win, statuscolumn = true }) then
+			vim.cmd("redraw!")
+		end
+	end)
+end
+
 --- Place un extmark pour representer un breakpoint desactive.
 ---@param bufnr integer
 ---@param line integer Numero de ligne (1-indexe)
@@ -70,6 +87,42 @@ local function get_bp_at_line(breakpoints, bufnr, line)
 	return nil
 end
 
+-- Window + ligne du dernier clic gauche sur la colonne numero. Sert a verifier
+-- que les deux clics d'un "double-clic" portent sur LA MEME ligne (et meme
+-- window) : Vim incremente `clicks` pour deux clics rapproches meme sur des
+-- lignes differentes, donc `clicks == 2` seul poserait un breakpoint sur la 2e
+-- ligne par erreur.
+local last_click = {}
+
+--- Handler de la colonne numero : double-clic gauche (meme ligne) => toggle bp.
+--- La colonne dap (`auto = true`) se replie quand vide, donc on pose le premier
+--- breakpoint via la colonne numero. Le coeur statuscol a deja place curseur +
+--- fenetre courante sur la ligne cliquee (get_click_args), donc toggle agit au
+--- bon endroit. On filtre sur le double-clic pour eviter les poses accidentelles
+--- (un simple clic sert juste a positionner le curseur).
+---@param args table  -- args statuscol : { button, clicks, mousepos, ... }
+function M.lnum_click(args)
+	if args.button ~= "l" then
+		return
+	end
+	local line = args.mousepos.line
+	local win = args.mousepos.winid
+	-- Memorise (win, ligne) au 1er clic. Un clicks==2 sur une AUTRE ligne/window
+	-- (deux clics rapides distincts) ne doit pas toggler : on re-memorise et sort.
+	if args.clicks ~= 2 or last_click.win ~= win or last_click.line ~= line then
+		last_click.win, last_click.line = win, line
+		return
+	end
+	last_click.win, last_click.line = nil, nil
+
+	local dap, dap_ok = pRequire("dap")
+	if not dap_ok then
+		return
+	end
+	dap.toggle_breakpoint()
+	refresh_statuscolumn(win)
+end
+
 --- Assigne le handler de clic global pour la colonne DAP.
 function M.setup()
 	---@param minwid number ID du widget (non utilise)
@@ -122,6 +175,8 @@ function M.setup()
 				dap.toggle_breakpoint()
 			end
 		end
+
+		refresh_statuscolumn(pos.winid)
 	end
 end
 

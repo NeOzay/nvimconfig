@@ -1,3 +1,5 @@
+---@namespace Ozay
+
 local M = {}
 
 M.FOLD_END = "╰"
@@ -18,7 +20,7 @@ function M.setup_hl()
 	vim.api.nvim_set_hl(0, "FoldColumn", { link = "RainbowScopeGray" })
 end
 
----@param args statuscol.text.arg
+---@param args Statuscol.text.arg
 function M.fold_by_indent(args)
 	local fold_text = require("statuscol.builtin").foldfunc(args)
 	local level = vim.fn.foldlevel(args.lnum)
@@ -26,8 +28,8 @@ function M.fold_by_indent(args)
 		local hl = M.indent_hls[((level - 1) % #M.indent_hls) + 1]
 		local clean = fold_text:gsub("%%#[^#]*#", ""):gsub("%%%*", "")
 		local next_level = vim.fn.foldlevel(args.lnum + 1)
-		if next_level < level and vim.fn.foldclosed(args.lnum) == -1 then
-			local sep = args.fold.sep
+		local sep = args.fold and args.fold.sep
+		if sep and next_level < level and vim.fn.foldclosed(args.lnum) == -1 then
 			clean = clean:gsub(vim.pesc(sep), M.FOLD_END)
 		end
 		return "%#" .. hl .. "#" .. clean

@@ -42,6 +42,9 @@ return {
 		opts.clickhandlers = {
 			FoldOpen = folds.with_scroll_to_click(builtin.foldopen_click),
 			FoldOther = folds.with_scroll_to_click(builtin.foldother_click),
+			-- Double-clic gauche sur la colonne numero => toggle breakpoint dap.
+			-- Remplace le builtin.lnum_click (qui toggle au simple clic).
+			Lnum = dap_handler.lnum_click,
 		}
 		require("statuscol").setup(opts)
 		-- Fire BufWinEnter to apply statuscol to already open buffers

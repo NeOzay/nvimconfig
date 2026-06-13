@@ -13,20 +13,14 @@ local M = {}
 ---@type Ozay.Statuscol.SegmentDef[]
 local registry = {
 	{
-		name = "padding",
-		order = 10,
-		condition = {
-			ft_whitelist = cond.ft_padding,
-			require_number = false,
-		},
-		segment = function(builtin)
-			return { text = { " " }, hl = "Normal" }
-		end,
-	},
-	{
 		name = "dap_signs",
 		order = 20,
 		condition = {
+			-- Masquée si window/terminal étroit : le sign segment a une largeur
+			-- dynamique, vider son texte suffit à replier la colonne. Mesure par
+			-- window (gère les splits) + garde-fou terminal.
+			min_win_width = cond.NARROW_WIN_WIDTH,
+			min_columns = cond.NARROW_WIDTH,
 			ft_blacklist = cond.ft_ignore,
 			require_file = true,
 			buf_predicate = function(bufnr)
@@ -43,7 +37,7 @@ local registry = {
 					namespace = { "dap_disabled" },
 					maxwidth = 1,
 					colwidth = 2,
-					auto = false,
+					auto = true,
 				},
 				click = "v:lua.DapClickHandler",
 			}
@@ -53,13 +47,19 @@ local registry = {
 		name = "number",
 		order = 30,
 		condition = {
+			-- Pas de `enabled` ici : en terminal étroit c'est l'option `number` qui
+			-- est éteinte (cf. conditions.apply_win_options), ce qui masque le
+			-- segment ET récupère la largeur de `numberwidth`. `args.nu` devient
+			-- alors faux et le segment ne rend rien.
 			ft_blacklist = { snacks_picker_preview = true, ["markdown.snacks_picker_preview"] = true },
 			predicate = function(args)
 				return args.nu
 			end,
 		},
 		segment = function(builtin)
-			return { text = { builtin.lnumfunc } }
+			-- click ScLa = handler lnum natif -> dispatch "Lnum" (cf. init.lua).
+			-- Double-clic gauche = pose/retrait d'un breakpoint dap.
+			return { text = { builtin.lnumfunc }, click = "v:lua.ScLa" }
 		end,
 	},
 	{
@@ -68,6 +68,7 @@ local registry = {
 		condition = {
 			ft_blacklist = cond.ft_ignore,
 			ignore_float_win = true,
+			require_file = true,
 		},
 		segment = function(builtin)
 			return {
@@ -88,6 +89,21 @@ local registry = {
 		},
 		segment = function(builtin)
 			return { text = { folds.fold_by_indent }, click = "v:lua.ScFa" }
+		end,
+	},
+
+	{
+		name = "padding",
+		order = 60,
+		condition = {
+			-- ft_whitelist = cond.ft_padding,
+			-- require_number = false,
+			after = function(ctx)
+				return vim.tbl_isempty(ctx.rendered)
+			end,
+		},
+		segment = function(builtin)
+			return { text = { " " }, hl = "Normal" }
 		end,
 	},
 }
@@ -134,7 +150,7 @@ function M.build()
 	for _, def in ipairs(sorted) do
 		local seg = def.segment(builtin)
 		if def.condition then
-			seg.condition = cond.make_condition(def.condition)
+			seg.condition = cond.make_condition(def.condition, def.name)
 		end
 		table.insert(segments, seg)
 	end
