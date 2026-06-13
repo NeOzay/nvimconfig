@@ -13,6 +13,7 @@ return {
 	},
 	dev = {
 		path = "~/projects/nvim-plugins/",
+		fallback = true,
 	},
 
 	performance = {
