@@ -155,8 +155,20 @@ local opts = {
 					},
 				},
 			},
+			ivy_2_tall = {
+				preset = "ivy_2",
+				config = function(layout)
+					for _, win in ipairs(layout.layout) do
+						if win.win == "list" then
+							win.height = 0.6
+							win.max_height = 30
+							break
+						end
+					end
+				end,
+			},
+			icons = { ui = { selected = "+", unselected = " " } },
 		},
-		icons = { ui = { selected = "+", unselected = " " } },
 	},
 }
 
@@ -265,6 +277,14 @@ local keys = {
 		"<leader>f<C-j>",
 		function()
 			Snacks.picker.highlights({
+				layout = {
+					preset = function()
+						if vim.o.columns < 120 then
+							return "ivy_2_tall"
+						end
+						return "telescope"
+					end,
+				},
 				actions = {
 					yank_hi = { action = "yank", field = "hl_group" },
 				},
