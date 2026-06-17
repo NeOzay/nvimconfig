@@ -16,7 +16,7 @@ end
 
 return {
 	dir = "~/projects/nvim-plugins/docstring-highlight.nvim",
-	enabled = vim.fn.isdirectory("~/projects/nvim-plugins/docstring-highlight.nvim") == 1,
+	enabled = vim.fn.isdirectory(vim.fn.expand("~/projects/nvim-plugins/docstring-highlight.nvim")) == 1,
 	ft = "python",
 	opts = opts,
 }

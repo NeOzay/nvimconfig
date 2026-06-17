@@ -1,7 +1,17 @@
 ---@type snacks.Config
 local opts = {
 	dashboard = {
-		enabled = true,
+		enabled = function()
+			if vim.fn.argc(-1) ~= 0 then
+				return false
+			end
+			local persistence, ok = pRequire("persistence")
+			if not ok then
+				return true
+			end
+			local session = persistence.current()
+			return not (session and vim.uv.fs_stat(session))
+		end,
 		preset = {
 			header = [[
    ███╗   ██╗██╗   ██╗██╗███╗   ███╗

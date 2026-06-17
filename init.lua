@@ -3,7 +3,7 @@ vim.g.mapleader = " "
 -- uncomment to enable debug mode
 -- require("dbg").schedule_print()
 --
----@return any, boolean
+
 function pRequire(module)
 	local status, lib = pcall(require, module)
 	if not status then

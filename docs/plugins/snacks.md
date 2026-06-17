@@ -12,14 +12,19 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 ## Key Behaviors
 
 ### Picker
-- Layout `telescope` custom (80% width, 90% height, horizontal split).
-- Preview responsive : la fonction `config` du layout `telescope` (réévaluée à l'ouverture et sur `VimResized`) bascule sur `preview = "main"` quand `vim.o.columns < 120`. La preview s'affiche alors dans la fenêtre d'arrière-plan (buffer courant) et le picker devient un panneau compact en bas (`box = "vertical"`, `height = 0.4`, `position = "bottom"`) pour garder l'arrière-plan visible. La win `preview` doit **rester listée dans le box** même dans ce mode : snacks la marque `layout = false` (`relative = "win"`) donc elle n'occupe pas de place, mais `get_wins` ne parcourt que la structure du box — sans cette entrée la fenêtre de preview n'est jamais ouverte au premier affichage et la preview reste vide jusqu'à un cycle de resize (cf. preset `ivy_split`).
+- **Preset responsive** : le preset par défaut est une fonction — `ivy_2` si `vim.o.columns < 120`, sinon `telescope`.
+- Layout `telescope` custom (95% width, `max_width = 150`, 95% height, horizontal split, panneau gauche `max_width = 45`).
+- **Preset `ivy_2`** : layout vertical full-screen — preview en haut, input au milieu (bordure top/bottom), list en bas (`height = 0.3`, `max_height = 10`). Conçu pour les terminaux étroits.
+- **Preset `ivy_2_tall`** : hérite de `ivy_2`, modifie la list via `config` (`height = 0.6`, `max_height = 30`). Utilisé par le picker highlights sur les terminaux larges pour afficher plus de résultats.
+- Icons déclarés dans `presets` (pas au niveau racine) : `selected = "+"`, `unselected = " "`.
+- Win `list` : `number = false`, `relativenumber = false`, `foldcolumn = "0"`, `signcolumn = "no"`.
 - Action `trouble_open` : envoie les résultats dans Trouble (`<c-q>`).
 - Action `yank_text` / `yank` : copie le texte (`<c-y>`).
 - Preview avec debounce 10ms qui appelle `ibl.setup_buffer` + markview si le filetype est markdown.
 - `EndOfBuffer` highlight = `SnacksNormal` dans preview et list.
 - `<c-j>` désactivé dans la list.
-- Icons : `selected = "+"`, `unselected = " "`.
+- Live grep (`<leader>fw`) force le preset `ivy_2`.
+- Picker highlights (`<leader>f<C-j>`) : responsive — `ivy_2_tall` sous 120 cols, `telescope` au-dessus.
 
 ### Explorer
 - `replace_netrw = true`.
@@ -92,7 +97,9 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - La statuscolumn de statuscol s'affiche dans la preview car c'est un float et l'autocmd statuscol ignore les floats (`conditions.lua` → `cfg.relative ~= ""`). On la neutralise via `win.preview.wo.statuscolumn = ""`.
 - Le picker est configuré en mode `SnacksSubmodule` (retourne `{ opts, keys }`) — pas un `LazyPluginSpec` direct.
 - La vue "buffers seulement" dans l'explorer utilise `include`/`exclude` de snacks explorer, pas un filtre standard.
+- `ivy_2_tall` modifie le layout via `config` (fonction qui itère `layout.layout`) car les presets héritent via `preset =` et ne peuvent pas surcharger directement une clé d'un sous-box.
 
 ## Changelog
 - 2026-06-05 : Analyse initiale. Actions récursives explorer, intégrations markview/trouble documentées.
 - 2026-06-11 : Layout `telescope` rendu responsive — si `vim.o.columns < 120`, bascule sur `preview = "main"` (preview dans l'arrière-plan) + panneau compact en bas, via `config`.
+- 2026-06-17 : Refactor picker — preset par défaut devient une fonction responsive. Ajout presets `ivy_2` et `ivy_2_tall`. Layout `telescope` élargi (95%/150). Live grep force `ivy_2`. Highlights picker responsive `ivy_2_tall`/`telescope`.

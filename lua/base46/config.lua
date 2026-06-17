@@ -29,11 +29,14 @@ return {
 		-- LSP semantic overrides
 		["@lsp"] = { fg = "NONE", bg = "NONE" },
 		["@lsp.typemod.keyword.readonly"] = { fg = "purple", italic = false },
-		["@lsp.typemod.class.declaration"] = { italic = true },
+		["@lsp.typemod.type.declaration"] = { bold = true },
+		["@lsp.typemod.class.declaration"] = { bold = true },
+		["@lsp.typemod.namespace.declaration"] = { bold = true },
 		["@lsp.type.keyword"] = { fg = "None" },
 		["@lsp.type.operator.lua"] = { fg = "None" },
 		["@lsp.type.macro"] = { fg = "pink" },
-		["@lsp.mod.documentation.lua"] = { italic = true, fg = "blue" },
+		["@lsp.typemod.keyword.documentation.lua"] = { italic = true, fg = "blue" },
+		["@punctuation.bracket.luadoc"] = { fg = "red" },
 		["@lsp.mod.defaultLibrary"] = { italic = true },
 		["@lsp.type.comment"] = { link = "@comment" },
 		["@lsp.type.property"] = { fg = "Field" },
@@ -46,7 +49,6 @@ return {
 		["@lsp.type.string"] = { fg = "NONE" },
 		["@lsp.type.modifier"] = { fg = "NONE" },
 		["@lsp.type.annotation"] = { fg = "purple" },
-
 		-- Syntax overrides
 		["Comment"] = { link = "@comment" },
 		["@comment"] = { italic = false },
@@ -59,6 +61,7 @@ return {
 		["@property"] = { fg = "Field" },
 		["@variable.member"] = { fg = "Field" },
 		["@type"] = { fg = "Type" },
+		["@type.builtin"] = { fg = "Type" },
 		["@string.delimitor"] = { link = "@comment" },
 		["@string.documentation"] = { link = "@comment" },
 		["@function.builtin"] = { fg = "green", italic = true },

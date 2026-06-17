@@ -1,30 +1,3 @@
--- Fermer les fenêtres nofile (Trouble, quickfix, etc.) avant la sauvegarde
-Userautocmd("User", {
-	pattern = "PersistenceSavePre",
-	callback = function()
-		for _, win in ipairs(vim.api.nvim_list_wins()) do
-			local buf = vim.api.nvim_win_get_buf(win)
-			local bt = vim.api.nvim_get_option_value("buftype", { buf = buf })
-			if bt ~= "" and bt ~= "help" then
-				vim.api.nvim_win_close(win, false)
-			end
-		end
-	end,
-})
-
-vim.api.nvim_create_user_command("PersistenceStart", function()
-	require("persistence").start()
-end, { desc = "Start persistence (resume saving)" })
-
-vim.api.nvim_create_user_command("PersistenceDelete", function()
-	local persistence = require("persistence")
-	local session = persistence.current()
-	if session and vim.uv.fs_stat(session) then
-		vim.uv.fs_unlink(session, function() end)
-	end
-	persistence.stop()
-end, { desc = "Delete session and stop persistence" })
-
 ---@type LazySpec
 return {
 	"folke/persistence.nvim",
@@ -41,7 +14,6 @@ return {
 				local session = persistence.current()
 				if vim.uv.fs_stat(session) then
 					persistence.load()
-					-- Échec silencieux → buf sans nom → UIEnter ouvre le dashboard naturellement
 				else
 					persistence.stop()
 				end
@@ -59,6 +31,31 @@ return {
 		if vim.fn.argc(-1) > 0 then
 			persistence.stop()
 		end
+
+		Userautocmd("User", {
+			pattern = "PersistenceSavePre",
+			callback = function()
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					local buf = vim.api.nvim_win_get_buf(win)
+					local bt = vim.api.nvim_get_option_value("buftype", { buf = buf })
+					if bt ~= "" and bt ~= "help" then
+						vim.api.nvim_win_close(win, false)
+					end
+				end
+			end,
+		})
+
+		vim.api.nvim_create_user_command("PersistenceStart", function()
+			persistence.start()
+		end, { desc = "Start persistence (resume saving)" })
+
+		vim.api.nvim_create_user_command("PersistenceDelete", function()
+			local session = persistence.current()
+			if session and vim.uv.fs_stat(session) then
+				vim.uv.fs_unlink(session, function() end)
+			end
+			persistence.stop()
+		end, { desc = "Delete session and stop persistence" })
 	end,
 	keys = {
 		{
