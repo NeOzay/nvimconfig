@@ -152,7 +152,7 @@ local opts = {
 				},
 				layout = {
 					preview = true,
-					preset = "telescope",
+					preset = require("utils").get_layout_preset,
 				},
 				win = {
 					list = {

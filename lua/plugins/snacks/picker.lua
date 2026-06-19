@@ -14,12 +14,7 @@ local opts = {
 			yank_text = { action = "yank", field = "text" },
 		},
 		layout = {
-			preset = function()
-				if vim.o.columns < 120 then
-					return "ivy_2"
-				end
-				return "telescope"
-			end,
+			preset = require("utils").get_layout_preset,
 		},
 		win = {
 			input = {

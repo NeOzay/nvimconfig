@@ -103,4 +103,11 @@ function M.extend_winhighlight(win, hi)
 	end
 end
 
+function M.get_layout_preset()
+	if vim.o.columns < 120 then
+		return "ivy_2"
+	end
+	return "telescope"
+end
+
 return M
