@@ -152,7 +152,7 @@ local opts = {
 				},
 				layout = {
 					preview = true,
-					preset = require("utils").get_layout_preset,
+					preset = require("utils").get_layout_preset("telescope", { ivy_2_tall = 120 }),
 				},
 				win = {
 					list = {

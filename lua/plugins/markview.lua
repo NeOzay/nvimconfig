@@ -53,6 +53,7 @@ end
 
 ---@type LazyPluginSpec
 return {
+	-- "OXY2DEV/markview.nvim",
 	"NeOzay/markview.nvim",
 	lazy = false,
 	dev = true,

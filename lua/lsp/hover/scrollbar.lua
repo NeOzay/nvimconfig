@@ -19,7 +19,7 @@ local function setup_hl()
 	vim.api.nvim_set_hl(0, "HoverScrollbarThumb", { bg = mix(c.grey_fg, c.one_bg3, 55), default = true })
 end
 
----@class Ozay.Hover.Scrollbar
+---@class Scrollbar
 ---@field thumb_win integer?
 ---@field buf integer?
 ---@field autocmd_scroll integer?
@@ -27,7 +27,7 @@ end
 local scrollbar = {}
 scrollbar.__index = scrollbar
 
----@return Ozay.Hover.Scrollbar
+---@return Scrollbar
 function M.new()
 	setup_hl()
 	return setmetatable({}, scrollbar)
@@ -57,7 +57,7 @@ end
 
 -- ── Fenêtres ──────────────────────────────────────────────────────────────────
 
----@param self Ozay.Hover.Scrollbar
+---@param self Scrollbar
 ---@return integer buf
 local function get_buf(self)
 	if not self.buf or not vim.api.nvim_buf_is_valid(self.buf) then
@@ -66,7 +66,7 @@ local function get_buf(self)
 	return self.buf
 end
 
----@param self Ozay.Hover.Scrollbar
+---@param self Scrollbar
 ---@param cfg table
 ---@param hl string
 ---@return integer win

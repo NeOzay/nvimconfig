@@ -14,7 +14,7 @@ local opts = {
 			yank_text = { action = "yank", field = "text" },
 		},
 		layout = {
-			preset = require("utils").get_layout_preset,
+			preset = require("utils").get_layout_preset(),
 		},
 		win = {
 			input = {
@@ -210,7 +210,7 @@ local keys = {
 			Snacks.picker.lines({
 				layout = {
 					layout = {
-						height = 0.2,
+						height = 0.3,
 						wo = { winhighlight = { FloatTitle = "SnacksPickerInputTitle" } },
 					},
 				},

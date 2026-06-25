@@ -20,6 +20,17 @@ return {
 			ensure_installed = {},
 			auto_install = true,
 			highlight = true,
+			languages = {
+				luadoc = {
+					install_info = {
+						url = "https://github.com/NeOzay/tree-sitter-luadoc.git",
+						-- Use the query files that ship with the forked repo instead of
+						-- the bundled queries. The parser's queries/ directory is copied
+						-- automatically during installation.
+						use_repo_queries = true,
+					},
+				},
+			},
 		})
 	end,
 }

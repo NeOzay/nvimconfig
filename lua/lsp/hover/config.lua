@@ -24,7 +24,7 @@ M.config = {
 		name = "󰗊 LSP/Hover",
 
 		min_width = 20,
-		max_width = math.floor(vim.o.columns * 0.6),
+		max_width = math.floor(vim.o.columns * 0.8),
 
 		min_height = 1,
 		max_height = math.floor(vim.o.lines * 0.5),

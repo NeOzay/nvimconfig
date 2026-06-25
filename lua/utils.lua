@@ -96,18 +96,42 @@ end
 ---@param win table
 ---@param hi string
 function M.extend_winhighlight(win, hi)
-	if win.winhighlight or win.winhighlight ~= "" then
+	if win.winhighlight and win.winhighlight ~= "" then
 		win.winhighlight = win.winhighlight .. "," .. hi
 	else
 		win.winhighlight = hi
 	end
 end
 
-function M.get_layout_preset()
-	if vim.o.columns < 120 then
-		return "ivy_2"
+---@param default string?
+---@param config table<string, integer>? mapping of preset name → max columns, iterated in ascending column order
+---@return fun(): string
+---@nodiscard
+function M.get_layout_preset(default, config)
+	local keys ---@type string[]?
+	if config then
+		keys = vim.tbl_keys(config)
+		table.sort(keys, function(a, b)
+			return config[a] < config[b]
+		end)
 	end
-	return "telescope"
+	return function()
+		if not config or not keys then
+			if default then
+				return default
+			end
+			if vim.o.columns < 120 then
+				return "ivy_2"
+			end
+			return "telescope"
+		end
+		for _, name in ipairs(keys) do
+			if vim.o.columns < config[name] then
+				return name
+			end
+		end
+		return default or keys[#keys]
+	end
 end
 
 return M
