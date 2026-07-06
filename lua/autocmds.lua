@@ -72,14 +72,14 @@ Userautocmd("CursorMoved", {
 	end,
 })
 
-local function refresh_diagnostics(bufnr)
-	vim.lsp.diagnostic._refresh(bufnr)
+local function refresh_diagnostics()
+	vim.lsp.buf.workspace_diagnostics()
 end
 
 local function refresh_current_buf()
 	local bufnr = vim.api.nvim_get_current_buf()
 	if vim.api.nvim_buf_is_loaded(bufnr) then
-		refresh_diagnostics(bufnr)
+		refresh_diagnostics()
 	end
 end
 
