@@ -1,3 +1,133 @@
+--- Compte les lignes d'un fichier (nil si illisible)
+---@param path string
+---@return integer?
+local function count_lines(path)
+	local fd = io.open(path, "rb")
+	if not fd then
+		return nil
+	end
+	local content = fd:read("*a")
+	fd:close()
+	if not content then
+		return 0
+	end
+	local _, n = content:gsub("\n", "")
+	if content ~= "" and content:sub(-1) ~= "\n" then
+		n = n + 1
+	end
+	return n
+end
+
+--- Trie les enfants d'un noeud comme le fait l'explorateur natif (dossiers avant
+--- fichiers, puis ordre alphabétique), et renvoie la liste triée.
+---@param node snacks.picker.explorer.Node
+---@return snacks.picker.explorer.Node[]
+local function sorted_children(node)
+	local children = vim.tbl_values(node.children)
+	table.sort(children, function(a, b)
+		if a.dir ~= b.dir then
+			return a.dir
+		end
+		return a.name < b.name
+	end)
+	return children
+end
+
+--- Finder explorer filtré : parcourt tout l'arbre récursivement (indépendamment
+--- de l'état plié/déplié des dossiers dans l'explorateur normal) et ne garde
+--- que les fichiers de plus de `threshold` lignes, ainsi que les dossiers menant
+--- à au moins un de ces fichiers. Les autres dossiers sont masqués.
+---@param threshold integer
+local function big_files_finder(threshold)
+	return function(_, ctx)
+		local cwd = ctx.filter.cwd
+		return function(cb)
+			local Tree = require("snacks.explorer.tree")
+			Tree:refresh(cwd)
+			local filter = Tree:filter({ hidden = false, ignored = false })
+
+			---@param node snacks.picker.explorer.Node
+			---@param parent_item table
+			---@return table? kept item (with `_children` for dirs), nil if pruned
+			local function visit(node, parent_item)
+				if not filter(node) then
+					return nil
+				end
+				if node.dir then
+					if not node.expanded then
+						Tree:expand(node)
+					end
+					local item = {
+						file = node.path,
+						dir = true,
+						open = true,
+						parent = parent_item,
+						text = node.path,
+						status = node.status,
+					}
+					local kept = {}
+					for _, child in ipairs(sorted_children(node)) do
+						local kid = visit(child, item)
+						if kid then
+							kept[#kept + 1] = kid
+						end
+					end
+					if #kept == 0 then
+						return nil
+					end
+					kept[#kept].last = true
+					item._children = kept
+					return item
+				end
+
+				local n = count_lines(node.path)
+				if not n or n <= threshold then
+					return nil
+				end
+				return {
+					file = node.path,
+					dir = false,
+					parent = parent_item,
+					text = node.path,
+					status = node.status,
+					line_count = n,
+				}
+			end
+
+			local root_node = Tree:find(cwd)
+			if not root_node.expanded then
+				Tree:expand(root_node)
+			end
+			local root_item = { file = root_node.path, dir = true, open = true, text = "" }
+			local kept = {}
+			for _, child in ipairs(sorted_children(root_node)) do
+				local kid = visit(child, root_item)
+				if kid then
+					kept[#kept + 1] = kid
+				end
+			end
+			if #kept == 0 then
+				return
+			end
+			kept[#kept].last = true
+
+			local function emit(item)
+				cb(item)
+				if item._children then
+					for _, child in ipairs(item._children) do
+						emit(child)
+					end
+				end
+			end
+
+			cb(root_item)
+			for _, item in ipairs(kept) do
+				emit(item)
+			end
+		end
+	end
+end
+
 ---@type snacks.Config
 local opts = {
 	explorer = {
@@ -257,6 +387,24 @@ local keys = {
 			Snacks.picker.git_status()
 		end,
 		desc = "Explorer (git status)",
+	},
+	{
+		"<leader>el",
+		function()
+			Snacks.explorer({
+				title = "Explorer (> 300 lignes)",
+				finder = big_files_finder(300),
+				formatters = { file = { filename_only = true } },
+				format = function(item, picker)
+					local ret = Snacks.picker.format.file(item, picker)
+					if item.line_count then
+						ret[#ret + 1] = { ("  %d lignes"):format(item.line_count), "Comment" }
+					end
+					return ret
+				end,
+			})
+		end,
+		desc = "Explorer (fichiers > 300 lignes)",
 	},
 }
 
