@@ -1,7 +1,7 @@
 ---@type LazySpec
 return {
 	"neovim/nvim-lspconfig",
-	event = "VeryLazy",
+	lazy = false,
 	config = function()
 		require("lsp").setup()
 	end,

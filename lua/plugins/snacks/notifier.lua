@@ -52,7 +52,7 @@ local opts = {
 		notification = {
 			wo = {
 				winblend = 5,
-				wrap = false,
+				wrap = true,
 				colorcolumn = "",
 				conceallevel = 2,
 			},

@@ -113,6 +113,16 @@ function M.setup(server_list)
 
 	for _, name in ipairs(server_list or M.lsp_configs) do
 		vim.lsp.enable(name)
+		-- Re-apply user config: lsp/ files are merged in runtimepath order, so
+		-- lspconfig's lsp/<name>.lua (loaded after ours) overrides our settings.
+		-- Explicit vim.lsp.config() calls win over file-based merges.
+		local user_cfg_path = vim.fn.stdpath("config") .. "/lsp/" .. name .. ".lua"
+		if vim.uv.fs_stat(user_cfg_path) then
+			local ok, cfg = pcall(dofile, user_cfg_path)
+			if ok and type(cfg) == "table" then
+				vim.lsp.config(name, cfg)
+			end
+		end
 	end
 
 	require("lsp.hover").setup()

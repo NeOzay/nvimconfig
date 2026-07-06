@@ -28,7 +28,16 @@ local function load_dotenv(dir)
 	return env
 end
 
-local function default_ft()
+---@param filename? string
+---@return string
+local function default_ft(filename)
+	if filename then
+		local ext = vim.fs.ext(filename)
+		if ext ~= "" then
+			return ext
+		end
+	end
+
 	if vim.bo.buftype == "" and vim.bo.filetype ~= "" then
 		return vim.bo.filetype
 	end
@@ -58,7 +67,7 @@ cmd("Scratch", function(o)
 			vim.notify("Usage: Scratch new <name> \\[filetype\\]", vim.log.levels.ERROR)
 			return
 		end
-		local ft = args[3] or default_ft()
+		local ft = args[3] or default_ft(args[2])
 		Snacks.scratch.open({ name = name, ft = ft })
 	else
 		vim.notify("Unknown subcommand: " .. sub, vim.log.levels.ERROR)

@@ -101,7 +101,7 @@ local function join_sentence_lines(lines)
 		elseif line:match("^%s*$") then
 			flush()
 			result[#result + 1] = ""
-		elseif line:match("^%s*%w+:") or is_markdown_block(line) then
+		elseif line:match("^%s*[%w\\_]+:") or is_markdown_block(line) then
 			flush()
 			result[#result + 1] = line
 		else

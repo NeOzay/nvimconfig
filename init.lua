@@ -92,6 +92,7 @@ require("lazy").setup({
 	{ import = "plugins.codecompanion" },
 	{ import = "plugins.fidget" },
 	{ import = "plugins.gitsigns" },
+	{ import = "plugins.guess-indent" },
 	{ import = "plugins.harpoon" },
 	{ import = "plugins.hover-translator" },
 	{ import = "plugins.indent-blankline" },

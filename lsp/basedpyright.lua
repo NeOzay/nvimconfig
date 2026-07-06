@@ -1,3 +1,11 @@
+local function get_cmd()
+	local dev_path = os.getenv("HOME") .. "/projects/basedpyright/packages/pyright/langserver.index.js"
+	if vim.uv.fs_stat(dev_path) then
+		return { "node", dev_path, "--stdio" }
+	end
+	return { "basedpyright", "--stdio" }
+end
+
 local function get_python_path()
 	local cwd = vim.fn.getcwd()
 
@@ -25,8 +33,8 @@ end
 
 ---@type vim.lsp.Config
 return {
-	filetypes = { "python", "py" },
-	cmd = { "node", "/var/home/Benoit/projects/basedpyright/packages/pyright/langserver.index.js", "--stdio" },
+	filetypes = { "python" },
+	cmd = get_cmd(),
 	init_options = { disablePullDiagnostics = true },
 
 	settings = {
@@ -45,10 +53,19 @@ return {
 		},
 	},
 
+	on_attach = function(client, bufnr)
+		-- Set up buffer-local key mappings and options here
+	end,
+
 	on_init = function()
 		vim.api.nvim_create_user_command("PyPath", function()
 			vim.notify("Python path: " .. get_python_path(), vim.log.levels.INFO)
 		end, { desc = "Afficher le chemin Python utilisé par basedpyright" })
+
+		vim.api.nvim_create_user_command("PyVer", function()
+			local python_path = get_python_path()
+			vim.notify("Python version: " .. vim.fn.system(python_path .. " --version"), vim.log.levels.INFO)
+		end, { desc = "Afficher la version de Python utilisée par basedpyright" })
 
 		vim.api.nvim_create_user_command("PyReload", function()
 			vim.cmd("LspRestart basedpyright")

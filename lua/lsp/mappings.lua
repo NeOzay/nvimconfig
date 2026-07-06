@@ -36,6 +36,12 @@ function M.attach(client, bufnr)
 	map("n", "<leader>ra", function()
 		require("lsp.ai-rename").rename()
 	end, opts("AI Rename"))
+
+	if client:supports_method("textDocument/prepareTypeHierarchy") then
+		map("n", "grh", wrapTrouble("lsp_type_hierarchy"), opts("Type hierarchy"))
+		map("n", "grs", wrapTrouble("lsp_supertypes"), opts("Supertypes"))
+		map("n", "grS", wrapTrouble("lsp_subtypes"), opts("Subtypes"))
+	end
 end
 
 return M
