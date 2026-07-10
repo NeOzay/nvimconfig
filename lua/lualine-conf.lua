@@ -176,6 +176,17 @@ function M.setup()
 		},
 	}
 
+	---@type Partial<LualineComponentOptions>
+	local tabpage_name = {
+		function()
+			return "󰓩 " .. require("tabpage").get_name()
+		end,
+		color = { fg = colors.purple, bg = bg },
+		cond = function()
+			return #vim.api.nvim_list_tabpages() > 1
+		end,
+	}
+
 	local location = {
 		{
 			function()
@@ -276,7 +287,7 @@ function M.setup()
 				{ "branch", icon = "", color = { gui = "bold" } },
 				{ "diff", symbols = { added = " ", modified = " ", removed = " " } },
 			},
-			lualine_x = { diagnostics, lsp_name },
+			lualine_x = { diagnostics, lsp_name, tabpage_name },
 			lualine_y = { cwd[1], cwd[2] },
 			lualine_z = { location[1], location[2] },
 		},

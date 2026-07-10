@@ -12,6 +12,8 @@ Visualisation des diffs git avec explorer de fichiers, remplace diffview.
 - `cycle_next_hunk = true` → cycle automatique entre les hunks.
 - `inlay_hints` désactivés dans les vues diff.
 - Focalisé sur l'explorer à l'ouverture (`initial_focus = "explorer"`).
+- Chaque diff ouvre un tab dédié, une session par tabpage dans `active_diffs` (`codediff.ui.lifecycle.session`), accessible via `codediff.ui.lifecycle.accessors` (`get_paths(tabnr)`, `get_git_context(tabnr)`, etc.). `mode` vaut `"standalone"` (un seul fichier) ou `"explorer"` (navigation git-root) ; dans les deux cas `modified_path`/`original_path` pointent vers le fichier affiché à l'instant.
+- `lua/tabpage.lua` (`default_name`) détecte ces sessions via `accessors.get_paths(tabnr)` et nomme automatiquement le tab d'après le basename du fichier affiché — pas de renommage manuel nécessaire tant que l'utilisateur n'a pas fixé de nom custom (`tabname` var de tabpage).
 
 ## Keymaps
 | Touche | Action |
@@ -52,3 +54,4 @@ Visualisation des diffs git avec explorer de fichiers, remplace diffview.
 
 ## Changelog
 - 2026-06-05 : Analyse initiale.
+- 2026-07-10 : Documentation de la détection auto des tabs CodeDiff par `lua/tabpage.lua`.

@@ -6,8 +6,8 @@ Guide pour créer des pickers Snacks personnalisés : API complète, structure d
 
 ## Files
 
-- Config globale : `lua/plugins/snacks/picker.lua`
-- Exemples : `lua/pickers/harpoon_snacks.lua`, `lua/plugins/snacks/scratch.lua`
+- Config globale : `lua/plugins/snacks/picker/init.lua`
+- Exemples : `lua/plugins/snacks/picker/sources/harpoon.lua`, `lua/plugins/snacks/picker/sources/tabpages.lua`, `lua/plugins/snacks/scratch.lua`
 - Source : `~/projects/nvim-plugins/snacks.nvim/lua/snacks/picker/`
 
 ---
@@ -295,7 +295,7 @@ picker:find(opts?)        -- re-run finder + matcher (opts: {refresh?, on_done?}
 
 ---
 
-## Exemple complet : `lua/pickers/harpoon_snacks.lua`
+## Exemple complet : `lua/plugins/snacks/picker/sources/harpoon.lua`
 
 Picker pour lister les buffers harpoon avec :
 - affichage `[n] icon fichier`

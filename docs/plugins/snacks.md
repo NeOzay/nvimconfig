@@ -4,7 +4,8 @@
 Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque sous-module est dans `lua/plugins/snacks/`.
 
 ## Files
-- Config picker: `lua/plugins/snacks/picker.lua`
+- Config picker (générique + agrégation keys): `lua/plugins/snacks/picker/init.lua`
+- Pickers custom autonomes: `lua/plugins/snacks/picker/sources/tabpages.lua`, `lua/plugins/snacks/picker/sources/harpoon.lua`
 - Config explorer: `lua/plugins/snacks/explorer.lua`
 - Config notifier: `lua/plugins/snacks/notifier.lua`
 - Guide picker custom: `docs/plugins/snacks-picker-custom.md`
@@ -16,6 +17,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - Layout `telescope` custom (95% width, `max_width = 150`, 95% height, horizontal split, panneau gauche `max_width = 45`).
 - **Preset `ivy_2`** : layout vertical full-screen — preview en haut, input au milieu (bordure top/bottom), list en bas (`height = 0.3`, `max_height = 10`). Conçu pour les terminaux étroits.
 - **Preset `ivy_2_tall`** : hérite de `ivy_2`, modifie la list via `config` (`height = 0.6`, `max_height = 30`). Utilisé par le picker highlights sur les terminaux larges pour afficher plus de résultats.
+- **Preset `bottom_compact`** : sans preview, compact (`width = 0.5`, `height = 0.3`, bornes `min/max_width` 60-100, `min/max_height` 8-16), ancré en bas (`row = -2`) et centré horizontalement (`col` non défini → centrage par défaut de `snacks.win`). Utilisé par le picker tabpages.
 - Icons déclarés dans `presets` (pas au niveau racine) : `selected = "+"`, `unselected = " "`.
 - Win `list` : `number = false`, `relativenumber = false`, `foldcolumn = "0"`, `signcolumn = "no"`.
 - Action `trouble_open` : envoie les résultats dans Trouble (`<c-q>`).
@@ -33,6 +35,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - `auto_close = true`, `jump.close = true` → ferme l'explorer après navigation.
 - `on_show` : synchronise le curseur picker avec la position du buffer principal.
 - Vue "buffers seulement" (`<leader>eb`) : construit une liste `include_paths` avec tous les buffers chargés + leurs répertoires parents jusqu'au cwd.
+- Finder "fichiers > 300 lignes" (`<leader>el`) : `big_files_finder` parcourt tout l'arbre via `snacks.explorer.tree` indépendamment de l'état plié/déplié, force l'expansion, ne garde que les fichiers dépassant le seuil et leurs dossiers parents (branches vides élaguées). Affiche le nombre de lignes en suffixe (`Snacks.picker.format.file` + extension custom).
 
 ### Notifier
 - Timeout 5000ms.
@@ -58,6 +61,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 | `<leader>gt` | Git status |
 | `<leader>f<C-j>` | Highlights |
 | `<leader>th` | Colorschemes |
+| `<leader>tt` | Tabpages |
 
 ## Keymaps Explorer
 | Touche | Action |
@@ -67,6 +71,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 | `<leader>ec` | Reveal fichier courant |
 | `<leader>eb` | Explorer (buffers ouverts seulement) |
 | `<leader>eg` | Git status picker |
+| `<leader>el` | Explorer (fichiers > 300 lignes) |
 
 ### Touches dans l'explorer (list)
 | Touche | Action |
@@ -87,6 +92,21 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 | `<C-Down>` / `<C-Up>` | Prochains/précédent répertoire |
 | `<S-C-Up>` / `<S-C-Down>` | Aller au répertoire parent |
 
+## Keymaps Tabpages
+| Touche | Action |
+|--------|--------|
+| `<leader>tt` | Picker tabpages |
+| `<leader>tr` | Renommer le tab courant |
+| `<A-r>` / `r` (dans le picker) | Renommer le tab sous le curseur |
+| `<A-d>` / `dd` (dans le picker) | Fermer le tab sous le curseur |
+| `<A-n>` / `a` (dans le picker) | Nouveau tab |
+| `<A-c>` / `c` (dans le picker) | Changer le cwd du tab (`:tcd`) |
+
+### Noms de tabpages
+- Aucun nom natif dans Neovim : `lua/tabpage.lua` stocke un nom custom dans `vim.t[tabnr].tabname`.
+- Nom par défaut si non renommé : basename du cwd local (`:tcd`) si différent du cwd global, sinon numéro du tab (pas de fallback sur le nom du buffer).
+- Affiché dans lualine (`lualine_y`, icône 󰓩) uniquement s'il y a plus d'un tabpage.
+
 ## Commandes
 - `:Pickers` → liste tous les pickers disponibles.
 - `:Notifi` → ouvre le picker notifications.
@@ -100,6 +120,13 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - `ivy_2_tall` modifie le layout via `config` (fonction qui itère `layout.layout`) car les presets héritent via `preset =` et ne peuvent pas surcharger directement une clé d'un sous-box.
 
 ## Changelog
+- 2026-07-09 : hauteur de la box du picker tabpages ajustée au nombre de tabs (`item_count + 3`, bornée par `min/max_height` de `bottom_compact`). Calculée une fois à l'ouverture — un `tab_close` pendant que le picker est ouvert ne rétrécit pas la box (le contenu de la list se met à jour via `refresh()`, pas le conteneur).
+- 2026-07-09 : nouveau preset `bottom_compact` (`picker/init.lua`) — compact, centré, ancré en bas (`row = -2`). Utilisé par le picker tabpages à la place de `ivy_2` (full-screen, pensé pour d'autres pickers).
+- 2026-07-09 : les floats (dont le picker) appartiennent à un seul tabpage — `nvim_set_current_tabpage` masque le picker au lieu de le suivre, ce qui déclenchait l'auto-close (`WinEnter` hors picker). `open_tabpage_picker` (dans `tabpages.lua`) est maintenant une fonction récursive : `on_change` ferme le picker (`switching = true` pour court-circuiter le revert de `on_close`), change de tab, puis rouvre un nouveau picker sur ce tab avec `on_show` repositionnant le curseur sur le même item (`preselect_tab`) et `pattern` conservant le texte tapé. `accept`/`tab_new` ne déclenchent pas de réouverture (juste `accepted = true`).
+- 2026-07-09 : picker tabpages sans preview (`layout.hidden = {"preview"}`) ; navigation live (`on_change` bascule immédiatement sur le tab sous le curseur) ; annulation (`<Esc>`/`q`) restaure le tab d'origine via `on_close`, sauf si `confirm`/`tab_new` a positionné un flag `accepted`.
+- 2026-07-09 : nom par défaut d'un tab non renommé remplacé par son numéro (au lieu du nom du buffer affiché). Ajout de l'action `tab_cwd` (`<A-c>`/`c`) dans le picker tabpages pour affecter un cwd local (`:tcd`) au tab sous le curseur.
+- 2026-07-08 : regroupement des pickers custom sous `lua/plugins/snacks/picker/` — `picker/init.lua` (ex `picker.lua`, config générique + agrégation keys) + `picker/sources/{tabpages,harpoon}.lua`. Suppression de `lua/pickers/` (dossier fragmenté, contenait aussi `init.lua` cassé et `jumplist.lua`, doublon Telescope mort de `Snacks.picker.jumps()`). `picker.sources.explorer`/`picker.sources.notifications` restent dans `explorer.lua`/`notifier.lua` (config intrinsèque à ces features).
+- 2026-07-08 : ajout gestion des tabpages — picker (`<leader>tt`, logique dans `lua/plugins/snacks/picker/sources/tabpages.lua`), rename (`<leader>tr`), nom affiché dans lualine. Logique de nommage dans `lua/tabpage.lua` (hors snacks, réutilisée par lualine).
 - 2026-06-05 : Analyse initiale. Actions récursives explorer, intégrations markview/trouble documentées.
 - 2026-06-11 : Layout `telescope` rendu responsive — si `vim.o.columns < 120`, bascule sur `preview = "main"` (preview dans l'arrière-plan) + panneau compact en bas, via `config`.
 - 2026-06-17 : Refactor picker — preset par défaut devient une fonction responsive. Ajout presets `ivy_2` et `ivy_2_tall`. Layout `telescope` élargi (95%/150). Live grep force `ivy_2`. Highlights picker responsive `ivy_2_tall`/`telescope`.

@@ -46,7 +46,7 @@ local opts = {
 							end
 							timer:stop()
 							timer:start(
-								10,
+								30,
 								0,
 								vim.schedule_wrap(function()
 									if
@@ -161,6 +161,26 @@ local opts = {
 						end
 					end
 				end,
+			},
+			-- Compact, centré horizontalement, ancré en bas de l'écran (`row < 0`).
+			-- Pas de preview : pensé pour des pickers courts (ex: tabpages).
+			bottom_compact = {
+				reverse = false,
+				layout = {
+					box = "vertical",
+					backdrop = false,
+					row = -2,
+					width = 0.5,
+					max_width = 100,
+					height = 0.3,
+					max_height = 10,
+					min_height = 1,
+					border = true,
+					title = "{title} {live} {flags}",
+					title_pos = "center",
+					{ win = "input", height = 1, border = "bottom" },
+					{ win = "list", border = "none" },
+				},
 			},
 			icons = { ui = { selected = "+", unselected = " " } },
 		},
@@ -300,6 +320,21 @@ local keys = {
 			Snacks.picker.colorschemes()
 		end,
 		desc = "themes",
+	},
+	{
+		"<leader>tt",
+		function()
+			require("plugins.snacks.picker.sources.tabpages")()
+		end,
+		desc = "Tabpages (picker)",
+	},
+	{
+		"<leader>tr",
+		function()
+			local tabpage = require("tabpage")
+			tabpage.rename()
+		end,
+		desc = "Renommer le tab courant",
 	},
 }
 

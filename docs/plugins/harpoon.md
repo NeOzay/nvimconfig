@@ -6,7 +6,7 @@ Navigation rapide entre fichiers marqués, intégré à cokeline et snacks picke
 ## Files
 - Config: `lua/plugins/harpoon.lua`
 - Fork: `NeOzay/harpoon` branche `harpoon2` (dev, `~/projects/nvim-plugins/`)
-- Picker: `lua/pickers/harpoon_snacks.lua`
+- Picker: `lua/plugins/snacks/picker/sources/harpoon.lua`
 
 ## Key Behaviors
 - `save_on_toggle = true` + `sync_on_ui_close = true`.

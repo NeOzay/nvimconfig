@@ -19,7 +19,7 @@ local function gen_keymaps()
 		{
 			"<C-e>",
 			function()
-				require("pickers.harpoon_snacks")()
+				require("plugins.snacks.picker.sources.harpoon")()
 			end,
 			mode = "n",
 			desc = "Harpoon: Snacks picker",
