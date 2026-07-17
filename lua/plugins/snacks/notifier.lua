@@ -2,52 +2,7 @@
 
 ---@type snacks.Config
 local opts = {
-	notifier = { enabled = true, timeout = 5000 },
-	picker = {
-		sources = {
-			notifications = {
-				win = {
-					preview = {
-						wo = { wrap = true },
-						---@param self snacks.win
-						on_win = function(self)
-							if not self.buf or not self.win then
-								return
-							end
-							vim.api.nvim_buf_attach(self.buf, false, {
-								on_lines = function()
-									if not vim.api.nvim_win_is_valid(self.win) then
-										return true
-									end
-									vim.schedule(function()
-										if not vim.api.nvim_buf_is_valid(self.buf) then
-											return
-										end
-										vim.wo[self.win].conceallevel = 2
-										require("markview.actions").render(self.buf, nil, {
-											markdown = {
-												list_items = { indent_size = 1, shift_width = 1 },
-												code_blocks = {
-													label_direction = "right",
-													style = "simple",
-												},
-											},
-											markdown_inline = {
-												inline_codes = { padding_left = "", padding_right = "" },
-												hyperlinks = { enable = false },
-											},
-											preview = { ignore_buftypes = {} },
-										})
-										require("markview.actions").set_query(self.buf)
-									end)
-								end,
-							})
-						end,
-					},
-				},
-			},
-		},
-	},
+	notifier = { enabled = true, timeout = 5000, padding = false },
 	styles = {
 		notification = {
 			wo = {
@@ -55,6 +10,7 @@ local opts = {
 				wrap = true,
 				colorcolumn = "",
 				conceallevel = 2,
+				statuscolumn = "",
 			},
 			on_win = function(self)
 				if not self.buf or not self.win then
