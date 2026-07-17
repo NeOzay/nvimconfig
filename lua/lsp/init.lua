@@ -10,6 +10,7 @@ M.lsp_configs = {
 	"rust_analyzer",
 	"zshcs",
 	"marksman",
+	"tombi",
 }
 
 ---@param client vim.lsp.Client

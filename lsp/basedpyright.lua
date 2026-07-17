@@ -3,7 +3,7 @@ local function get_cmd()
 	if vim.uv.fs_stat(dev_path) then
 		return { "node", dev_path, "--stdio" }
 	end
-	return { "basedpyright", "--stdio" }
+	return { "basedpyright-langserver", "--stdio" }
 end
 
 local function get_python_path()
