@@ -1,4 +1,7 @@
 local opts = {
+	env = {
+		EDITOR = "nvim",
+	},
 	terminal = {
 		provider = "snacks",
 		-- provider = "none",
@@ -8,6 +11,10 @@ local opts = {
 			width = 0.4,
 			height = 0.8,
 			border = "rounded",
+			-- Sans ça, snacks.win détecte qu'un autre buffer (le prompt ouvert via
+			-- nvim-unception/Ctrl+G) a remplacé le sien dans cette fenêtre et le swap
+			-- automatiquement vers la fenêtre principale (BufWinEnter -> fixbuf()).
+			fixbuf = false,
 			keys = {
 				hide = {
 					"<A-c>",
@@ -46,10 +53,6 @@ local opts = {
 		hide_terminal_in_new_tab = false,
 		auto_resize_terminal = true, -- Let the plugin manage the terminal width across the diff lifecycle; set false to own it via the User autocmds below
 		-- on_new_file_reject = "keep_empty", -- "keep_empty" or "close_window"
-
-		-- Legacy aliases (still supported):
-		-- vertical_split = true,
-		-- open_in_current_tab = true,
 	},
 }
 ---@type LazyPluginSpec

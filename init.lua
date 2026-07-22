@@ -95,6 +95,7 @@ require("lazy").setup({
 	{ import = "plugins.guess-indent" },
 	{ import = "plugins.harpoon" },
 	{ import = "plugins.hover-translator" },
+	{ import = "plugins.nvim-unception" },
 	{ import = "plugins.indent-blankline" },
 	{ import = "plugins.lspconfig" },
 	{ import = "plugins.lsp-endhints" },

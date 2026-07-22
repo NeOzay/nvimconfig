@@ -122,6 +122,12 @@ Userautocmd("BufEnter", {
 Userautocmd("BufReadPost", {
 	callback = function()
 		local filepath = vim.fn.expand("%:p")
+
+		-- Fichier de prompt temporaire de Claude Code (édité via Ctrl+G/$EDITOR,
+		-- relayé par nvim-unception) : toujours éditable, jamais en lecture seule.
+		if filepath:match("/claude%-prompt%-[^/]+%.md$") then
+			return
+		end
 		local cwd = vim.fn.getcwd()
 		local args = vim.v.argv
 

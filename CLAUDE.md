@@ -87,6 +87,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | statuscol | `plugins/statuscol/` | [`statuscol.md`](docs/plugins/statuscol.md) |
 | ufo | `plugins/ufo/` | [`ufo.md`](docs/plugins/ufo.md) |
 | claudecode | `plugins/claudecode.lua` | [`claudecode.md`](docs/plugins/claudecode.md) |
+| nvim-unception | `plugins/nvim-unception.lua` | [`nvim-unception.md`](docs/plugins/nvim-unception.md) |
 | codecompanion | `plugins/codecompanion.lua` | [`codecompanion.md`](docs/plugins/codecompanion.md) |
 | conform | `plugins/conform.lua` | [`conform.md`](docs/plugins/conform.md) |
 | treesitter | `plugins/treesitter.lua` | [`treesitter.md`](docs/plugins/treesitter.md) |
