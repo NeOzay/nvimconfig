@@ -5,12 +5,14 @@ Pont entre Neovim et Claude Code (CLI dans un terminal externe) : partage de fic
 
 ## Files
 - Config: `lua/plugins/claudecode.lua`
+- Highlights: `lua/highlights/claudecode.lua`
 
 ## Key Behaviors
-- Usage : envoyer le buffer courant ou une sélection visuelle à Claude Code qui tourne dans un terminal séparé.
-- Terminal provider : `"none"` — pas d'intégration terminal, Claude Code est lancé manuellement hors de Neovim.
+- Usage : envoyer le buffer courant ou une sélection visuelle à Claude Code.
+- Terminal provider : `"snacks"` — Claude Code tourne dans un terminal snacks flottant (`<A-c>` pour toggle).
 - `lazy = false` — chargé immédiatement.
 - `<leader>a` réservé comme préfixe "AI/Claude Code".
+- `diff_opts.layout = "vertical"` par défaut ; le mode `"unified"` (diff inline dans un seul buffer) utilise les groupes de highlight définis dans `lua/highlights/claudecode.lua` : `ClaudeCodeInlineDiffAdd`, `ClaudeCodeInlineDiffDelete`, `ClaudeCodeInlineDiffAddSign`, `ClaudeCodeInlineDiffDeleteSign`. Bg add/delete réutilisent les couleurs `CodeDiffLineInsert`/`CodeDiffLineDelete` (base46/config.lua) pour rester cohérent avec codediff.nvim ; les signs utilisent `colors.green`/`colors.red`.
 
 ## Keymaps
 | Touche | Mode | Action |
