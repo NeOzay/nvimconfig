@@ -68,6 +68,11 @@ map("n", "<M-j>", "<C-w>j", { desc = "switch window down" })
 map("n", "<M-Up>", "<C-w>k", { desc = "switch window up" })
 map("n", "<M-k>", "<C-w>k", { desc = "switch window up" })
 
+map("t", "<M-left>", "<C-\\><C-N><C-w>h", { desc = "switch window left" })
+map("t", "<M-right>", "<C-\\><C-N><C-w>l", { desc = "switch window right" })
+map("t", "<M-down>", "<C-\\><C-N><C-w>j", { desc = "switch window down" })
+map("t", "<M-up>", "<C-\\><C-N><C-w>k", { desc = "switch window up" })
+
 map("i", "jk", "<ESC>")
 
 -- Auto-indent quand on entre en mode insertion sur une ligne vide

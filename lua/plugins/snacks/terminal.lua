@@ -3,6 +3,8 @@ local opts = {
 	terminal = {
 		shell = { "zsh" },
 		win = {
+			split = "below",
+			stack = true,
 			wo = {
 				winbar = "",
 				-- statuscolumn = "%#normal# ",
@@ -33,13 +35,13 @@ local opts = {
 				-- 	self:close()
 				-- 	print("Terminal fermé via Snacks")
 				-- end,
-				close = {
-					"<C-ù>",
-					function(self)
-						self:hide()
-					end,
-					mode = "t",
-				},
+				-- close = {
+				-- 	"<C-ù>",
+				-- 	function(self)
+				-- 		self:hide()
+				-- 	end,
+				-- 	mode = "t",
+				-- },
 			},
 		},
 	},
@@ -50,8 +52,22 @@ local keys = {
 	{
 		"<C-ù>",
 		function()
-			Snacks.terminal(nil, { env = { PROMPT_EOL_MARK = "" } })
+			Snacks.terminal(nil, {
+				env = { PROMPT_EOL_MARK = "" },
+				win = {
+					keys = {
+						close = {
+							"<C-ù>",
+							function(self)
+								self:hide()
+							end,
+							mode = "t",
+						},
+					},
+				},
+			})
 		end,
+		mode = { "n", "t" },
 		desc = "Toggle Terminal",
 	},
 }

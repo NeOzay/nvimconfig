@@ -41,6 +41,7 @@ o.mouse = "a"
 o.exrc = true
 o.virtualedit = "block"
 o.mousemoveevent = true
+vim.opt.guicursor:append("t:hor20-blinkon500-blinkoff500")
 
 -- Indentation avec espaces uniquement
 o.expandtab = true
