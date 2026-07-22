@@ -12,7 +12,7 @@ Système de theming multi-couche basé sur Sonokai, avec highlights per-plugin c
 ## Moment de chargement
 
 Dans `init.lua` :
-1. `require("base46.load").apply()` → `base46.setup()` applique les 3 premières couches (step 4)
+1. `require("base46").setup()` applique les 3 premières couches (step 4)
 2. `loader.setup_autocmds()` enregistre les autocmds pour les intégrations per-plugin (step 4)
 3. Les intégrations user/base46 se chargent ensuite via `LazyLoad` et hot-reload
 
@@ -72,9 +72,22 @@ Lors du chargement d'une intégration (`loader.load_integration(name)`) :
 ### base46 config (`lua/base46/config.lua`)
 Remplace `chadrc.lua`. Contient :
 - `theme` : chemin du thème (ex: `"themes.sonokai"`)
+- `term_theme` : chemin du thème pour le terminal (ex: `"themes.tokyonight"`), `nil` = même que `theme` — voir « Thème du terminal » ci-dessous
 - `integrations` : module path des intégrations user (`"highlights"`)
 - `extended_palette` : couleurs custom réutilisables dans tout le système
 - `hl_override` : overrides finaux (syntaxe base46 complète)
+
+### Thème du terminal (`term_theme`)
+
+Le terminal intégré (snacks.terminal) peut avoir un thème distinct du reste de l'éditeur, résolu
+par le même mécanisme que `theme` :
+- `base46.get_term_theme_tb(tb_type)` (`base46/init.lua`) : résout `M.config.term_theme or M.config.theme`, miroir exact de `get_theme_tb`.
+- Deux points consomment `term_theme` :
+  1. **Couleurs ANSI** (`base_16_terminal` → `vim.g.terminal_color_0..15`) : posées une seule fois dans `base46/init.lua → load()`. Globales à l'instance Nvim (`:h terminal_color_`), mais uniquement consommées par les buffers `:terminal` — pas de bascule `TermOpen`/`TermClose` nécessaire.
+  2. **Fond/texte du widget** (`Normal`) : groupes `TerminalNormal`/`TerminalNormalNC` dans `lua/highlights/snacks.lua` (palette `base_30` résolue via `get_term_theme_tb`), appliqués via `win.wo.winhighlight` dans `lua/plugins/snacks/terminal.lua`.
+- `M.reload()` invalide aussi `package.loaded[term_theme]` s'il diffère de `theme`, pour que `:Base46Reload` reste cohérent.
+- Par défaut `term_theme = nil` → comportement strictement identique au thème principal.
+- **Gotcha** : les ANSI (`terminal_color_0..15`) ne sont relues par Neovim qu'au `TermOpen` (`:h terminal_color_x`) — `:Base46Reload` ne les rafraîchit pas sur un terminal déjà ouvert. Voir `docs/plugins/snacks.md` § Gotchas pour le détail (le toggle `<C-ù>`/`q` ne fait que masquer le terminal, jamais le fermer réellement). `TerminalNormal`/`TerminalNormalNC` (fond/texte), eux, se rechargent à chaud normalement.
 
 ### Color utilities (`lua/base46/colors.lua`)
 - `hi_pathwork(fg, bg, opts?)` : groupe composite (fg d'un groupe + bg d'un autre). Caché, recalculé sur `ColorScheme`.
@@ -125,6 +138,7 @@ Remplace `chadrc.lua`. Contient :
 - **`extended_palette`** peut être défini dans config ET dans le thème — config écrase le thème pour les noms en collision.
 
 ## Changelog
+- 2026-07-22 : Ajout `term_theme` (thème distinct pour le terminal intégré) — `get_term_theme_tb`, groupes `TerminalNormal`/`TerminalNormalNC` dans `lua/highlights/snacks.lua`. Correction du point d'entrée documenté (`require("base46").setup()`, pas `base46.load`).
 - 2026-06-05 : Réécriture complète. Suppression chadrc.lua → config.lua. Documentation extended_palette, loader deux sources (user/base46), tables vs fonctions, utils déplacés dans base46/colors.lua, commandes Base46Reload/Base46Integrations.
 - 2026-03-22 : Migration hors NvChad — fork local de base46.
 - 2026-03-20 : Fiche initiale.

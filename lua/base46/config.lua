@@ -6,6 +6,7 @@
 ---@type Base46Config
 return {
 	theme = "themes.sonokai",
+	term_theme = "themes.tokyonight", -- nil = même thème que `theme` ; sinon chemin de module dédié au terminal
 	integrations = "highlights",
 
 	---@type table<string, string|Base46MixedColor>

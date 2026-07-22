@@ -3,6 +3,7 @@
 
 ---@class Base46Config
 ---@field theme string
+---@field term_theme? string Chemin de module pour le thème du terminal ; nil = même que `theme`
 ---@field transparency boolean
 ---@field hl_override Base46HLTable
 ---@field integrations string Module path pour les intégrations user (ex: "highlights")
@@ -40,6 +41,18 @@ local set_hl = vim.api.nvim_set_hl
 ---@overload fun(tb_type: "type"): "dark"|"light"
 function M.get_theme_tb(tb_type)
 	return require(M.config.theme)[tb_type]
+end
+
+---@param tb_type keyof Base46Theme
+---@return table|string|nil
+---@overload fun(tb_type: "base_30"): Base30Table
+---@overload fun(tb_type: "base_16"): Base16Table
+---@overload fun(tb_type: "base_16_terminal"): Base16TerminalTable?
+---@overload fun(tb_type: "extended_palette"): table<string, string>?
+---@overload fun(tb_type: "polish_hl"): table<string, Base46HLTable>?
+---@overload fun(tb_type: "type"): "dark"|"light"
+function M.get_term_theme_tb(tb_type)
+	return require(M.config.term_theme or M.config.theme)[tb_type]
 end
 
 ---@return Base46ExtendedTable
@@ -84,7 +97,7 @@ local function load()
 	end
 
 	-- Couleurs terminal ANSI
-	local terminal = M.get_theme_tb("base_16_terminal")
+	local terminal = M.get_term_theme_tb("base_16_terminal")
 	if terminal then
 		for i = 0, 15 do
 			vim.g["terminal_color_" .. i] = terminal[i]
@@ -118,6 +131,9 @@ function M.reload()
 	package.loaded["base46.integrations.defaults"] = nil
 	package.loaded["base46.config"] = nil
 	package.loaded[M.config.theme] = nil
+	if M.config.term_theme then
+		package.loaded[M.config.term_theme] = nil
+	end
 
 	-- Reset état
 	loader.reset_cache()

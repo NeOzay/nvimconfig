@@ -8,6 +8,11 @@ local opts = {
 			wo = {
 				winbar = "",
 				-- statuscolumn = "%#normal# ",
+				winhighlight = {
+					Normal = "TerminalNormal",
+					NormalNC = "TerminalNormalNC",
+					EndOfBuffer = "TerminalNormal",
+				},
 			},
 			bo = {},
 			height = 0.2,

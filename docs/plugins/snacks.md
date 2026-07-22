@@ -8,6 +8,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - Pickers custom autonomes: `lua/plugins/snacks/picker/sources/tabpages.lua`, `lua/plugins/snacks/picker/sources/harpoon.lua`
 - Config explorer: `lua/plugins/snacks/explorer.lua`
 - Config notifier: `lua/plugins/snacks/notifier.lua`
+- Config terminal: `lua/plugins/snacks/terminal.lua`
 - Guide picker custom: `docs/plugins/snacks-picker-custom.md`
 
 ## Key Behaviors
@@ -36,6 +37,12 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - `on_show` : synchronise le curseur picker avec la position du buffer principal.
 - Vue "buffers seulement" (`<leader>eb`) : construit une liste `include_paths` avec tous les buffers chargés + leurs répertoires parents jusqu'au cwd.
 - Finder "fichiers > 300 lignes" (`<leader>el`) : `big_files_finder` parcourt tout l'arbre via `snacks.explorer.tree` indépendamment de l'état plié/déplié, force l'expansion, ne garde que les fichiers dépassant le seuil et leurs dossiers parents (branches vides élaguées). Affiche le nombre de lignes en suffixe (`Snacks.picker.format.file` + extension custom).
+
+### Terminal
+- Split `below`, `stack = true` (empile les terminaux successifs), `height = 0.2`.
+- Toggle : `<C-ù>` (n/t), `q` cache, `<C-x>` sort du mode insertion.
+- **Thème distinct de l'éditeur** : `win.wo.winhighlight` mappe `Normal`/`NormalNC`/`EndOfBuffer` vers les groupes `TerminalNormal`/`TerminalNormalNC` (définis dans `lua/highlights/snacks.lua`, palette résolue via `base46.get_term_theme_tb` — voir `docs/plugins/theme-highlights.md` § Thème du terminal). Piloté par la clé `term_theme` de `lua/base46/config.lua` (`nil` = même thème que l'éditeur).
+- Les couleurs ANSI (`terminal_color_0..15`) suivent aussi `term_theme` (posées une seule fois au démarrage dans `base46/init.lua`, globales à l'instance Nvim).
 
 ### Notifier
 - Timeout 5000ms.
@@ -112,6 +119,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - `:Notifi` → ouvre le picker notifications.
 
 ## Gotchas
+- **ANSI du terminal non rechargées à chaud** : `g:terminal_color_0..15` (posées depuis `term_theme`, voir `theme-highlights.md`) ne sont lues par Neovim qu'au moment de `TermOpen` (`:h terminal_color_x`). `:Base46Reload` met à jour la variable globale mais un terminal déjà ouvert garde son ancienne palette ANSI. Or `q` et le toggle `<C-ù>` (`terminal.lua`) ne font que `self:hide()` — jamais de vrai `close()` — donc le job shell reste vivant et `TermOpen` ne se redéclenche jamais tant qu'on ne tue pas vraiment le terminal. **Pour voir un changement d'ANSI** : `exit` dans le shell (ou `:bd!` sur le buffer terminal) puis rouvrir avec `<C-ù>`. Le fond/texte (`TerminalNormal`/`TerminalNormalNC`) n'a pas ce problème : ce sont des groupes de highlight classiques, résolus par `winhighlight` à chaque redraw, donc rechargés à chaud normalement.
 - Mode `preview = "main"` : toujours garder `{ win = "preview" }` dans le box, sinon `get_wins` (`snacks/layout.lua`) n'ouvre jamais la fenêtre de preview au premier affichage (preview vide tant qu'on n'a pas redimensionné le terminal).
 - Le `wo` posé sur l'entrée `{ win = "preview" }` du box **n'est pas appliqué** en mode `preview = "main"` : la win est en `layout = false`, donc `update_win` (qui applique le `wo` du box) ne tourne jamais pour elle. Les options de fenêtre de la preview (statuscolumn, number…) doivent être posées sur `win.preview.wo` (config globale), pas sur le box.
 - La statuscolumn de statuscol s'affiche dans la preview car c'est un float et l'autocmd statuscol ignore les floats (`conditions.lua` → `cfg.relative ~= ""`). On la neutralise via `win.preview.wo.statuscolumn = ""`.
@@ -120,6 +128,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - `ivy_2_tall` modifie le layout via `config` (fonction qui itère `layout.layout`) car les presets héritent via `preset =` et ne peuvent pas surcharger directement une clé d'un sous-box.
 
 ## Changelog
+- 2026-07-22 : terminal — thème distinct de l'éditeur via `term_theme` (`base46/config.lua`), groupes `TerminalNormal`/`TerminalNormalNC` appliqués par `win.wo.winhighlight`. Gotcha documenté : ANSI non rechargées à chaud (`TermOpen`-only, terminal jamais vraiment fermé par `q`/toggle).
 - 2026-07-09 : hauteur de la box du picker tabpages ajustée au nombre de tabs (`item_count + 3`, bornée par `min/max_height` de `bottom_compact`). Calculée une fois à l'ouverture — un `tab_close` pendant que le picker est ouvert ne rétrécit pas la box (le contenu de la list se met à jour via `refresh()`, pas le conteneur).
 - 2026-07-09 : nouveau preset `bottom_compact` (`picker/init.lua`) — compact, centré, ancré en bas (`row = -2`). Utilisé par le picker tabpages à la place de `ivy_2` (full-screen, pensé pour d'autres pickers).
 - 2026-07-09 : les floats (dont le picker) appartiennent à un seul tabpage — `nvim_set_current_tabpage` masque le picker au lieu de le suivre, ce qui déclenchait l'auto-close (`WinEnter` hors picker). `open_tabpage_picker` (dans `tabpages.lua`) est maintenant une fonction récursive : `on_change` ferme le picker (`switching = true` pour court-circuiter le revert de `on_close`), change de tab, puis rouvre un nouveau picker sur ce tab avec `on_show` repositionnant le curseur sur le même item (`preselect_tab`) et `pattern` conservant le texte tapé. `accept`/`tab_new` ne déclenchent pas de réouverture (juste `accepted = true`).

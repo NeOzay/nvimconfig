@@ -1,6 +1,7 @@
 -- Snacks picker highlights for Sonokai theme
 
 local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
+local term_colors = require("base46").get_term_theme_tb("base_30") ---@as Base30Table
 local mix = require("base46.colors").mix_colors_group
 local colors_util = require("base46.colors")
 
@@ -9,6 +10,11 @@ return {
 	SnacksDir = { fg = mix("comment", "Normal", 60) },
 	SnacksNormal = { fg = colors.white, bg = colors.black },
 	SnacksNormalNC = { fg = colors.white, bg = colors.black },
+
+	-- Terminal (win.wo.winhighlight dans lua/plugins/snacks/terminal.lua) — palette
+	-- résolue depuis `term_theme` (base46/config.lua), distincte du thème éditeur.
+	TerminalNormal = { fg = term_colors.white, bg = term_colors.black },
+	TerminalNormalNC = { fg = term_colors.white, bg = term_colors.black },
 
 	SnacksDebugPrint = { fg = colors.one_bg3, bg = colors.one_bg },
 
