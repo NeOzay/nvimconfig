@@ -156,40 +156,30 @@ Userautocmd("QuitPre", {
 		vim.schedule(function()
 			local term_bufnr = claude_terminal_bufnr
 			if
-				not (
-					term_bufnr
-					and vim.api.nvim_buf_is_valid(term_bufnr)
-					and vim.bo[term_bufnr].buftype == "terminal"
-				)
+				not (term_bufnr and vim.api.nvim_buf_is_valid(term_bufnr) and vim.bo[term_bufnr].buftype == "terminal")
 			then
 				return
 			end
 
 			local ok, snacks_provider = pcall(require, "claudecode.terminal.snacks")
 			local term_obj = ok and snacks_provider._get_terminal_for_test()
-			if term_obj then
-				term_obj.buf = term_bufnr
-				if not (term_obj.win and vim.api.nvim_win_is_valid(term_obj.win)) then
-					-- Fenêtre d'origine perdue : on raccroche l'objet à n'importe
-					-- quelle fenêtre affichant déjà le terminal, s'il y en a une.
-					for _, t in ipairs(vim.api.nvim_list_tabpages()) do
-						for _, w in ipairs(vim.api.nvim_tabpage_list_wins(t)) do
-							if vim.api.nvim_win_get_buf(w) == term_bufnr then
-								term_obj.win = w
-							end
-						end
-					end
-				elseif vim.api.nvim_win_get_buf(term_obj.win) ~= term_bufnr then
-					vim.api.nvim_win_set_buf(term_obj.win, term_bufnr)
-				end
+			if not term_obj then
+				return
 			end
 
-			for _, t in ipairs(vim.api.nvim_list_tabpages()) do
-				for _, w in ipairs(vim.api.nvim_tabpage_list_wins(t)) do
-					if vim.api.nvim_win_get_buf(w) == prompt_buf then
-						vim.api.nvim_win_set_buf(w, term_bufnr)
+			term_obj.buf = term_bufnr
+			if not (term_obj.win and vim.api.nvim_win_is_valid(term_obj.win)) then
+				-- Fenêtre d'origine perdue : on raccroche l'objet à n'importe
+				-- quelle fenêtre affichant déjà le terminal, s'il y en a une.
+				for _, t in ipairs(vim.api.nvim_list_tabpages()) do
+					for _, w in ipairs(vim.api.nvim_tabpage_list_wins(t)) do
+						if vim.api.nvim_win_get_buf(w) == term_bufnr then
+							term_obj.win = w
+						end
 					end
 				end
+			elseif vim.api.nvim_win_get_buf(term_obj.win) ~= term_bufnr then
+				vim.api.nvim_win_set_buf(term_obj.win, term_bufnr)
 			end
 		end)
 	end,

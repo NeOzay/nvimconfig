@@ -63,7 +63,7 @@ return {
 	opts = opts,
 	keys = {
 		{ "<leader>a", nil, desc = "AI/Claude Code" },
-		{ "<A-c>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude Code" },
+		{ "<A-c>", "<cmd>ClaudeCode<cr>", mode = { "n", "t" }, desc = "Toggle Claude Code" },
 		-- { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
 		-- { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
 		-- { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
