@@ -88,7 +88,7 @@ require("lazy").setup({
 	{ import = "plugins.docstring-highlight" },
 	{ import = "plugins.dap.init" },
 	{ import = "plugins.codediff" },
-	{ import = "plugins.claudecode" },
+	{ import = "plugins.claudecode.init" },
 	{ import = "plugins.codecompanion" },
 	{ import = "plugins.fidget" },
 	{ import = "plugins.gitsigns" },

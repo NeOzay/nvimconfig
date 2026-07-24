@@ -23,7 +23,7 @@
 ---@type LazyPluginSpec
 return {
 	"luukvbaal/statuscol.nvim",
-	event = "VeryLazy",
+	lazy = false,
 	dependencies = {
 		"mfussenegger/nvim-dap",
 	},

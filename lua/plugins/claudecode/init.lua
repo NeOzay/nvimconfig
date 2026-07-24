@@ -3,26 +3,14 @@ local opts = {
 		EDITOR = "nvim",
 	},
 	terminal = {
-		provider = "snacks",
-		-- provider = "none",
+		provider = require("plugins.claudecode.terminal"),
 		---@type snacks.win.Config|{}
 		snacks_win_opts = {
 			position = "right",
 			width = 0.4,
 			height = 0.8,
 			border = "rounded",
-			-- Sans ça, snacks.win détecte qu'un autre buffer (le prompt ouvert via
-			-- nvim-unception/Ctrl+G) a remplacé le sien dans cette fenêtre et le swap
-			-- automatiquement vers la fenêtre principale (BufWinEnter -> fixbuf()).
-			fixbuf = false,
 			keys = {
-				hide = {
-					"<A-c>",
-					function(self)
-						self:hide()
-					end,
-					mode = "t",
-				},
 				term_normal = {
 					"<esc>",
 					function(self)
@@ -64,6 +52,15 @@ return {
 	keys = {
 		{ "<leader>a", nil, desc = "AI/Claude Code" },
 		{ "<A-c>", "<cmd>ClaudeCode<cr>", mode = { "n", "t" }, desc = "Toggle Claude Code" },
+		{
+			"<leader>aR",
+			function()
+				require("plugins.claudecode.terminal").reset_size()
+			end,
+			mode = "n",
+			desc = "Reset Claude Code window size",
+		},
+		{ "<leader>ac", "<cmd>ClaudeCode --continue<cr>", mode = { "n", "t" }, desc = "Toggle Claude Code" },
 		-- { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
 		-- { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
 		-- { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
