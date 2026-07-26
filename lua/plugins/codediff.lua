@@ -2,7 +2,7 @@
 return {
 	"esmuellert/codediff.nvim",
 	cmd = "CodeDiff",
-	-- dev = true,
+	dev = true,
 	keys = {
 		{ "<leader>gd", "<cmd>CodeDiff<cr>", desc = "Open CodeDiff" },
 		{ "<leader>gh", "<cmd>CodeDiff history HEAD~50 %<cr>", desc = "File History (current)" },
@@ -22,6 +22,8 @@ return {
 			position = "bottom",
 			height = 16,
 		},
+		diff = { compute_moves = true },
+
 		keymaps = {
 			view = {
 				close = "q",
