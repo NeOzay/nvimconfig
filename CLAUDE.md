@@ -77,6 +77,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | Plugin | Config file | Doc |
 |---|---|---|
 | blink.cmp | `plugins/blink-cmp.lua` | [`blink-cmp.md`](docs/plugins/blink-cmp.md) |
+| bookmarks | `plugins/bookmarks/` | [`bookmarks.md`](docs/plugins/bookmarks.md) |
 | cokeline | `plugins/cokeline.lua` | [`cokeline.md`](docs/plugins/cokeline.md) |
 | codediff | `plugins/codediff.lua` | [`codediff.md`](docs/plugins/codediff.md) |
 | dap | `plugins/dap/` | [`dap.md`](docs/plugins/dap.md) |

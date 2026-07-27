@@ -88,6 +88,10 @@ return {
 				Variable = "󰀫 ",
 			},
 		},
+		keys = {
+			["<cr>"] = "jump_close",
+			["<m-cr>"] = "jump",
+		},
 		auto_close = false,
 		auto_open = false,
 		auto_preview = true,

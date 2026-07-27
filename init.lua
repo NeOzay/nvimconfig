@@ -82,6 +82,7 @@ require("lazy").setup({
 	{ import = "plugins.aerial" },
 	{ import = "plugins.auto-pairs" },
 	{ import = "plugins.blink-cmp" },
+	{ import = "plugins.bookmarks.init" },
 	{ import = "plugins.cokeline" },
 	{ import = "plugins.conform" },
 	{ import = "plugins.copilot" },

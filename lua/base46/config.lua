@@ -112,5 +112,8 @@ return {
 		DapStopped = { fg = "green" },
 		DapBreakpointRejected = { fg = "grey" },
 		DapStoppedLine = { bg = { "green", "black", 20 } },
+
+		-- Bookmarks (fond de ligne pour les lignes marquées)
+		BookmarksLine = { bg = { "red", "black", 85 } },
 	},
 }
