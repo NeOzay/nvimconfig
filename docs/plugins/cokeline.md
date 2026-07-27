@@ -5,7 +5,7 @@ Bufferline intégrée à Harpoon — affiche uniquement les buffers harponnés, 
 
 ## Files
 - Config: `lua/plugins/cokeline.lua`
-- Fork: `NeOzay/nvim-cokeline` (dev, `~/projects/nvim-plugins/`)
+- Fork: `NeOzay/nvim-cokeline` — submodule git `plugins/nvim-cokeline/`
 
 ## Key Behaviors
 - `filter_valid` : n'affiche QUE les buffers présents dans la liste Harpoon.
@@ -25,3 +25,4 @@ Bufferline intégrée à Harpoon — affiche uniquement les buffers harponnés, 
 
 ## Changelog
 - 2026-06-05 : Analyse initiale. Filtre Harpoon-only, tri par index, load_harpoon_buffers au démarrage.
+- 2026-07-27 : fork migré en submodule git sous `plugins/nvim-cokeline/` ; la spec Lazy utilise `dir = vim.fn.stdpath("config") .. "/plugins/nvim-cokeline"` (plus de `dev = true`, `dev.path` supprimé de `lazy-conf.lua`).

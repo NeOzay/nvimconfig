@@ -56,7 +56,7 @@ return {
 	-- "OXY2DEV/markview.nvim",
 	"NeOzay/markview.nvim",
 	lazy = false,
-	dev = true,
+	dir = vim.fn.stdpath("config") .. "/plugins/markview.nvim",
 	ft = { "markdown", "codecompanion", "snacks_notif" },
 	---@type markview.config
 	opts = {

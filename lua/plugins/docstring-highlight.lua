@@ -15,8 +15,7 @@ local function opts()
 end
 
 return {
-	dir = "~/projects/nvim-plugins/docstring-highlight.nvim",
-	enabled = vim.fn.isdirectory(vim.fn.expand("~/projects/nvim-plugins/docstring-highlight.nvim")) == 1,
+	dir = vim.fn.stdpath("config") .. "/plugins/docstring-highlight.nvim",
 	ft = "python",
 	opts = opts,
 }

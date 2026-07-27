@@ -1,7 +1,7 @@
-local config = require("plugins.bookmarks.config")
-local db = require("plugins.bookmarks.db")
-local service = require("plugins.bookmarks.service")
-local ui = require("plugins.bookmarks.ui")
+local config = require("bookmarks.config")
+local db = require("bookmarks.db")
+local service = require("bookmarks.service")
+local ui = require("bookmarks.ui")
 
 local function create_commands()
 	vim.api.nvim_create_user_command("Bookmarks", function()
@@ -79,48 +79,19 @@ local function create_commands()
 	end, { desc = "Supprime tous les bookmarks du fichier courant" })
 
 	vim.api.nvim_create_user_command("BookmarkPick", function()
-		require("plugins.bookmarks.snacks_picker")()
+		require("bookmarks.snacks_picker")()
 	end, { desc = "Ouvre le picker Snacks des bookmarks du projet" })
 end
 
-local function setup()
+---@class Ozay.Bookmarks
+local M = {}
+
+function M.setup()
 	config.setup({})
 	db.setup(config.resolved_db_path())
 	ui.setup_autocmds()
-	require("plugins.bookmarks.trouble").register()
+	require("bookmarks.trouble").register()
 	create_commands()
 end
 
-local function gen_keymaps()
-	return {
-		{ "<leader>bb", "<cmd>BookmarkToggle<CR>", mode = "n", desc = "Bookmarks: toggle" },
-		{ "<leader>ba", "<cmd>BookmarkAnnotate<CR>", mode = "n", desc = "Bookmarks: annoter" },
-		{ "<leader>bl", "<cmd>Bookmarks<CR>", mode = "n", desc = "Bookmarks: liste (Trouble)" },
-		{ "<leader>bp", "<cmd>BookmarkPick<CR>", mode = "n", desc = "Bookmarks: picker Snacks" },
-		{ "]b", "<cmd>BookmarkNext<CR>", mode = "n", desc = "Bookmark suivant" },
-		{ "[b", "<cmd>BookmarkPrev<CR>", mode = "n", desc = "Bookmark précédent" },
-		{ "<leader>bx", "<cmd>BookmarkClear<CR>", mode = "n", desc = "Bookmarks: vider le fichier" },
-	}
-end
-
----@type LazySpec
-return {
-	dir = "~",
-	dependencies = {
-		"neozay/trouble.nvim",
-		"kkharji/sqlite.lua",
-	},
-	lazy = false,
-	config = setup,
-	cmd = {
-		"Bookmarks",
-		"BookmarkToggle",
-		"BookmarkAdd",
-		"BookmarkAnnotate",
-		"BookmarkNext",
-		"BookmarkPrev",
-		"BookmarkClear",
-		"BookmarkPick",
-	},
-	keys = gen_keymaps(),
-}
+return M

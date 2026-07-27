@@ -227,9 +227,14 @@ Décision (minimale, sans toucher au fork) :
 > Conséquence sur la piste 3 (signcolumn vide) : **indépendante** de cette décision. La
 > colonne dap reste en `auto = false` ; seul `git_signs` peut passer en `auto = true`.
 
-## 10. Wiring du fork (au moment d'implémenter)
+## 10. Wiring du fork — abandonné (2026-07-27)
 
-`dev.path` = `~/projects/nvim-plugins/`, mais le fork est à `~/projects/statuscol.nvim`.
-Options : (a) `dir = "~/projects/statuscol.nvim"` dans le spec ; (b) symlink/déplacement
-sous `~/projects/nvim-plugins/statuscol.nvim` + `dev = true`. Le spec pointe encore
-`"luukvbaal/statuscol.nvim"` → à repointer sur le fork `NeOzay/statuscol.nvim`.
+Le fork `NeOzay/statuscol.nvim` a été inspecté au moment de centraliser les plugins sous
+`plugins/` : son HEAD (`c46172d`, 2025-06-02) est un **ancêtre strict** du HEAD upstream
+installé, qui a 4 commits d'avance. Aucun commit propre — les seuls commits d'auteurs
+non-mainteneur (`5ecc340`) sont eux aussi présents en upstream. Le câbler aurait donc été
+une régression pure.
+
+La spec reste sur `"luukvbaal/statuscol.nvim"` (chargé depuis le lazy dir), et le fork n'est
+pas un submodule de ce repo. Si un patch maison devient nécessaire un jour, repartir d'un
+fork à jour plutôt que de celui-ci.

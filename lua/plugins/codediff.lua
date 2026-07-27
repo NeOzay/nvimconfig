@@ -2,7 +2,7 @@
 return {
 	"esmuellert/codediff.nvim",
 	cmd = "CodeDiff",
-	dev = true,
+	dir = vim.fn.stdpath("config") .. "/plugins/codediff.nvim",
 	keys = {
 		{ "<leader>gd", "<cmd>CodeDiff<cr>", desc = "Open CodeDiff" },
 		{ "<leader>gh", "<cmd>CodeDiff history HEAD~50 %<cr>", desc = "File History (current)" },

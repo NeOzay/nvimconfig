@@ -5,6 +5,7 @@ Visualisation des diffs git avec explorer de fichiers, remplace diffview.
 
 ## Files
 - Config: `lua/plugins/codediff.lua`
+- Fork: `NeOzay/codediff.nvim` (upstream `esmuellert/codediff.nvim`) — submodule git `plugins/codediff.nvim/`
 
 ## Key Behaviors
 - Explorer à gauche, largeur 25, vue `tree`.
@@ -55,3 +56,4 @@ Visualisation des diffs git avec explorer de fichiers, remplace diffview.
 ## Changelog
 - 2026-06-05 : Analyse initiale.
 - 2026-07-10 : Documentation de la détection auto des tabs CodeDiff par `lua/tabpage.lua`.
+- 2026-07-27 : fork migré en submodule git sous `plugins/codediff.nvim/` ; la spec Lazy utilise `dir = vim.fn.stdpath("config") .. "/plugins/codediff.nvim"` (plus de `dev = true`, `dev.path` supprimé de `lazy-conf.lua`).

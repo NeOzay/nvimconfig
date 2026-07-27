@@ -19,7 +19,7 @@ M.config = {
 M.get = {
 	---@param cb trouble.Source.Callback
 	bookmarks = function(cb)
-		local service = require("plugins.bookmarks.service")
+		local service = require("bookmarks.service")
 		local Item = require("trouble.item")
 		local items = {}
 		for _, record in ipairs(service.list_for_project()) do

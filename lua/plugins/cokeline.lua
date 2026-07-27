@@ -284,7 +284,7 @@ end
 ---@type LazyPluginSpec
 return {
 	"NeOzay/nvim-cokeline",
-	dev = true,
+	dir = vim.fn.stdpath("config") .. "/plugins/nvim-cokeline",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",

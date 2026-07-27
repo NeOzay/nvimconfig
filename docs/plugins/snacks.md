@@ -10,6 +10,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - Config notifier: `lua/plugins/snacks/notifier.lua`
 - Config terminal: `lua/plugins/snacks/terminal.lua`
 - Guide picker custom: `docs/plugins/snacks-picker-custom.md`
+- Fork: `NeOzay/snacks.nvim` (upstream `folke/snacks.nvim`) — submodule git `plugins/snacks.nvim/`
 
 ## Key Behaviors
 
@@ -128,6 +129,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - `ivy_2_tall` modifie le layout via `config` (fonction qui itère `layout.layout`) car les presets héritent via `preset =` et ne peuvent pas surcharger directement une clé d'un sous-box.
 
 ## Changelog
+- 2026-07-27 : fork migré en submodule git sous `plugins/snacks.nvim/` ; la spec Lazy utilise `dir = vim.fn.stdpath("config") .. "/plugins/snacks.nvim"` (plus de `dev = true`, `dev.path` supprimé de `lazy-conf.lua`).
 - 2026-07-22 : terminal — thème distinct de l'éditeur via `term_theme` (`base46/config.lua`), groupes `TerminalNormal`/`TerminalNormalNC` appliqués par `win.wo.winhighlight`. Gotcha documenté : ANSI non rechargées à chaud (`TermOpen`-only, terminal jamais vraiment fermé par `q`/toggle).
 - 2026-07-09 : hauteur de la box du picker tabpages ajustée au nombre de tabs (`item_count + 3`, bornée par `min/max_height` de `bottom_compact`). Calculée une fois à l'ouverture — un `tab_close` pendant que le picker est ouvert ne rétrécit pas la box (le contenu de la list se met à jour via `refresh()`, pas le conteneur).
 - 2026-07-09 : nouveau preset `bottom_compact` (`picker/init.lua`) — compact, centré, ancré en bas (`row = -2`). Utilisé par le picker tabpages à la place de `ivy_2` (full-screen, pensé pour d'autres pickers).

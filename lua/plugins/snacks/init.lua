@@ -33,7 +33,7 @@ return {
 	lazy = false,
 	-- enabled = false,
 	priority = 1000,
-	dev = true,
+	dir = vim.fn.stdpath("config") .. "/plugins/snacks.nvim",
 	opts = merged_opts,
 	config = true,
 	keys = merged_keys,

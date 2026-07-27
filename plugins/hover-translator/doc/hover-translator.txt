@@ -1,0 +1,278 @@
+*hover-translator.txt*    Translate LSP hover documentation in Neovim
+
+==============================================================================
+CONTENTS                                          *hover-translator-contents*
+
+    1. Introduction .......................... |hover-translator-introduction|
+    2. Requirements .......................... |hover-translator-requirements|
+    3. Installation .......................... |hover-translator-installation|
+    4. Configuration ........................ |hover-translator-configuration|
+    5. Mappings .............................. |hover-translator-mappings|
+    6. Commands .............................. |hover-translator-commands|
+    7. API ................................... |hover-translator-api|
+    8. Translators ........................... |hover-translator-translators|
+    9. Parsers ............................... |hover-translator-parsers|
+    10. Cache ................................ |hover-translator-cache|
+
+==============================================================================
+INTRODUCTION                                  *hover-translator-introduction*
+
+hover-translator is a Neovim plugin that translates LSP hover documentation
+to your preferred language. It preserves function signatures and code blocks
+while translating descriptive text.
+
+Features:
+- Translates hover documentation while preserving function signatures
+- Configurable translation service (Google Translate by default)
+- Caching system to avoid redundant API calls
+- Support for custom parsers per filetype
+- Extensible translator and parser interfaces
+
+==============================================================================
+REQUIREMENTS                                  *hover-translator-requirements*
+
+- Neovim >= 0.9
+- plenary.nvim (https://github.com/nvim-lua/plenary.nvim)
+- curl (system command)
+- An active LSP client with hover support
+
+==============================================================================
+INSTALLATION                                  *hover-translator-installation*
+
+Using lazy.nvim: >lua
+    {
+      "your-username/hover-translator",
+      dependencies = { "nvim-lua/plenary.nvim" },
+      config = function()
+        require("hover-translator").setup({
+          target_lang = "fr",
+        })
+      end,
+    }
+<
+
+Using packer.nvim: >lua
+    use {
+      "your-username/hover-translator",
+      requires = { "nvim-lua/plenary.nvim" },
+      config = function()
+        require("hover-translator").setup({
+          target_lang = "fr",
+        })
+      end,
+    }
+<
+
+==============================================================================
+CONFIGURATION                                *hover-translator-configuration*
+
+Call `setup()` with your configuration options: >lua
+    require("hover-translator").setup({
+      -- Translation service to use (default: "google")
+      translator = "google",
+
+      -- Target language code (default: "fr")
+      -- Use ISO 639-1 codes: en, fr, de, es, it, pt, zh, ja, ko, etc.
+      target_lang = "fr",
+
+      -- Border style for floating window (default: "rounded")
+      -- Options: "none", "single", "double", "rounded", "solid", "shadow"
+      border = "rounded",
+
+      -- Cache configuration
+      cache = {
+        -- Enable caching (default: true)
+        enabled = true,
+
+        -- Time-to-live in seconds (default: 3600 = 1 hour)
+        ttl = 3600,
+      },
+    })
+<
+
+==============================================================================
+MAPPINGS                                          *hover-translator-mappings*
+
+This plugin does not define any keymaps by default.
+
+Recommended configuration: >lua
+    vim.keymap.set("n", "<leader>th", function()
+      require("hover-translator").hover_translate()
+    end, { desc = "Hover Translate" })
+<
+
+With language override: >lua
+    vim.keymap.set("n", "<leader>te", function()
+      require("hover-translator").hover_translate({ target_lang = "en" })
+    end, { desc = "Hover Translate (English)" })
+
+    vim.keymap.set("n", "<leader>td", function()
+      require("hover-translator").hover_translate({ target_lang = "de" })
+    end, { desc = "Hover Translate (German)" })
+<
+
+==============================================================================
+COMMANDS                                          *hover-translator-commands*
+
+:HoverTranslate [lang]                                        *:HoverTranslate*
+    Translate hover at current cursor position.
+    Optional [lang] argument overrides the configured target language.
+
+    Examples: >vim
+        :HoverTranslate
+        :HoverTranslate de
+        :HoverTranslate ja
+<
+
+:HoverTranslateClearCache                            *:HoverTranslateClearCache*
+    Clear the translation cache.
+
+==============================================================================
+API                                                    *hover-translator-api*
+
+                                          *hover-translator.setup()*
+setup({opts})
+    Initialize the plugin with configuration options.
+    See |hover-translator-configuration| for available options.
+
+                                          *hover-translator.hover_translate()*
+hover_translate({opts})
+    Translate hover documentation at the current cursor position.
+
+    Parameters: ~
+        {opts} (table|nil) Optional configuration:
+            - target_lang (string): Override target language
+            - border (string): Override border style
+
+    Example: >lua
+        require("hover-translator").hover_translate({ target_lang = "de" })
+<
+
+                                          *hover-translator.clear_cache()*
+clear_cache()
+    Clear all cached translations.
+
+                                          *hover-translator.cache_stats()*
+cache_stats()
+    Get cache statistics.
+
+    Returns: ~
+        (table) { entries: number, expired: number }
+
+==============================================================================
+TRANSLATORS                                    *hover-translator-translators*
+
+hover-translator supports multiple translation backends through a pluggable
+interface.
+
+Built-in translators:~
+
+google                                    *hover-translator-translator-google*
+    Google Translate (default). Uses the free translate.googleapis.com API.
+    No API key required.
+
+Custom translators:~
+
+You can register custom translators: >lua
+    local translators = require("hover-translator.translators")
+
+    translators.register("my_translator", {
+      name = "my_translator",
+      translate = function(text, target_lang, callback)
+        -- Perform translation asynchronously
+        -- Call callback with result:
+        callback({
+          success = true,
+          translated_text = "...",
+          error = nil,  -- or error message if success = false
+        })
+      end,
+    })
+
+    -- Then configure to use it:
+    require("hover-translator").setup({
+      translator = "my_translator",
+    })
+<
+
+==============================================================================
+PARSERS                                            *hover-translator-parsers*
+
+Parsers extract translatable text from hover content while preserving
+function signatures and code blocks.
+
+Built-in parsers:~
+
+generic                                      *hover-translator-parser-generic*
+    Default parser. Preserves:
+    - Code blocks (``` ... ```)
+    - Lines containing function signatures
+    - Separator lines (───, ---, etc.)
+
+lua                                              *hover-translator-parser-lua*
+    Lua/Neovim-specific parser. Better detection of Lua function signatures
+    and type annotations.
+
+Custom parsers:~
+
+You can register custom parsers for specific filetypes: >lua
+    local parsers = require("hover-translator.parsers")
+
+    parsers.register("python", {
+      name = "python",
+      parse = function(content)
+        local preserved = {}
+        local translatable = ""
+
+        -- Parse content...
+
+        return {
+          preserved = preserved,
+          translatable = translatable,
+          reconstruct = function(translated)
+            -- Reconstruct hover with translated text
+            return final_content
+          end,
+        }
+      end,
+    })
+<
+
+==============================================================================
+CACHE                                                *hover-translator-cache*
+
+hover-translator caches translations to avoid redundant API calls.
+
+Cache key:~
+    SHA256 hash of (original content + target language)
+
+Cache storage:~
+    In-memory Lua table, persists for the Neovim session only.
+
+TTL (Time-to-Live):~
+    Configurable via `cache.ttl` option (default: 3600 seconds = 1 hour).
+    Expired entries are lazily removed on access.
+
+Commands:~
+    :HoverTranslateClearCache - Clear all cached translations
+
+API:~
+    `require("hover-translator").clear_cache()` - Clear cache programmatically
+    `require("hover-translator").cache_stats()` - Get cache statistics
+
+==============================================================================
+HEALTHCHECK                                    *hover-translator-healthcheck*
+
+Run `:checkhealth hover-translator` to verify your setup.
+
+The healthcheck verifies:
+- Neovim version
+- plenary.nvim installation
+- curl availability
+- LSP client status
+- Current configuration
+- Registered translators and parsers
+- Cache statistics
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

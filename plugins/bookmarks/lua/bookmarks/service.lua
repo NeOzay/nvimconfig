@@ -1,5 +1,5 @@
-local db = require("plugins.bookmarks.db")
-local utils = require("plugins.bookmarks.utils")
+local db = require("bookmarks.db")
+local utils = require("bookmarks.utils")
 
 ---@class Ozay.Bookmarks.Service
 local M = {}

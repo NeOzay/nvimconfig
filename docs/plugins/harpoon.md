@@ -5,7 +5,7 @@ Navigation rapide entre fichiers marqués, intégré à cokeline et snacks picke
 
 ## Files
 - Config: `lua/plugins/harpoon.lua`
-- Fork: `NeOzay/harpoon` branche `harpoon2` (dev, `~/projects/nvim-plugins/`)
+- Fork: `NeOzay/harpoon` branche `harpoon2` — submodule git `plugins/harpoon/`
 - Picker: `lua/plugins/snacks/picker/sources/harpoon.lua`
 
 ## Key Behaviors
@@ -32,3 +32,4 @@ Navigation rapide entre fichiers marqués, intégré à cokeline et snacks picke
 
 ## Changelog
 - 2026-06-05 : Analyse initiale. Extension REMOVE, toggle add/remove sur `<C-a>`.
+- 2026-07-27 : fork migré en submodule git sous `plugins/harpoon/` ; la spec Lazy utilise `dir = vim.fn.stdpath("config") .. "/plugins/harpoon"` (plus de `dev = true`, `dev.path` supprimé de `lazy-conf.lua`).

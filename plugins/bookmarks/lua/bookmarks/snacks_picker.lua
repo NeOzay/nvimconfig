@@ -1,6 +1,6 @@
 --- Ouvre un picker Snacks listant les bookmarks du projet courant.
 return function()
-	local service = require("plugins.bookmarks.service")
+	local service = require("bookmarks.service")
 
 	Snacks.picker.pick({
 		title = "󰃁 Bookmarks",

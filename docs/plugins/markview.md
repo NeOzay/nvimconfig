@@ -5,7 +5,7 @@ Rendu markdown dans les buffers (et notifications snacks), avec concealment de l
 
 ## Files
 - Config: `lua/plugins/markview.lua`
-- Fork: `OXY2DEV/markview.nvim` (dev, `~/projects/nvim-plugins/`)
+- Fork: `NeOzay/markview.nvim` (upstream `OXY2DEV/markview.nvim`) — submodule git `plugins/markview.nvim/`
 
 ## Key Behaviors
 - `lazy = false` — chargé immédiatement.
@@ -37,3 +37,4 @@ Le preview du picker appache un `on_lines` debounced (10ms timer) qui appelle `i
 
 ## Changelog
 - 2026-06-05 : Analyse initiale. Hook render, intégrations snacks documentées.
+- 2026-07-27 : fork migré en submodule git sous `plugins/markview.nvim/` ; la spec Lazy utilise `dir = vim.fn.stdpath("config") .. "/plugins/markview.nvim"` (plus de `dev = true`, `dev.path` supprimé de `lazy-conf.lua`).

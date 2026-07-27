@@ -1,0 +1,18 @@
+[submodule "plugins/snacks.nvim"]
+	path = plugins/snacks.nvim
+	url = git@github.com:NeOzay/snacks.nvim.git
+[submodule "plugins/lualine.nvim"]
+	path = plugins/lualine.nvim
+	url = git@github.com:NeOzay/lualine.nvim.git
+[submodule "plugins/codediff.nvim"]
+	path = plugins/codediff.nvim
+	url = git@github.com:NeOzay/codediff.nvim.git
+[submodule "plugins/harpoon"]
+	path = plugins/harpoon
+	url = git@github.com:NeOzay/harpoon.git
+[submodule "plugins/nvim-cokeline"]
+	path = plugins/nvim-cokeline
+	url = git@github.com:NeOzay/nvim-cokeline.git
+[submodule "plugins/markview.nvim"]
+	path = plugins/markview.nvim
+	url = git@github.com:NeOzay/markview.nvim.git

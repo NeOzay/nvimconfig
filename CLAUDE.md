@@ -14,9 +14,18 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 
 ## Plugin Locations — READ CAREFULLY
 - **Installed (lazy.nvim)**: `~/.local/share/nvim/lazy/` — **READ-ONLY, never write here**
-- **Dev plugins**: `~/projects/nvim-plugins/` (configured in `lua/lazy-conf.lua` → `dev.path`) — **write only with explicit user permission**
-- Dev-flagged repos: `NeOzay/lualine.nvim`, `NeOzay/nvim-cokeline`, `NeOzay/harpoon` (branch harpoon2), `folke/snacks.nvim`, `OXY2DEV/markview.nvim`
-- Local plugins (dir explicit): `hover-translator`, `docstring-highlight.nvim`
+- **Plugins tenus par l'utilisateur**: `plugins/<nom>/` à la racine du repo nvim (pas sous
+  `lua/`). Structure standard de plugin (`lua/<nom>/*.lua`), spec Lazy séparée dans
+  `lua/plugins/<nom>.lua` avec `dir = vim.fn.stdpath("config") .. "/plugins/<nom>"`.
+  Il n'y a plus de `dev.path` ni de `dev = true` : toute spec locale passe par `dir`.
+  - **Submodules git** (forks, pour continuer à suivre l'upstream) : `lualine.nvim`,
+    `nvim-cokeline`, `harpoon` (branche `harpoon2`), `snacks.nvim`, `markview.nvim`,
+    `codediff.nvim` — tous sur `NeOzay/<repo>`.
+    Écrire dedans **uniquement avec accord explicite** ; un commit dans un submodule est un
+    commit dans un autre dépôt, et le SHA doit être poussé avant d'être référencé ici.
+  - **Suivis directement par ce repo** (pas d'upstream) : `bookmarks`, `hover-translator`,
+    `docstring-highlight.nvim`.
+- Après clone : `git submodule update --init --recursive`.
 
 ## LSP Architecture (Neovim 0.11+ native API)
 - Uses `vim.lsp.config()` / `vim.lsp.enable()` — **NOT** nvim-lspconfig `setup()`
@@ -77,15 +86,15 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | Plugin | Config file | Doc |
 |---|---|---|
 | blink.cmp | `plugins/blink-cmp.lua` | [`blink-cmp.md`](docs/plugins/blink-cmp.md) |
-| bookmarks | `plugins/bookmarks/` | [`bookmarks.md`](docs/plugins/bookmarks.md) |
-| cokeline | `plugins/cokeline.lua` | [`cokeline.md`](docs/plugins/cokeline.md) |
-| codediff | `plugins/codediff.lua` | [`codediff.md`](docs/plugins/codediff.md) |
+| bookmarks | `lua/plugins/bookmarks.lua` (spec) + `plugins/bookmarks/` (code) | [`bookmarks.md`](docs/plugins/bookmarks.md) |
+| cokeline | `lua/plugins/cokeline.lua` (spec) + submodule `plugins/nvim-cokeline/` | [`cokeline.md`](docs/plugins/cokeline.md) |
+| codediff | `lua/plugins/codediff.lua` (spec) + submodule `plugins/codediff.nvim/` | [`codediff.md`](docs/plugins/codediff.md) |
 | dap | `plugins/dap/` | [`dap.md`](docs/plugins/dap.md) |
 | gitsigns | `plugins/gitsigns.lua` | [`gitsigns.md`](docs/plugins/gitsigns.md) |
-| harpoon | `plugins/harpoon.lua` | [`harpoon.md`](docs/plugins/harpoon.md) |
-| lualine | `plugins/lualine.lua` + `lualine-conf.lua` | Fork NeOzay, per-window statusline |
-| snacks | `plugins/snacks/` | [`snacks.md`](docs/plugins/snacks.md) |
-| statuscol | `plugins/statuscol/` | [`statuscol.md`](docs/plugins/statuscol.md) |
+| harpoon | `lua/plugins/harpoon.lua` (spec) + submodule `plugins/harpoon/` | [`harpoon.md`](docs/plugins/harpoon.md) |
+| lualine | `lua/plugins/lualine.lua` + `lualine-conf.lua` (spec) + submodule `plugins/lualine.nvim/` | Fork NeOzay, per-window statusline |
+| snacks | `lua/plugins/snacks/` (spec) + submodule `plugins/snacks.nvim/` | [`snacks.md`](docs/plugins/snacks.md) |
+| statuscol | `lua/plugins/statuscol/` | [`statuscol.md`](docs/plugins/statuscol.md) |
 | ufo | `plugins/ufo/` | [`ufo.md`](docs/plugins/ufo.md) |
 | claudecode | `plugins/claudecode/init.lua` | [`claudecode.md`](docs/plugins/claudecode.md) |
 | nvim-unception | `plugins/nvim-unception.lua` | [`nvim-unception.md`](docs/plugins/nvim-unception.md) |
@@ -94,13 +103,13 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | treesitter | `plugins/treesitter.lua` | [`treesitter.md`](docs/plugins/treesitter.md) |
 | trouble | `plugins/trouble.lua` | [`trouble.md`](docs/plugins/trouble.md) |
 | neogit | `plugins/neogit.lua` | [`neogit.md`](docs/plugins/neogit.md) |
-| markview | `plugins/markview.lua` | [`markview.md`](docs/plugins/markview.md) |
+| markview | `lua/plugins/markview.lua` (spec) + submodule `plugins/markview.nvim/` | [`markview.md`](docs/plugins/markview.md) |
 | copilot | `plugins/copilot.lua` | [`copilot.md`](docs/plugins/copilot.md) |
 | persistence | `plugins/persistence.lua` | [`persistence.md`](docs/plugins/persistence.md) |
 | java | `plugins/java.lua` | [`java.md`](docs/plugins/java.md) |
 | lsp | `lsp/init.lua` + `lua/lsp/` | [`lsp.md`](docs/plugins/lsp.md) |
-| hover-translator | `plugins/hover-translator.lua` | Local dev plugin, FR translation |
-| docstring-highlight | `plugins/docstring-highlight.lua` | Local dev plugin, Python docstrings |
+| hover-translator | `lua/plugins/hover-translator.lua` (spec) + `plugins/hover-translator/` (code) | Traduction FR des hovers, suivi direct |
+| docstring-highlight | `lua/plugins/docstring-highlight.lua` (spec) + `plugins/docstring-highlight.nvim/` (code) | Docstrings Python, suivi direct |
 
 Also loaded: aerial, auto-pairs, fidget, hover, illuminate, indent-blankline, lsp-endhints, navic, satellite, schemastore, which-key, wezterm-types, vim-suda.
 

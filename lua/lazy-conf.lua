@@ -11,11 +11,6 @@ return {
 			not_loaded = "",
 		},
 	},
-	dev = {
-		path = "~/projects/nvim-plugins/",
-		fallback = true,
-	},
-
 	performance = {
 		rtp = {
 			disabled_plugins = {

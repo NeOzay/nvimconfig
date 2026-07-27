@@ -74,8 +74,8 @@ end
 ---@type LazySpec
 return {
 	"NeOzay/harpoon",
-	branch = "harpoon2",
-	dev = true,
+	-- branche harpoon2 : gérée par le submodule plugins/harpoon, pas par Lazy
+	dir = vim.fn.stdpath("config") .. "/plugins/harpoon",
 	lazy = false,
 	dependencies = {
 		"nvim-lua/plenary.nvim",

@@ -8,7 +8,7 @@ Guide pour créer des pickers Snacks personnalisés : API complète, structure d
 
 - Config globale : `lua/plugins/snacks/picker/init.lua`
 - Exemples : `lua/plugins/snacks/picker/sources/harpoon.lua`, `lua/plugins/snacks/picker/sources/tabpages.lua`, `lua/plugins/snacks/scratch.lua`
-- Source : `~/projects/nvim-plugins/snacks.nvim/lua/snacks/picker/`
+- Source : `plugins/snacks.nvim/lua/snacks/picker/` (submodule)
 
 ---
 

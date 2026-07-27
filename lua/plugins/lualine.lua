@@ -2,7 +2,7 @@
 return {
 	"NeOzay/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
-	dev = true,
+	dir = vim.fn.stdpath("config") .. "/plugins/lualine.nvim",
 	event = "VeryLazy",
 	config = function()
 		require("lualine-conf").setup()
