@@ -5,11 +5,15 @@ Plugin maison de bookmarks locaux au projet, persistés en SQLite, affichés en
 gutter (signe + virtual text) et listables via Trouble ou un picker Snacks.
 
 ## Files
-- Spec lazy + point d'entrée: `lua/plugins/bookmarks/init.lua`
-- Modules internes: `lua/plugins/bookmarks/{utils,db,config,service,ui,trouble,snacks_picker}.lua`
-  (requis via `plugins.bookmarks.<module>`, pattern identique à `plugins/dap/` et `plugins/snacks/`)
-- Import: `{ import = "plugins.bookmarks.init" }` dans `init.lua` (comme `plugins.dap.init`)
-- Doc de suivi d'implémentation: `.claude/implementation/bookmarks.md`
+- Spec lazy: `lua/plugins/bookmarks.lua` — `dir = vim.fn.stdpath("config") .. "/plugins/bookmarks"`,
+  `config = function() require("bookmarks").setup() end`
+- Code du plugin (structure standard, hors de `lua/`): `plugins/bookmarks/lua/bookmarks/{init,utils,db,config,service,ui,trouble,snacks_picker}.lua`
+  (requis via `bookmarks.<module>`, sans préfixe `plugins.` — le `lua/` de `plugins/bookmarks/`
+  est ajouté au runtimepath par Lazy via `dir`)
+- Import: `{ import = "plugins.bookmarks" }` dans `init.lua`
+- Doc de suivi d'implémentation: `.claude/implementation/done/2026-07-27-bookmarks.md`
+  (chantier initial, clôturé) ; migration vers ce pattern suivie dans
+  `.claude/implementation/plugins-root.md`
 
 ## Key Behaviors
 - Fond de ligne (`BookmarksLine`) sur les lignes marquées, via `line_hl_group`
@@ -56,9 +60,14 @@ gutter (signe + virtual text) et listables via Trouble ou un picker Snacks.
   `id` crée toujours un nouvel extmark, jamais une mise à jour en place.
 - Toutes les erreurs SQLite passent par `vim.notify(..., ERROR)` + `pcall`,
   jamais de `error()` brut ni de dépendance à un logger externe (contrairement
-  à un brouillon précédent abandonné, cf. `.claude/implementation/bookmarks.md`
+  à un brouillon précédent abandonné, cf. `.claude/implementation/done/2026-07-27-bookmarks.md`
   → journal de décisions).
 
 ## Changelog
+- 2026-07-27 : migration vers le pattern "plugin maison versionné dans le repo" —
+  code déplacé de `lua/plugins/bookmarks/` vers `plugins/bookmarks/lua/bookmarks/`
+  (structure standard de plugin), spec Lazy séparée dans `lua/plugins/bookmarks.lua`
+  avec `dir` explicite. Prépare l'intégration future des plugins forkés sous le
+  même répertoire `plugins/` (en submodules git, chantier séparé).
 - 2026-07-26 : implémentation initiale (SQLite via `kkharji/sqlite.lua`, source
   Trouble dédiée, picker Snacks, extmarks gutter).

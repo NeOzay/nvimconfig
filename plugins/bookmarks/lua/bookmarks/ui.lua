@@ -1,5 +1,5 @@
-local service = require("plugins.bookmarks.service")
-local config = require("plugins.bookmarks.config")
+local service = require("bookmarks.service")
+local config = require("bookmarks.config")
 
 local ns = vim.api.nvim_create_namespace("bookmarks.nvim")
 

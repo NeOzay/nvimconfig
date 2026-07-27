@@ -17,6 +17,13 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 - **Dev plugins**: `~/projects/nvim-plugins/` (configured in `lua/lazy-conf.lua` → `dev.path`) — **write only with explicit user permission**
 - Dev-flagged repos: `NeOzay/lualine.nvim`, `NeOzay/nvim-cokeline`, `NeOzay/harpoon` (branch harpoon2), `folke/snacks.nvim`, `OXY2DEV/markview.nvim`
 - Local plugins (dir explicit): `hover-translator`, `docstring-highlight.nvim`
+- **Plugins maison versionnés dans le repo**: `plugins/<nom>/` à la racine du repo nvim
+  (pas sous `lua/`) — structure standard de plugin (`lua/<nom>/*.lua`), spec Lazy dans
+  `lua/plugins/<nom>.lua` avec `dir = vim.fn.stdpath("config") .. "/plugins/<nom>"`. Suivi
+  directement par ce repo (pas de sous-module). Ex. : `bookmarks`. Les plugins forkés
+  (`lualine`, `cokeline`, `harpoon`, `snacks.nvim`, `markview`) rejoindront à terme ce même
+  répertoire `plugins/`, en submodules git pour continuer à suivre l'upstream — chantier
+  séparé, pas encore fait.
 
 ## LSP Architecture (Neovim 0.11+ native API)
 - Uses `vim.lsp.config()` / `vim.lsp.enable()` — **NOT** nvim-lspconfig `setup()`
@@ -77,7 +84,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | Plugin | Config file | Doc |
 |---|---|---|
 | blink.cmp | `plugins/blink-cmp.lua` | [`blink-cmp.md`](docs/plugins/blink-cmp.md) |
-| bookmarks | `plugins/bookmarks/` | [`bookmarks.md`](docs/plugins/bookmarks.md) |
+| bookmarks | `plugins/bookmarks.lua` (spec) + racine `plugins/bookmarks/` (code) | [`bookmarks.md`](docs/plugins/bookmarks.md) |
 | cokeline | `plugins/cokeline.lua` | [`cokeline.md`](docs/plugins/cokeline.md) |
 | codediff | `plugins/codediff.lua` | [`codediff.md`](docs/plugins/codediff.md) |
 | dap | `plugins/dap/` | [`dap.md`](docs/plugins/dap.md) |
