@@ -22,7 +22,13 @@ return {
 			position = "bottom",
 			height = 16,
 		},
-		diff = { compute_moves = true },
+		diff = {
+			compact_context_lines = 20, -- Number of context lines around hunks in compact mode
+			compact_sync_folds = true, -- Sync fold open/close across panes (mirrors Vim diff mode behavior)
+			compact = true, -- Open diffs in compact mode by default (fold unchanged regions; toggle with gc)
+
+			compute_moves = true,
+		},
 
 		keymaps = {
 			view = {
