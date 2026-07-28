@@ -6,6 +6,7 @@
 ---@field annotation? string
 ---@field code_context? string
 ---@field tag? string
+---@field note? string
 ---@field created_at integer
 
 ---@class Ozay.Bookmarks.Db
@@ -23,10 +24,38 @@ CREATE TABLE IF NOT EXISTS bookmarks (
 	annotation TEXT,
 	code_context TEXT,
 	tag TEXT,
+	note TEXT,
 	created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_bookmarks_project_file ON bookmarks(project_root, file);
 ]]
+
+--- Ajoute les colonnes manquantes sur une base déjà existante (migration idempotente).
+local function migrate()
+	local columns = conn:eval("PRAGMA table_info(bookmarks)")
+	if type(columns) ~= "table" then
+		return
+	end
+	local has_note = false
+	for _, col in ipairs(columns) do
+		if col.name == "note" then
+			has_note = true
+			break
+		end
+	end
+	if not has_note then
+		local ok, err = pcall(function()
+			conn:eval("ALTER TABLE bookmarks ADD COLUMN note TEXT")
+		end)
+		if not ok then
+			vim.notify(
+				"bookmarks.nvim: échec migration colonne note: " .. tostring(err),
+				vim.log.levels.ERROR,
+				{ title = "bookmarks.nvim" }
+			)
+		end
+	end
+end
 
 --- Ouvre (ou crée) la base et la table si absente. Idempotent.
 ---@param db_path string chemin absolu du fichier .sqlite.db
@@ -53,7 +82,9 @@ function M.setup(db_path)
 			vim.log.levels.ERROR,
 			{ title = "bookmarks.nvim" }
 		)
+		return
 	end
+	migrate()
 end
 
 ---@return boolean
@@ -80,7 +111,11 @@ function M.insert(record)
 		)
 	end)
 	if not ok then
-		vim.notify("bookmarks.nvim: échec insert: " .. tostring(result), vim.log.levels.ERROR, { title = "bookmarks.nvim" })
+		vim.notify(
+			"bookmarks.nvim: échec insert: " .. tostring(result),
+			vim.log.levels.ERROR,
+			{ title = "bookmarks.nvim" }
+		)
 		return nil
 	end
 	local id_row = conn:eval("SELECT last_insert_rowid() as id")
@@ -136,7 +171,11 @@ function M.update(id, fields)
 		conn:eval("UPDATE bookmarks SET " .. table.concat(sets, ", ") .. " WHERE id = :id", params)
 	end)
 	if not ok then
-		vim.notify("bookmarks.nvim: échec update: " .. tostring(err), vim.log.levels.ERROR, { title = "bookmarks.nvim" })
+		vim.notify(
+			"bookmarks.nvim: échec update: " .. tostring(err),
+			vim.log.levels.ERROR,
+			{ title = "bookmarks.nvim" }
+		)
 	end
 end
 

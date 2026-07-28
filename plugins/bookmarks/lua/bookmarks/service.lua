@@ -24,7 +24,7 @@ end
 --- Ajoute un bookmark sur la ligne courante du buffer donné.
 ---@param bufnr integer
 ---@param lnum integer
----@param opts? { annotation?: string, tag?: string }
+---@param opts? { annotation?: string, tag?: string, note?: string }
 ---@return Ozay.Bookmarks.Record?
 function M.add(bufnr, lnum, opts)
 	if skip_buf(bufnr) then
@@ -41,6 +41,7 @@ function M.add(bufnr, lnum, opts)
 		annotation = opts.annotation,
 		code_context = code_context,
 		tag = opts.tag,
+		note = opts.note,
 		created_at = os.time(),
 	}
 	local id = db.insert(record)
@@ -97,6 +98,13 @@ end
 ---@param tag? string
 function M.set_annotation(id, annotation, tag)
 	db.update(id, { annotation = annotation, tag = tag })
+end
+
+--- Met à jour la note d'un bookmark existant.
+---@param id integer
+---@param note? string
+function M.set_note(id, note)
+	db.update(id, { note = note })
 end
 
 --- Met à jour le numéro de ligne d'un bookmark (resync après déplacement).

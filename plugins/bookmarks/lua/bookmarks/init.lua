@@ -2,6 +2,7 @@ local config = require("bookmarks.config")
 local db = require("bookmarks.db")
 local service = require("bookmarks.service")
 local ui = require("bookmarks.ui")
+local note = require("bookmarks.note")
 
 local function create_commands()
 	vim.api.nvim_create_user_command("Bookmarks", function()
@@ -81,13 +82,20 @@ local function create_commands()
 	vim.api.nvim_create_user_command("BookmarkPick", function()
 		require("bookmarks.snacks_picker")()
 	end, { desc = "Ouvre le picker Snacks des bookmarks du projet" })
+
+	vim.api.nvim_create_user_command("BookmarkNote", function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		local lnum = vim.api.nvim_win_get_cursor(0)[1]
+		note.open(bufnr, lnum)
+	end, { desc = "Ouvre le popup de note du bookmark sur la ligne courante" })
 end
 
 ---@class Ozay.Bookmarks
 local M = {}
 
-function M.setup()
-	config.setup({})
+---@param opt Ozay.Bookmarks.Config.opt?
+function M.setup(opt)
+	config.setup(opt)
 	db.setup(config.resolved_db_path())
 	ui.setup_autocmds()
 	require("bookmarks.trouble").register()

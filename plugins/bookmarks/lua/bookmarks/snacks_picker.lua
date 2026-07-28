@@ -1,6 +1,7 @@
 --- Ouvre un picker Snacks listant les bookmarks du projet courant.
 return function()
 	local service = require("bookmarks.service")
+	local config = require("bookmarks.config")
 
 	Snacks.picker.pick({
 		title = "󰃁 Bookmarks",
@@ -11,7 +12,7 @@ return function()
 			local items = {}
 			for _, record in ipairs(service.list_for_project()) do
 				table.insert(items, {
-					text = record.annotation or record.code_context or "",
+					text = vim.trim(record.annotation or record.code_context or ""),
 					file = record.file,
 					pos = { record.lnum, 0 },
 					bookmark = record,
@@ -25,8 +26,12 @@ return function()
 				table.insert(ret, { "[" .. item.bookmark.tag .. "] ", "DiagnosticSignInfo" })
 			end
 			vim.list_extend(ret, Snacks.picker.format.filename(item, picker))
+			if item.bookmark.note and item.bookmark.note ~= "" then
+				local signs = config.options.signs
+				table.insert(ret, { " " .. signs.note_icon, signs.note_hl_group })
+			end
 			if item.text ~= "" then
-				table.insert(ret, { "  " .. item.text, "Comment" })
+				table.insert(ret, { " " .. item.text, "Comment" })
 			end
 			return ret
 		end,
@@ -46,10 +51,29 @@ return function()
 				service.remove(item.bookmark.id)
 				picker:refresh()
 			end,
+			bookmark_note = function(picker, item)
+				if not item then
+					return
+				end
+				local bufnr = vim.fn.bufadd(item.bookmark.file)
+				vim.fn.bufload(bufnr)
+				require("bookmarks.note").open(bufnr, item.bookmark.lnum, {
+					on_saved = function()
+						if picker then
+							picker:refresh()
+						end
+					end,
+				})
+			end,
 		},
 		win = {
-			input = { keys = { ["<M-d>"] = "bookmark_delete" } },
-			list = { keys = { ["dd"] = "bookmark_delete" } },
+			input = {
+				keys = {
+					["<M-d>"] = { "bookmark_delete", mode = { "i", "n" } },
+					["<M-k>"] = { "bookmark_note", mode = { "i", "n" } },
+				},
+			},
+			list = { keys = { ["dd"] = "bookmark_delete", ["K"] = "bookmark_note" } },
 		},
 	})
 end

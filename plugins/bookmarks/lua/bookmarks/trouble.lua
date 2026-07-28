@@ -12,6 +12,24 @@ M.config = {
 			},
 			sort = { "filename", "pos" },
 			format = "{text} {pos}",
+			keys = {
+				K = {
+					action = function(view, ctx)
+						local record = ctx.item and ctx.item.item
+						if not record then
+							return
+						end
+						local bufnr = vim.fn.bufadd(record.file)
+						vim.fn.bufload(bufnr)
+						require("bookmarks.note").open(bufnr, record.lnum, {
+							on_saved = function()
+								view:refresh()
+							end,
+						})
+					end,
+					desc = "Note du bookmark",
+				},
+			},
 		},
 	},
 }
@@ -19,11 +37,23 @@ M.config = {
 M.get = {
 	---@param cb trouble.Source.Callback
 	bookmarks = function(cb)
+		local config = require("bookmarks.config")
 		local service = require("bookmarks.service")
 		local Item = require("trouble.item")
+		local note_icon = config.options.signs.note_icon
+		-- espace insécable (U+00A0) : trouble.nvim fait vim.trim() sur `text`, qui ne
+		-- retire que les espaces ASCII (%s) — un padding en tête doit donc l'éviter.
+		local note_pad = string.rep("\u{00A0}", vim.fn.strdisplaywidth(note_icon))
 		local items = {}
 		for _, record in ipairs(service.list_for_project()) do
-			local text = record.annotation or record.code_context or ""
+			local text = ""
+			if record.note and record.note ~= "" then
+				text = text .. note_icon .. " "
+			else
+				text = text .. note_pad .. " "
+			end
+
+			text = text .. vim.trim(record.annotation or record.code_context or "")
 			if record.tag and record.tag ~= "" then
 				text = ("[%s] %s"):format(record.tag, text)
 			end

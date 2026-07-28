@@ -7,6 +7,7 @@ local function gen_keymaps()
 		{ "]b", "<cmd>BookmarkNext<CR>", mode = "n", desc = "Bookmark suivant" },
 		{ "[b", "<cmd>BookmarkPrev<CR>", mode = "n", desc = "Bookmark précédent" },
 		{ "<leader>bx", "<cmd>BookmarkClear<CR>", mode = "n", desc = "Bookmarks: vider le fichier" },
+		{ "<leader>bK", "<cmd>BookmarkNote<CR>", mode = "n", desc = "Bookmarks: note (popup)" },
 	}
 end
 
@@ -30,6 +31,7 @@ return {
 		"BookmarkPrev",
 		"BookmarkClear",
 		"BookmarkPick",
+		"BookmarkNote",
 	},
 	keys = gen_keymaps(),
 }

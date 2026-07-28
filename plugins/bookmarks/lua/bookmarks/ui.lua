@@ -21,11 +21,21 @@ function M.render_one(bufnr, record)
 	if signs.line_hl_group and signs.line_hl_group ~= "" then
 		opts.line_hl_group = signs.line_hl_group
 	end
+
 	local label = record.annotation or record.tag
+	local virt_text = {} ---@type {[1]: string, [2]: string}[]
+
+	if record.note and record.note ~= "" then
+		virt_text[#virt_text + 1] = { signs.note_icon .. " ", signs.note_hl_group }
+	end
 	if label and label ~= "" then
-		opts.virt_text = { { label, signs.annotation_hl_group } }
+		virt_text[#virt_text + 1] = { label, signs.annotation_hl_group }
+	end
+	if #virt_text > 0 then
+		opts.virt_text = virt_text
 		opts.hl_mode = "combine"
 	end
+
 	local extmark_id = vim.api.nvim_buf_set_extmark(bufnr, ns, record.lnum - 1, 0, opts)
 	extmarks_by_buf[bufnr] = extmarks_by_buf[bufnr] or {}
 	extmarks_by_buf[bufnr][record.id] = extmark_id
