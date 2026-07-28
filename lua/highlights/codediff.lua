@@ -2,14 +2,15 @@
 
 local colors = require("base46").get_theme_tb("base_30") ---@as Base30Table
 
+---@type Base46HLTable
 return {
 	-- Diff: line-level
-	CodeDiffLineInsert = { bg = "CodeDiffLineInsert" },
-	CodeDiffLineDelete = { bg = "CodeDiffLineDelete" },
+	CodeDiffLineInsert = { bg = "DiffAdd" },
+	CodeDiffLineDelete = { bg = "DiffRemoved" },
 
 	-- Diff: character-level (brighter)
-	CodeDiffCharInsert = { bg = "CodeDiffCharInsert" },
-	CodeDiffCharDelete = { bg = "CodeDiffCharDelete" },
+	CodeDiffCharInsert = { bg = "DiffAddInline" },
+	CodeDiffCharDelete = { bg = "DiffDeleteInline" },
 
 	-- Filler lines
 	CodeDiffFiller = { fg = colors.grey_fg },

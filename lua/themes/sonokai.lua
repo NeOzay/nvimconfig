@@ -226,12 +226,6 @@ M.polish_hl = {
 		DiagnosticSignInfo = { fg = base_30.cyan },
 		DiagnosticSignHint = { fg = base_30.green },
 
-		-- Diff
-		DiffAdd = { bg = "#394634" }, -- diff_green
-		DiffChange = { bg = "#354157" }, -- diff_blue
-		DiffDelete = { bg = "#55393d" }, -- diff_red
-		DiffText = { bg = "#354157" },
-
 		-- Pmenu (popup menu)
 		Pmenu = { bg = "#33363f", fg = base_30.white }, -- editorSuggestWidget
 		PmenuSel = { bg = base_30.one_bg3, fg = base_30.white },
@@ -283,16 +277,16 @@ M.polish_hl = {
 	},
 
 	git = {
-		-- Git signs in gutter
-		GitSignsAdd = { fg = base_30.green, bg = base_30.one_bg },
-		GitSignsChange = { fg = base_30.cyan, bg = base_30.one_bg },
-		GitSignsDelete = { fg = base_30.red, bg = base_30.one_bg },
-
-		-- Git diff colors (in buffer)
-		DiffAdd = { fg = base_30.green },
-		DiffChange = { fg = base_30.cyan },
-		DiffDelete = { fg = base_30.red },
-		DiffModified = { fg = base_30.cyan },
+		-- -- Git signs in gutter
+		-- GitSignsAdd = { fg = base_30.green, bg = base_30.one_bg },
+		-- GitSignsChange = { fg = base_30.cyan, bg = base_30.one_bg },
+		-- GitSignsDelete = { fg = base_30.red, bg = base_30.one_bg },
+		--
+		-- -- Git diff colors (in buffer)
+		-- DiffAdd = { fg = base_30.green },
+		-- DiffChange = { fg = base_30.cyan },
+		-- DiffDelete = { fg = base_30.red },
+		-- DiffModified = { fg = base_30.cyan },
 	},
 
 	trouble = {

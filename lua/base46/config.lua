@@ -9,7 +9,7 @@ return {
 	term_theme = "themes.tokyonight", -- nil = même thème que `theme` ; sinon chemin de module dédié au terminal
 	integrations = "highlights",
 
-	---@type table<string, string|Base46MixedColor>
+	--@type table<string, string|Base46MixedColor>
 	---@class (partial) Base46ExtendedPalette
 	extended_palette = {
 		Type = { "blue", -20 },
@@ -17,10 +17,12 @@ return {
 		Interface = { { "blue", -25 }, "green", 35 },
 		Field = "#A6A67C",
 
-		CodeDiffLineInsert = { "green", "black", 92 },
-		CodeDiffLineDelete = { "red", "black", 92 },
-		CodeDiffCharInsert = { "green", "black", 80 },
-		CodeDiffCharDelete = { "red", "black", 80 },
+		DiffAdd = { "green", "black", 92 },
+		DiffRemoved = { "red", "black", 92 },
+		DiffChange = { "cyan", "black", 92 },
+		DiffAddInline = { "green", "black", 80 },
+		DiffDeleteInline = { "red", "black", 80 },
+		DiffChangeInline = { "cyan", "black", 80 },
 
 		code_bg = { "one_bg2", "black", 50 },
 		scratch_desc = { "green", "black2", 85 },
