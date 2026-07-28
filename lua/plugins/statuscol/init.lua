@@ -47,9 +47,16 @@ return {
 			Lnum = dap_handler.lnum_click,
 		}
 		require("statuscol").setup(opts)
-		-- Fire BufWinEnter to apply statuscol to already open buffers
+		-- Rattrape TOUTES les fenetres deja ouvertes au demarrage (args
+		-- multiples, session persistence.nvim, splits) : leurs FileType/
+		-- BufWinEnter ont pu etre emis avant que setup_win_autocmd() existe,
+		-- donc apply_win_options() ne serait sinon jamais appele sur elles.
 		vim.schedule(function()
-			vim.api.nvim_exec_autocmds("BufWinEnter", { buf = vim.api.nvim_get_current_buf() })
+			for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+				for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+					cond.apply_win_options(win, vim.api.nvim_win_get_buf(win))
+				end
+			end
 		end)
 	end,
 }
