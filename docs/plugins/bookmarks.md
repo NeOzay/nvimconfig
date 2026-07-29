@@ -47,9 +47,9 @@ gutter (signe + virtual text) et listables via Trouble ou un picker Snacks.
   `note`) à la fermeture du popup, quel que soit le moyen (`q`, `<Esc>`, `:q`, `WinClosed` —
   `Snacks.win` hooke `on_close` sur l'autocmd `WinClosed`, donc toute fermeture est couverte).
   Une note vide est stockée comme `""`, jamais `nil` : `db.update` boucle sur `pairs(fields)`,
-  qui saute silencieusement les clés à valeur `nil`, donc `set_note(id, nil)` ne viderait
-  jamais la colonne — `nil` reste réservé à un futur appelant voulant explicitement ne pas
-  toucher au champ.
+  qui saute silencieusement les clés à valeur `nil`, donc `service.update(id, { note = nil })`
+  ne viderait jamais la colonne — `nil` reste réservé à un appelant voulant explicitement ne
+  pas toucher au champ. Même règle pour l'annotation (`:BookmarkAnnotate` écrit `""`).
 - Icône de note en second `virt_text` (gutter), indépendante de l'annotation — `signs.note_icon`
   / `signs.note_hl_group`. Même icône reprise comme indicateur dans le picker Snacks (format,
   suffixe après le nom de fichier) et dans Trouble (préfixe du texte de l'item).
@@ -73,16 +73,39 @@ gutter (signe + virtual text) et listables via Trouble ou un picker Snacks.
 | `<M-k>` (picker Snacks, input) | Idem, sans quitter le champ de recherche |
 | `K` (Trouble, mode bookmarks) | Ouvre la note du bookmark sous le curseur |
 
+## API publique
+`require("bookmarks")` expose, en plus de `setup()` : `get(bufnr, lnum)`,
+`create(bufnr, lnum, opts?)`, `get_or_create`, `update(bufnr, lnum, opts)`,
+`remove(record)` **ou** `remove(bufnr, lnum)`, `toggle`, `next`/`previous`,
+`clear_buffer`, `open_note`, `list_for_buffer`, `list_for_project`.
+Ces fonctions font DB + UI ; `bookmarks.service` (couche DB seule) ne doit pas être appelé
+directement depuis un module d'UI, sinon l'extmark n'est pas rafraîchi.
+`update()` fusionne `opts` dans le record avant `ui.update_one` et retourne le record fusionné —
+passer le record d'origine re-rendrait l'ancien label.
+
 ## Gotchas
-- `:BookmarkAdd [tag]` prend le tag en argument de commande, pas en prompt —
-  seule l'annotation est demandée via `vim.fn.input`.
+- `:BookmarkAdd [annotation]` prend l'annotation en argument de commande (plus de prompt).
+  Le `tag` n'est plus réglable par une commande — seulement via l'API
+  (`bookmarks.create(bufnr, lnum, { tag = ... })`).
+- `:BookmarkAnnotate` prompte **avant** de créer le bookmark : annuler par Échap ne doit
+  laisser aucun résidu. L'annulation se distingue d'une saisie vide (= effacement explicite)
+  par une sentinelle passée en `cancelreturn` — `vim.fn.input` retourne `""` dans les deux
+  cas sinon.
 - La modification d'une annotation (`:BookmarkAnnotate` sur un bookmark existant)
   supprime puis recrée l'extmark (`ui.update_one`) : `nvim_buf_set_extmark` sans
   `id` crée toujours un nouvel extmark, jamais une mise à jour en place.
-- Toutes les erreurs SQLite passent par `vim.notify(..., ERROR)` + `pcall`,
-  jamais de `error()` brut ni de dépendance à un logger externe (contrairement
-  à un brouillon précédent abandonné, cf. `.claude/implementation/done/2026-07-27-bookmarks.md`
-  → journal de décisions).
+- Gestion d'erreur en deux régimes depuis 2026-07-29 (la règle précédente « jamais de
+  `error()` brut » ne tient plus) :
+  - **`error(msg, 0)`** pour ce qui est irrécupérable et survient au `setup()` ou sur une
+    écriture explicite : sqlite absent, schéma/migration en échec, `insert`/`update` en échec.
+    Comme `db.setup()` précède `ui.setup_autocmds()` dans `bookmarks.setup()`, un échec de db
+    empêche la création des autocmds — pas de cascade d'erreurs ensuite.
+  - **`utils.notify(..., ERROR)`** dans `db.guarded` (connexion absente) : ces appels partent
+    d'autocmds (`BufEnter` → `ui.attach` → `list_by_file`), où une exception donnerait un
+    « Error executing lua callback » à chaque changement de buffer.
+  - Le second argument d'`error` est un **niveau de pile**, pas un niveau de log : `error(msg, 0)`
+    (message nu). Passer `vim.log.levels.ERROR` (= 4) préfixe le message d'une position de
+    frame arbitraire.
 - Les touches Alt (`<M-x>`) dans le picker Snacks doivent porter `mode = { "i", "n" }`
   explicitement pour fonctionner pendant la saisie : sans ça, le terminal envoie `ESC` puis
   la lettre pour Alt+lettre, et Neovim quitte l'insertion sur le `ESC` nu (aucun mapping
@@ -97,6 +120,11 @@ gutter (signe + virtual text) et listables via Trouble ou un picker Snacks.
   invisible au pattern Lua `%s`) pour un padding qui doit survivre en tête de chaîne.
 
 ## Changelog
+- 2026-07-29 : refonte de l'API publique (`create`/`get`/`get_or_create`/`update`/`remove`),
+  extraction des commandes dans `commands.lua`, `dd` dans la source Trouble, `utils.find_buf`
+  (suppression depuis un picker sans buffer courant). Corrections d'audit : fusion de `opts`
+  avant `ui.update_one`, prompt de `:BookmarkAnnotate` avant création, annotation effaçable,
+  `error(msg, 0)`, type `Ozay.Bookmarks.NewRecord` à la place de la sentinelle `id = -1`.
 - 2026-07-28 : ajout de la note multi-ligne (`note.lua`, popup `Snacks.win`), distincte de
   l'annotation courte — commande `BookmarkNote`, keymap `<leader>bK`, icône gutter dédiée
   (`signs.note_icon`/`note_hl_group`), ouverture/indicateur depuis le picker Snacks et Trouble

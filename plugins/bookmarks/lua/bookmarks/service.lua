@@ -21,22 +21,35 @@ local function buf_file(bufnr)
 	return utils.unify_path(vim.api.nvim_buf_get_name(bufnr))
 end
 
+---@class Ozay.Bookmarks.Service.Context
+---@field root string
+---@field file string
+
+--- Racine du projet + chemin du fichier du buffer, regroupés en un seul appel.
+---@param bufnr integer
+---@return Ozay.Bookmarks.Service.Context
+local function context(bufnr)
+	return { root = utils.project_root(), file = buf_file(bufnr) }
+end
+
+---@alias Ozay.Bookmarks.Service.Opts { annotation?: string, tag?: string, note?: string }
+
 --- Ajoute un bookmark sur la ligne courante du buffer donné.
 ---@param bufnr integer
 ---@param lnum integer
----@param opts? { annotation?: string, tag?: string, note?: string }
+---@param opts? Ozay.Bookmarks.Service.Opts
 ---@return Ozay.Bookmarks.Record?
 function M.add(bufnr, lnum, opts)
 	if skip_buf(bufnr) then
 		return nil
 	end
 	opts = opts or {}
-	local file = buf_file(bufnr)
+	local ctx = context(bufnr)
 	local code_context = vim.api.nvim_buf_get_lines(bufnr, lnum - 1, lnum, false)[1] or ""
-	---@type Ozay.Bookmarks.Record
-	local record = {
-		project_root = utils.project_root(),
-		file = file,
+	---@type Ozay.Bookmarks.NewRecord
+	local new_record = {
+		project_root = ctx.root,
+		file = ctx.file,
 		lnum = lnum,
 		annotation = opts.annotation,
 		code_context = code_context,
@@ -44,12 +57,12 @@ function M.add(bufnr, lnum, opts)
 		note = opts.note,
 		created_at = os.time(),
 	}
-	local id = db.insert(record)
+	local id = db.insert(new_record)
 	if not id then
 		return nil
 	end
-	record.id = id
-	return record
+	---@type Ozay.Bookmarks.Record
+	return vim.tbl_extend("force", new_record, { id = id })
 end
 
 --- Supprime un bookmark par id.
@@ -66,9 +79,8 @@ function M.find(bufnr, lnum)
 	if skip_buf(bufnr) then
 		return nil
 	end
-	local root = utils.project_root()
-	local file = buf_file(bufnr)
-	for _, record in ipairs(db.list_by_file(root, file)) do
+	local ctx = context(bufnr)
+	for _, record in ipairs(db.list_by_file(ctx.root, ctx.file)) do
 		if record.lnum == lnum then
 			return record
 		end
@@ -83,7 +95,8 @@ function M.list_for_buffer(bufnr)
 	if skip_buf(bufnr) then
 		return {}
 	end
-	return db.list_by_file(utils.project_root(), buf_file(bufnr))
+	local ctx = context(bufnr)
+	return db.list_by_file(ctx.root, ctx.file)
 end
 
 --- Tous les bookmarks du projet courant (pour Trouble/Snacks), triés par fichier puis lnum.
@@ -92,19 +105,12 @@ function M.list_for_project()
 	return db.list_by_project(utils.project_root())
 end
 
---- Met à jour l'annotation/tag d'un bookmark existant.
+--- Met à jour un bookmark existant (partiel : seuls les champs fournis sont écrits —
+--- `db.update` boucle sur `pairs`, une valeur `nil` est donc ignorée, pas effacée).
 ---@param id integer
----@param annotation? string
----@param tag? string
-function M.set_annotation(id, annotation, tag)
-	db.update(id, { annotation = annotation, tag = tag })
-end
-
---- Met à jour la note d'un bookmark existant.
----@param id integer
----@param note? string
-function M.set_note(id, note)
-	db.update(id, { note = note })
+---@param opts Partial<Ozay.Bookmarks.Record>
+function M.update(id, opts)
+	db.update(id, opts)
 end
 
 --- Met à jour le numéro de ligne d'un bookmark (resync après déplacement).
@@ -120,7 +126,8 @@ function M.clear_buffer(bufnr)
 	if skip_buf(bufnr) then
 		return
 	end
-	db.delete_by_file(utils.project_root(), buf_file(bufnr))
+	local ctx = context(bufnr)
+	db.delete_by_file(ctx.root, ctx.file)
 end
 
 M.skip_buf = skip_buf

@@ -1,5 +1,5 @@
----@class Ozay.Bookmarks.Record
----@field id? integer
+--- Bookmark pas encore inséré en base : identique à `Ozay.Bookmarks.Record`, sans `id`.
+---@class Ozay.Bookmarks.NewRecord
 ---@field project_root string
 ---@field file string
 ---@field lnum integer
@@ -8,6 +8,11 @@
 ---@field tag? string
 ---@field note? string
 ---@field created_at integer
+
+---@class Ozay.Bookmarks.Record : Ozay.Bookmarks.NewRecord
+---@field id integer
+
+local utils = require("bookmarks.utils")
 
 ---@class Ozay.Bookmarks.Db
 local M = {}
@@ -32,6 +37,10 @@ CREATE INDEX IF NOT EXISTS idx_bookmarks_project_file ON bookmarks(project_root,
 
 --- Ajoute les colonnes manquantes sur une base déjà existante (migration idempotente).
 local function migrate()
+	if not conn then
+		error("bookmarks.nvim: db non initialisée, impossible de migrer", 0)
+	end
+
 	local columns = conn:eval("PRAGMA table_info(bookmarks)")
 	if type(columns) ~= "table" then
 		return
@@ -48,11 +57,7 @@ local function migrate()
 			conn:eval("ALTER TABLE bookmarks ADD COLUMN note TEXT")
 		end)
 		if not ok then
-			vim.notify(
-				"bookmarks.nvim: échec migration colonne note: " .. tostring(err),
-				vim.log.levels.ERROR,
-				{ title = "bookmarks.nvim" }
-			)
+			error("bookmarks.nvim: échec migration colonne note: " .. tostring(err), 0)
 		end
 	end
 end
@@ -64,9 +69,8 @@ function M.setup(db_path)
 		return
 	end
 	local ok, sqlite = pcall(require, "sqlite.db")
-	if not ok then
-		vim.notify("bookmarks.nvim: sqlite.lua introuvable", vim.log.levels.ERROR, { title = "bookmarks.nvim" })
-		return
+	if not ok or not sqlite then
+		error("bookmarks.nvim: sqlite.lua introuvable", 0)
 	end
 	local parent = vim.fs.dirname(db_path)
 	if vim.fn.isdirectory(parent) == 0 then
@@ -77,63 +81,60 @@ function M.setup(db_path)
 		conn:eval(SCHEMA)
 	end)
 	if not eval_ok then
-		vim.notify(
-			"bookmarks.nvim: échec de création du schéma: " .. tostring(eval_err),
-			vim.log.levels.ERROR,
-			{ title = "bookmarks.nvim" }
-		)
-		return
+		error("bookmarks.nvim: échec de création du schéma: " .. tostring(eval_err), 0)
 	end
 	migrate()
 end
 
----@return boolean
-local function ensure_ready()
+--- Exécute `fn` si la connexion est prête, sinon notifie et retourne `default`.
+--- Volontairement récupérable (notify, pas `error`) : ces appels ont lieu depuis des
+--- autocmds (`BufEnter` → `ui.attach`), où une exception se traduirait par un
+--- « Error executing lua callback » à chaque changement de buffer.
+---@generic T, D
+---@param default D
+---@param fn fun(conn:table): T
+---@return T|D
+local function guarded(default, fn)
 	if not conn then
-		vim.notify("bookmarks.nvim: db non initialisée", vim.log.levels.ERROR, { title = "bookmarks.nvim" })
-		return false
+		utils.notify("bookmarks.nvim: db non initialisée", vim.log.levels.ERROR)
+		return default
 	end
-	return true
+	return fn(conn)
 end
 
 --- Insère un nouveau bookmark, retourne son id (ou nil si échec).
----@param record Ozay.Bookmarks.Record  -- sans `id`
+---@param record Ozay.Bookmarks.NewRecord
 ---@return integer? id
 function M.insert(record)
-	if not ensure_ready() then
-		return nil
-	end
-	local ok, result = pcall(function()
-		return conn:eval(
-			[[INSERT INTO bookmarks (project_root, file, lnum, annotation, code_context, tag, created_at)
-			VALUES (:project_root, :file, :lnum, :annotation, :code_context, :tag, :created_at)]],
-			record
-		)
+	return guarded(nil, function(_conn)
+		local ok, result = pcall(function()
+			return _conn:eval(
+				[[INSERT INTO bookmarks (project_root, file, lnum, annotation, code_context, tag, note, created_at)
+				VALUES (:project_root, :file, :lnum, :annotation, :code_context, :tag, :note, :created_at)]],
+				record
+			)
+		end)
+
+		if not ok then
+			error("bookmarks.nvim: échec insert: " .. tostring(result), 0)
+		end
+		local id_row = _conn:eval("SELECT last_insert_rowid() as id")
+		return type(id_row) == "table" and id_row[1] and type(id_row[1].id) == "number" and math.floor(id_row[1].id)
+			or nil
 	end)
-	if not ok then
-		vim.notify(
-			"bookmarks.nvim: échec insert: " .. tostring(result),
-			vim.log.levels.ERROR,
-			{ title = "bookmarks.nvim" }
-		)
-		return nil
-	end
-	local id_row = conn:eval("SELECT last_insert_rowid() as id")
-	return type(id_row) == "table" and id_row[1] and id_row[1].id or nil
 end
 
 --- Liste tous les bookmarks d'un projet (tous fichiers confondus), triés par fichier puis ligne.
 ---@param project_root string
 ---@return Ozay.Bookmarks.Record[]
 function M.list_by_project(project_root)
-	if not ensure_ready() then
-		return {}
-	end
-	local rows = conn:eval(
-		"SELECT * FROM bookmarks WHERE project_root = :project_root ORDER BY file, lnum",
-		{ project_root = project_root }
-	)
-	return type(rows) == "table" and rows or {}
+	return guarded({}, function(_conn)
+		local rows = _conn:eval(
+			"SELECT * FROM bookmarks WHERE project_root = :project_root ORDER BY file, lnum",
+			{ project_root = project_root }
+		)
+		return type(rows) == "table" and rows or {}
+	end)
 end
 
 --- Liste les bookmarks d'un fichier précis dans un projet, triés par ligne.
@@ -141,64 +142,56 @@ end
 ---@param file string
 ---@return Ozay.Bookmarks.Record[]
 function M.list_by_file(project_root, file)
-	if not ensure_ready() then
-		return {}
-	end
-	local rows = conn:eval(
-		"SELECT * FROM bookmarks WHERE project_root = :project_root AND file = :file ORDER BY lnum",
-		{ project_root = project_root, file = file }
-	)
-	return type(rows) == "table" and rows or {}
+	return guarded({}, function(_conn)
+		local rows = _conn:eval(
+			"SELECT * FROM bookmarks WHERE project_root = :project_root AND file = :file ORDER BY lnum",
+			{ project_root = project_root, file = file }
+		)
+		return type(rows) == "table" and rows or {}
+	end)
 end
 
 --- Met à jour un bookmark existant (partiel : seuls les champs fournis sont modifiés).
 ---@param id integer
----@param fields table<string, unknown> -- ex: {lnum=42, annotation="..."}
+---@param fields table -- ex: {lnum=42, annotation="..."}
 function M.update(id, fields)
-	if not ensure_ready() then
-		return
-	end
-	local sets = {}
-	local params = { id = id }
-	for k, v in pairs(fields) do
-		table.insert(sets, k .. " = :" .. k)
-		params[k] = v
-	end
-	if #sets == 0 then
-		return
-	end
-	local ok, err = pcall(function()
-		conn:eval("UPDATE bookmarks SET " .. table.concat(sets, ", ") .. " WHERE id = :id", params)
+	guarded(nil, function(_conn)
+		local sets = {}
+		local params = { id = id }
+		for k, v in pairs(fields) do
+			table.insert(sets, k .. " = :" .. k)
+			params[k] = v
+		end
+		if #sets == 0 then
+			return
+		end
+		local ok, err = pcall(function()
+			_conn:eval("UPDATE bookmarks SET " .. table.concat(sets, ", ") .. " WHERE id = :id", params)
+		end)
+		if not ok then
+			error("bookmarks.nvim: échec update: " .. tostring(err), 0)
+		end
 	end)
-	if not ok then
-		vim.notify(
-			"bookmarks.nvim: échec update: " .. tostring(err),
-			vim.log.levels.ERROR,
-			{ title = "bookmarks.nvim" }
-		)
-	end
 end
 
 --- Supprime un bookmark par id.
 ---@param id integer
 function M.delete(id)
-	if not ensure_ready() then
-		return
-	end
-	conn:eval("DELETE FROM bookmarks WHERE id = :id", { id = id })
+	guarded(nil, function(_conn)
+		_conn:eval("DELETE FROM bookmarks WHERE id = :id", { id = id })
+	end)
 end
 
 --- Supprime tous les bookmarks d'un fichier dans un projet.
 ---@param project_root string
 ---@param file string
 function M.delete_by_file(project_root, file)
-	if not ensure_ready() then
-		return
-	end
-	conn:eval(
-		"DELETE FROM bookmarks WHERE project_root = :project_root AND file = :file",
-		{ project_root = project_root, file = file }
-	)
+	guarded(nil, function(_conn)
+		_conn:eval(
+			"DELETE FROM bookmarks WHERE project_root = :project_root AND file = :file",
+			{ project_root = project_root, file = file }
+		)
+	end)
 end
 
 --- Ferme la connexion.

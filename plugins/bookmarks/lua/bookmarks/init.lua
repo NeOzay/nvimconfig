@@ -3,95 +3,121 @@ local db = require("bookmarks.db")
 local service = require("bookmarks.service")
 local ui = require("bookmarks.ui")
 local note = require("bookmarks.note")
+local utils = require("bookmarks.utils")
 
-local function create_commands()
-	vim.api.nvim_create_user_command("Bookmarks", function()
-		require("trouble").open({ mode = "bookmarks" })
-	end, { desc = "Ouvre la liste des bookmarks du projet (Trouble)" })
-
-	vim.api.nvim_create_user_command("BookmarkToggle", function()
-		local bufnr = vim.api.nvim_get_current_buf()
-		local lnum = vim.api.nvim_win_get_cursor(0)[1]
-		local existing = service.find(bufnr, lnum)
-		if existing then
-			service.remove(existing.id)
-			ui.remove_one(bufnr, existing.id)
-			vim.notify("bookmark supprimé.", vim.log.levels.INFO, { title = "bookmarks.nvim" })
-		else
-			local record = service.add(bufnr, lnum)
-			if record then
-				ui.render_one(bufnr, record)
-				vim.notify("bookmark ajouté.", vim.log.levels.INFO, { title = "bookmarks.nvim" })
-			end
-		end
-	end, { desc = "Ajoute/retire un bookmark sur la ligne courante" })
-
-	vim.api.nvim_create_user_command("BookmarkAdd", function(cmd_opts)
-		local bufnr = vim.api.nvim_get_current_buf()
-		local lnum = vim.api.nvim_win_get_cursor(0)[1]
-		local annotation = vim.fn.input({ prompt = "Annotation: ", cancelreturn = "" })
-		if annotation == "" then
-			vim.notify("annotation vide, annulé.", vim.log.levels.INFO, { title = "bookmarks.nvim" })
-			return
-		end
-		local tag = cmd_opts.args ~= "" and cmd_opts.args or nil
-		local record = service.add(bufnr, lnum, { annotation = annotation, tag = tag })
-		if record then
-			ui.render_one(bufnr, record)
-		end
-	end, { desc = "Ajoute un bookmark avec annotation", nargs = "?" })
-
-	vim.api.nvim_create_user_command("BookmarkAnnotate", function()
-		local bufnr = vim.api.nvim_get_current_buf()
-		local lnum = vim.api.nvim_win_get_cursor(0)[1]
-		local existing = service.find(bufnr, lnum)
-		local annotation = vim.fn.input({
-			prompt = "Annotation: ",
-			default = existing and existing.annotation or "",
-			cancelreturn = "",
-		})
-		if annotation == "" then
-			vim.notify("annulé, aucun changement.", vim.log.levels.INFO, { title = "bookmarks.nvim" })
-			return
-		end
-		if existing then
-			service.set_annotation(existing.id, annotation, existing.tag)
-			existing.annotation = annotation
-			ui.update_one(bufnr, existing)
-		else
-			local record = service.add(bufnr, lnum, { annotation = annotation })
-			if record then
-				ui.render_one(bufnr, record)
-			end
-		end
-	end, { desc = "Édite l'annotation du bookmark sur la ligne courante" })
-
-	vim.api.nvim_create_user_command("BookmarkNext", function()
-		ui.next(vim.api.nvim_get_current_buf())
-	end, { desc = "Bookmark suivant dans le buffer" })
-
-	vim.api.nvim_create_user_command("BookmarkPrev", function()
-		ui.previous(vim.api.nvim_get_current_buf())
-	end, { desc = "Bookmark précédent dans le buffer" })
-
-	vim.api.nvim_create_user_command("BookmarkClear", function()
-		ui.clear_buffer(vim.api.nvim_get_current_buf())
-		vim.notify("bookmarks du fichier supprimés.", vim.log.levels.INFO, { title = "bookmarks.nvim" })
-	end, { desc = "Supprime tous les bookmarks du fichier courant" })
-
-	vim.api.nvim_create_user_command("BookmarkPick", function()
-		require("bookmarks.snacks_picker")()
-	end, { desc = "Ouvre le picker Snacks des bookmarks du projet" })
-
-	vim.api.nvim_create_user_command("BookmarkNote", function()
-		local bufnr = vim.api.nvim_get_current_buf()
-		local lnum = vim.api.nvim_win_get_cursor(0)[1]
-		note.open(bufnr, lnum)
-	end, { desc = "Ouvre le popup de note du bookmark sur la ligne courante" })
+--- Buffer et ligne sous le curseur, dans la fenêtre courante.
+---@return integer bufnr
+---@return integer lnum
+local function cursor_pos()
+	return vim.api.nvim_get_current_buf(), vim.api.nvim_win_get_cursor(0)[1]
 end
 
 ---@class Ozay.Bookmarks
 local M = {}
+
+---@param bufnr integer
+---@param lnum integer
+---@param opts? Ozay.Bookmarks.Service.Opts
+---@return Ozay.Bookmarks.Record?
+function M.create(bufnr, lnum, opts)
+	local existing = M.get(bufnr, lnum)
+	if existing then
+		if opts then
+			return M.update(bufnr, lnum, opts)
+		end
+		return existing
+	end
+
+	local record = service.add(bufnr, lnum, opts)
+	if record then
+		ui.render_one(bufnr, record)
+		utils.notify("bookmark ajouté.", vim.log.levels.INFO)
+	end
+	return record
+end
+
+M.get = service.find
+
+---@param bufnr integer
+---@param lnum integer
+---@param opts?  Ozay.Bookmarks.Service.Opts
+---@return Ozay.Bookmarks.Record?
+function M.get_or_create(bufnr, lnum, opts)
+	local existing = service.find(bufnr, lnum)
+	if existing then
+		return existing
+	end
+	return M.create(bufnr, lnum, opts)
+end
+
+-- @param bufnr integer|Ozay.Bookmarks.Record
+-- @param lnum integer?
+---@overload fun(record:Ozay.Bookmarks.Record)
+---@overload fun(bufnr:integer, lnum:integer)
+function M.remove(bufnr, lnum)
+	local record
+	if type(bufnr) == "table" then
+		record = bufnr
+		bufnr = utils.find_buf(record.file) or -1
+	elseif lnum then
+		record = service.find(bufnr, lnum)
+	end
+
+	if not record or not record.id then
+		return
+	end
+
+	service.remove(record.id)
+	if bufnr ~= -1 then
+		ui.remove_one(bufnr, record.id)
+	end
+	utils.notify("bookmark supprimé.", vim.log.levels.INFO)
+end
+
+function M.clear_buffer(bufnr)
+	ui.clear_buffer(bufnr)
+end
+
+---@param bufnr integer
+---@param lnum integer
+function M.toggle(bufnr, lnum)
+	if M.get(bufnr, lnum) then
+		M.remove(bufnr, lnum)
+	else
+		M.create(bufnr, lnum)
+	end
+end
+
+--- Met à jour les champs fournis d'un bookmark existant et rafraîchit son extmark.
+--- Sans bookmark sur la ligne, ne fait rien.
+---@param bufnr integer
+---@param lnum integer
+---@param opts? Ozay.Bookmarks.Service.Opts
+---@return Ozay.Bookmarks.Record?
+function M.update(bufnr, lnum, opts)
+	local existing = M.get(bufnr, lnum)
+	if not existing or not opts or vim.tbl_isempty(opts) then
+		return existing
+	end
+	service.update(existing.id, opts)
+	---@type Ozay.Bookmarks.Record
+	local record = M.get(bufnr, lnum)
+	ui.update_one(bufnr, record)
+	utils.notify("bookmark mis à jour.", vim.log.levels.INFO)
+	return record
+end
+
+function M.next(bufnr)
+	ui.next(bufnr)
+end
+
+function M.previous(bufnr)
+	ui.previous(bufnr)
+end
+
+function M.open_note(bufnr, lnum)
+	note.open(bufnr, lnum)
+end
 
 ---@param opt Ozay.Bookmarks.Config.opt?
 function M.setup(opt)
@@ -99,7 +125,11 @@ function M.setup(opt)
 	db.setup(config.resolved_db_path())
 	ui.setup_autocmds()
 	require("bookmarks.trouble").register()
-	create_commands()
+	require("bookmarks.commands")()
 end
+
+--- API publique : créer/consulter/retirer un bookmark sans passer par les commandes.
+M.list_for_buffer = service.list_for_buffer
+M.list_for_project = service.list_for_project
 
 return M

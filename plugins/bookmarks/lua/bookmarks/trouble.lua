@@ -1,3 +1,4 @@
+---@diagnostic disable:missing-fields
 ---@class trouble.Source.bookmarks: trouble.Source
 local M = {}
 
@@ -19,15 +20,23 @@ M.config = {
 						if not record then
 							return
 						end
-						local bufnr = vim.fn.bufadd(record.file)
-						vim.fn.bufload(bufnr)
-						require("bookmarks.note").open(bufnr, record.lnum, {
+						require("bookmarks.note").open_for_record(record, {
 							on_saved = function()
 								view:refresh()
 							end,
 						})
 					end,
 					desc = "Note du bookmark",
+				},
+				dd = {
+					action = function(view, ctx)
+						local record = ctx.item and ctx.item.item
+						if not record then
+							return
+						end
+						require("bookmarks").remove(record)
+						view:refresh()
+					end,
 				},
 			},
 		},

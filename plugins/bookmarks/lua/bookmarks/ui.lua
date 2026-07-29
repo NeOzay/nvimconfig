@@ -86,6 +86,12 @@ function M.setup_autocmds()
 			resync(ev.buf)
 		end,
 	})
+	vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
+		group = augroup,
+		callback = function(ev)
+			extmarks_by_buf[ev.buf] = nil
+		end,
+	})
 end
 
 ---@param bufnr integer

@@ -1,6 +1,7 @@
+---@diagnostic disable:param-type-mismatch
 --- Ouvre un picker Snacks listant les bookmarks du projet courant.
 return function()
-	local service = require("bookmarks.service")
+	local bookmarks = require("bookmarks")
 	local config = require("bookmarks.config")
 
 	Snacks.picker.pick({
@@ -10,7 +11,7 @@ return function()
 		},
 		finder = function(opts, ctx)
 			local items = {}
-			for _, record in ipairs(service.list_for_project()) do
+			for _, record in ipairs(bookmarks.list_for_project()) do
 				table.insert(items, {
 					text = vim.trim(record.annotation or record.code_context or ""),
 					file = record.file,
@@ -43,21 +44,20 @@ return function()
 			vim.cmd(("edit %s"):format(vim.fn.fnameescape(item.file)))
 			vim.api.nvim_win_set_cursor(0, { item.pos[1], item.pos[2] })
 		end,
+		---@type table<string, fun(picker:snacks.Picker, item: {bookmark: Ozay.Bookmarks.Record})>
 		actions = {
 			bookmark_delete = function(picker, item)
 				if not item then
 					return
 				end
-				service.remove(item.bookmark.id)
+				bookmarks.remove(item.bookmark)
 				picker:refresh()
 			end,
 			bookmark_note = function(picker, item)
 				if not item then
 					return
 				end
-				local bufnr = vim.fn.bufadd(item.bookmark.file)
-				vim.fn.bufload(bufnr)
-				require("bookmarks.note").open(bufnr, item.bookmark.lnum, {
+				require("bookmarks.note").open_for_record(item.bookmark, {
 					on_saved = function()
 						if picker then
 							picker:refresh()

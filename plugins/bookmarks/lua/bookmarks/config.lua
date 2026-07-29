@@ -35,7 +35,7 @@ M.defaults = {
 M.options = vim.deepcopy(M.defaults)
 
 --- Fusionne les options utilisateur avec les défauts.
----@param opts? Ozay.Bookmarks.Config
+---@param opts? Ozay.Bookmarks.Config.opt
 ---@return Ozay.Bookmarks.Config
 function M.setup(opts)
 	M.options = vim.tbl_deep_extend("force", M.defaults, opts or {})

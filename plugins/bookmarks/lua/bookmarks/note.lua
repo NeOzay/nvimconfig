@@ -1,5 +1,6 @@
 local service = require("bookmarks.service")
 local ui = require("bookmarks.ui")
+local utils = require("bookmarks.utils")
 
 ---@class Ozay.Bookmarks.Note
 local M = {}
@@ -11,15 +12,15 @@ local M = {}
 ---@param lnum integer
 ---@param opts? { on_saved?: fun() } on_saved rappelé après la sauvegarde (ex: rafraîchir un picker/Trouble appelant)
 function M.open(bufnr, lnum, opts)
+	local bookmarks = require("bookmarks")
+
 	opts = opts or {}
-	local record = service.find(bufnr, lnum)
+	local record = bookmarks.get_or_create(bufnr, lnum)
 	if not record then
-		record = service.add(bufnr, lnum)
-		if not record then
-			vim.notify("impossible de créer le bookmark.", vim.log.levels.ERROR, { title = "bookmarks.nvim" })
-			return
-		end
-		ui.render_one(bufnr, record)
+		-- cas normal, pas une erreur de programmation : buffer sans nom ou `buftype` non vide
+		-- (terminal, quickfix…) — `service.skip_buf` refuse d'y poser un bookmark.
+		utils.notify("impossible de créer le bookmark sur ce buffer.", vim.log.levels.WARN)
+		return
 	end
 
 	local record_id = record.id
@@ -48,7 +49,9 @@ function M.open(bufnr, lnum, opts)
 		on_close = function(self)
 			local lines = vim.api.nvim_buf_get_lines(self.buf, 0, -1, false)
 			local note = (table.concat(lines, "\n"):gsub("%s+$", ""))
-			service.set_note(record_id, note)
+			-- écriture par id : la ligne a pu bouger pendant l'édition du popup, une
+			-- recherche par (bufnr, lnum) ne retrouverait plus le bon bookmark.
+			service.update(record_id, { note = note })
 			record.note = note
 			ui.update_one(bufnr, record)
 			if opts.on_saved then
@@ -56,6 +59,17 @@ function M.open(bufnr, lnum, opts)
 			end
 		end,
 	})
+end
+
+--- Charge le buffer du fichier concerné (bufadd/bufload) puis ouvre la note du bookmark.
+--- Utile depuis un contexte externe au buffer courant (picker, Trouble) où l'on ne dispose
+--- que du record, pas d'un bufnr déjà chargé.
+---@param record Ozay.Bookmarks.Record
+---@param opts? { on_saved?: fun() }
+function M.open_for_record(record, opts)
+	local bufnr = vim.fn.bufadd(record.file)
+	vim.fn.bufload(bufnr)
+	M.open(bufnr, record.lnum, opts)
 end
 
 return M
