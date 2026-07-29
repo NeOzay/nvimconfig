@@ -7,7 +7,7 @@ gutter (signe + virtual text) et listables via Trouble ou un picker Snacks.
 ## Files
 - Spec lazy: `lua/plugins/bookmarks.lua` — `dir = vim.fn.stdpath("config") .. "/plugins/bookmarks"`,
   `config = function() require("bookmarks").setup() end`
-- Code du plugin (structure standard, hors de `lua/`): `plugins/bookmarks/lua/bookmarks/{init,utils,db,config,service,ui,note,trouble,snacks_picker}.lua`
+- Code du plugin (structure standard, hors de `lua/`): `plugins/bookmarks/lua/bookmarks/{init,utils,db,config,service,ui,note,events,trouble,snacks_picker}.lua`
   (requis via `bookmarks.<module>`, sans préfixe `plugins.` — le `lua/` de `plugins/bookmarks/`
   est ajouté au runtimepath par Lazy via `dir`)
 - Import: `{ import = "plugins.bookmarks" }` dans `init.lua`
@@ -54,8 +54,16 @@ gutter (signe + virtual text) et listables via Trouble ou un picker Snacks.
   / `signs.note_hl_group`. Même icône reprise comme indicateur dans le picker Snacks (format,
   suffixe après le nom de fichier) et dans Trouble (préfixe du texte de l'item).
 - `note.lua` accepte `opts.on_saved` (rappelé après la sauvegarde) : le picker Snacks
-  (`picker:refresh()`) et Trouble (`view:refresh()`) s'en servent pour se rafraîchir dès la
-  fermeture du popup, sans action manuelle de l'utilisateur.
+  (`picker:refresh()`) s'en sert pour se rafraîchir dès la fermeture du popup, sans action
+  manuelle de l'utilisateur. Trouble n'en a plus besoin depuis les events `User` (voir plus bas).
+- **Events `User`** (`events.lua`) : `BookmarkCreate`/`BookmarkUpdate`/`BookmarkDeleted` émis
+  par tous les chemins de mutation de l'API publique (`create`/`update`/`remove`/`clear_buffer`
+  dans `init.lua`, plus `note.lua` qui écrit la note directement par id sans passer par
+  `bookmarks.update`). `data` porte le record concerné (ou `{ bufnr = ... }` pour
+  `clear_buffer`, qui supprime en bloc sans record unique). La source Trouble (`trouble.lua`)
+  s'y abonne via le champ déclaratif `events` d'un mode (mécanisme natif de trouble.nvim,
+  `view/section.lua:listen`, déjà utilisé par les sources `diagnostics`/`qf` upstream) — plus
+  besoin de `view:refresh()` manuel dans les actions `K`/`dd`.
 - `note.lua` force `zindex = Snacks.win.zindex()` : sans ça, le popup de note s'ouvrait *sous*
   le picker Snacks (même zindex par défaut que les fenêtres flottantes déjà ouvertes).
 
@@ -120,6 +128,10 @@ passer le record d'origine re-rendrait l'ancien label.
   invisible au pattern Lua `%s`) pour un padding qui doit survivre en tête de chaîne.
 
 ## Changelog
+- 2026-07-29 : events `User` (`BookmarkCreate`/`BookmarkUpdate`/`BookmarkDeleted`,
+  `events.lua`) émis à chaque mutation. Source Trouble abonnée via le champ déclaratif
+  `events` d'un mode — auto-refresh natif, suppression des `view:refresh()` manuels dans
+  les actions `K`/`dd`.
 - 2026-07-29 : refonte de l'API publique (`create`/`get`/`get_or_create`/`update`/`remove`),
   extraction des commandes dans `commands.lua`, `dd` dans la source Trouble, `utils.find_buf`
   (suppression depuis un picker sans buffer courant). Corrections d'audit : fusion de `opts`

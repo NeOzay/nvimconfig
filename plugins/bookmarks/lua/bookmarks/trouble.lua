@@ -13,29 +13,27 @@ M.config = {
 			},
 			sort = { "filename", "pos" },
 			format = "{text} {pos}",
+			-- auto-refresh natif de trouble.nvim (view/section.lua:listen) sur les events
+			-- émis par bookmarks.events : plus besoin de view:refresh() manuel ci-dessous.
+			events = { "User BookmarkCreate", "User BookmarkUpdate", "User BookmarkDeleted" },
 			keys = {
 				K = {
-					action = function(view, ctx)
+					action = function(_, ctx)
 						local record = ctx.item and ctx.item.item
 						if not record then
 							return
 						end
-						require("bookmarks.note").open_for_record(record, {
-							on_saved = function()
-								view:refresh()
-							end,
-						})
+						require("bookmarks.note").open_for_record(record)
 					end,
 					desc = "Note du bookmark",
 				},
 				dd = {
-					action = function(view, ctx)
+					action = function(_, ctx)
 						local record = ctx.item and ctx.item.item
 						if not record then
 							return
 						end
 						require("bookmarks").remove(record)
-						view:refresh()
 					end,
 				},
 			},

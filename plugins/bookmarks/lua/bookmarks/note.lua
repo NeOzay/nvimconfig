@@ -1,6 +1,7 @@
 local service = require("bookmarks.service")
 local ui = require("bookmarks.ui")
 local utils = require("bookmarks.utils")
+local events = require("bookmarks.events")
 
 ---@class Ozay.Bookmarks.Note
 local M = {}
@@ -54,6 +55,7 @@ function M.open(bufnr, lnum, opts)
 			service.update(record_id, { note = note })
 			record.note = note
 			ui.update_one(bufnr, record)
+			events.emit(events.UPDATE, record)
 			if opts.on_saved then
 				opts.on_saved()
 			end

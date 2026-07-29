@@ -4,6 +4,7 @@ local service = require("bookmarks.service")
 local ui = require("bookmarks.ui")
 local note = require("bookmarks.note")
 local utils = require("bookmarks.utils")
+local events = require("bookmarks.events")
 
 --- Buffer et ligne sous le curseur, dans la fenêtre courante.
 ---@return integer bufnr
@@ -32,6 +33,7 @@ function M.create(bufnr, lnum, opts)
 	if record then
 		ui.render_one(bufnr, record)
 		utils.notify("bookmark ajouté.", vim.log.levels.INFO)
+		events.emit(events.CREATE, record)
 	end
 	return record
 end
@@ -72,10 +74,12 @@ function M.remove(bufnr, lnum)
 		ui.remove_one(bufnr, record.id)
 	end
 	utils.notify("bookmark supprimé.", vim.log.levels.INFO)
+	events.emit(events.DELETED, record)
 end
 
 function M.clear_buffer(bufnr)
 	ui.clear_buffer(bufnr)
+	events.emit(events.DELETED, { bufnr = bufnr })
 end
 
 ---@param bufnr integer
@@ -104,6 +108,7 @@ function M.update(bufnr, lnum, opts)
 	local record = M.get(bufnr, lnum)
 	ui.update_one(bufnr, record)
 	utils.notify("bookmark mis à jour.", vim.log.levels.INFO)
+	events.emit(events.UPDATE, record)
 	return record
 end
 
