@@ -33,7 +33,7 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 - Capabilities from `blink.cmp.get_lsp_capabilities()`
 - Servers: `emmylua_ls`, `basedpyright`, `jsonls`, `ts_ls`, `rust_analyzer`, `zshcs`
 - `jdtls` activé séparément dans `lua/plugins/java.lua`
-- `copilot_ls` activé dans `lua/plugins/copilot.lua`
+- `copilot_ls` : plus activé (copilot désactivé, cf. minuet)
 - Full doc: [`docs/plugins/lsp.md`](docs/plugins/lsp.md)
 
 ## Global Helpers (init.lua)
@@ -104,7 +104,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | trouble | `plugins/trouble.lua` | [`trouble.md`](docs/plugins/trouble.md) |
 | neogit | `plugins/neogit.lua` | [`neogit.md`](docs/plugins/neogit.md) |
 | markview | `lua/plugins/markview.lua` (spec) + submodule `plugins/markview.nvim/` | [`markview.md`](docs/plugins/markview.md) |
-| copilot | `plugins/copilot.lua` | [`copilot.md`](docs/plugins/copilot.md) |
+| minuet-ai | `lua/plugins/minuet.lua` | [`minuet.md`](docs/plugins/minuet.md) |
 | persistence | `plugins/persistence.lua` | [`persistence.md`](docs/plugins/persistence.md) |
 | java | `plugins/java.lua` | [`java.md`](docs/plugins/java.md) |
 | lsp | `lsp/init.lua` + `lua/lsp/` | [`lsp.md`](docs/plugins/lsp.md) |
@@ -113,7 +113,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 
 Also loaded: aerial, auto-pairs, fidget, hover, illuminate, indent-blankline, lsp-endhints, navic, satellite, schemastore, which-key, wezterm-types, vim-suda.
 
-Disabled: neo-tree (replaced by snacks explorer), telescope (replaced by snacks picker), avante, copilot-chat (replaced by codecompanion).
+Disabled: neo-tree (replaced by snacks explorer), telescope (replaced by snacks picker), avante, copilot-chat (replaced by codecompanion), copilot.lua + copilot-lsp + blink-cmp-copilot (replaced by minuet-ai / DeepSeek).
 
 # Documentation Maintenance
 

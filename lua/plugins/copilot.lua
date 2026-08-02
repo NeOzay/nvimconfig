@@ -1,7 +1,14 @@
+-- Copilot est désactivé : la complétion IA passe désormais par minuet-ai (DeepSeek),
+-- voir `lua/plugins/minuet.lua`. Les specs sont conservées pour pouvoir revenir en
+-- arrière rapidement (`enabled = true`) ; dans ce cas, remettre aussi la source
+-- `copilot` dans `lua/plugins/blink-cmp.lua` et l'adapter `copilot` dans
+-- `lua/plugins/codecompanion.lua`.
+
 ---@type LazyPluginSpec[]
 return {
 	{
 		"zbirenbaum/copilot.lua",
+		enabled = false,
 		cmd = "Copilot",
 		event = "InsertEnter",
 		build = function()
@@ -10,6 +17,7 @@ return {
 		dependencies = {
 			{
 				"copilotlsp-nvim/copilot-lsp",
+				enabled = false,
 				init = function()
 					vim.g.copilot_nes_debounce = 500
 					vim.lsp.enable("copilot_ls")
@@ -65,6 +73,7 @@ return {
 	},
 	{
 		"giuxtaposition/blink-cmp-copilot",
+		enabled = false,
 		dependencies = { "zbirenbaum/copilot.lua" },
 		event = "InsertEnter",
 	},

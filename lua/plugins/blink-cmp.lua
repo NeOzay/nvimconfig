@@ -7,7 +7,7 @@ return {
 	dependencies = {
 		"L3MON4D3/LuaSnip",
 		"rafamadriz/friendly-snippets",
-		"fang2hou/blink-copilot",
+		"milanglacier/minuet-ai.nvim",
 	},
 
 	---@module 'blink.cmp'
@@ -27,15 +27,15 @@ return {
 					end
 				end,
 				"snippet_forward",
-				function(cmp)
-					if vim.b[vim.api.nvim_get_current_buf()].nes_state then
-						return (
-							require("copilot-lsp.nes").apply_pending_nes()
-							and require("copilot-lsp.nes").walk_cursor_end_edit()
-						)
-					end
-				end,
 				"fallback",
+			},
+			-- Déclenchement manuel de la complétion IA (minuet / DeepSeek)
+			["<A-y>"] = {
+				-- équivalent de `require("minuet").make_blink_map()`, sans charger
+				-- minuet au démarrage
+				function(cmp)
+					cmp.show({ providers = { "minuet" } })
+				end,
 			},
 			["<CR>"] = { "accept", "fallback" },
 			["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
@@ -52,22 +52,23 @@ return {
 			min_keyword_length = function(a)
 				return vim.bo.filetype == "markdown" and 2 or 0
 			end,
-			default = { "lsp", "copilot", "snippets", "path", "path_cwd", "buffer" },
+			-- minuet n'est PAS ici : il s'affiche en ghost text (virtualtext).
+			-- Il reste invocable manuellement dans le menu via <A-y>.
+			default = { "lsp", "snippets", "path", "path_cwd", "buffer" },
 			per_filetype = {
 				AvanteInput = { "avante_commands", "avante_mentions", "avante_files", "avante_shortcuts" },
 				codecompanion = { "codecompanion" },
 			},
 			---@type table<string, blink.cmp.SourceProviderConfig>
 			providers = {
-				copilot = {
-					name = "copilot",
-					module = "blink-copilot",
-					score_offset = -3,
+				minuet = {
+					name = "minuet",
+					module = "minuet.blink",
+					score_offset = 50,
 					async = true,
-					timeout_ms = 2000,
-					opts = {
-						kind_hl = "BlinkCmpKindCopilot",
-					},
+					-- minuet gère son propre timeout (request_timeout) ; blink doit
+					-- laisser assez de marge pour la réponse du LLM.
+					timeout_ms = 3000,
 				},
 				buffer = {
 					max_items = 5,
@@ -90,6 +91,8 @@ return {
 		---@type blink.cmp.CompletionConfig
 		completion = {
 			keyword = { range = "full" },
+			-- Recommandé par minuet : évite de préfetcher la source LLM à l'entrée en insertion.
+			trigger = { prefetch_on_insert = false },
 			accept = {
 				auto_brackets = {
 					enabled = true,

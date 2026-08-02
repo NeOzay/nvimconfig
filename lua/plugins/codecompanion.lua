@@ -13,7 +13,6 @@ return {
 		"olimorris/codecompanion.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"zbirenbaum/copilot.lua",
 		},
 		cmd = {
 			"CodeCompanion",
@@ -51,25 +50,33 @@ return {
 				},
 			},
 			adapters = {
-				copilot = function()
-					return require("codecompanion.adapters").extend("copilot", {
-						schema = {
-							model = {
-								default = "gpt-5-codex",
+				http = {
+					deepseek = function()
+						return require("codecompanion.adapters").extend("deepseek", {
+							env = {
+								-- Clé lue dans `.env` (non suivi par git) plutôt que dans l'environnement
+								api_key = function()
+									return require("utils.env").get("DEEPSEEK_API_KEY") or ""
+								end,
 							},
-						},
-					})
-				end,
+							schema = {
+								model = {
+									default = "deepseek-v4-flash",
+								},
+							},
+						})
+					end,
+				},
 			},
 			strategies = {
 				chat = {
-					adapter = "copilot",
+					adapter = "deepseek",
 				},
 				inline = {
-					adapter = "copilot",
+					adapter = "deepseek",
 				},
 				cmd = {
-					adapter = "copilot",
+					adapter = "deepseek",
 				},
 			},
 		},

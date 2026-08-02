@@ -4,3 +4,6 @@ deps
 # réglages Claude locaux, y compris ceux des plugins sous plugins/
 .claude/settings.local.json
 /plugins
+
+# clés d'API locales (minuet/DeepSeek, codecompanion)
+.env

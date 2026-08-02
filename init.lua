@@ -105,6 +105,7 @@ require("lazy").setup({
 	{ import = "plugins.neodim" },
 	{ import = "plugins.markview" },
 	{ import = "plugins.mason" },
+	{ import = "plugins.minuet" },
 	-- { import = "plugins.neo-tree" },
 	{ import = "plugins.neogit" },
 	{ import = "plugins.persistence" },
