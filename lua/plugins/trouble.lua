@@ -1,3 +1,4 @@
+---@diagnostic disable:missing-fields
 ---@type LazyPluginSpec
 return {
 	"folke/trouble.nvim",
