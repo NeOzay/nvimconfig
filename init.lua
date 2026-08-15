@@ -113,7 +113,7 @@ require("lazy").setup({
 	{ import = "plugins.schemastore" },
 	{ import = "plugins.statuscol.init" },
 	{ import = "plugins.treesitter-context" },
-	{ import = "plugins.tree-sitter-manager" },
+	{ import = "plugins.treesitter" },
 	{ import = "plugins.treesitter-textobjects" },
 	{ import = "plugins.trouble" },
 	{ import = "plugins.lualine" },

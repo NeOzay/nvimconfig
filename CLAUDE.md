@@ -100,7 +100,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | nvim-unception | `plugins/nvim-unception.lua` | [`nvim-unception.md`](docs/plugins/nvim-unception.md) |
 | codecompanion | `plugins/codecompanion.lua` | [`codecompanion.md`](docs/plugins/codecompanion.md) |
 | conform | `plugins/conform.lua` | [`conform.md`](docs/plugins/conform.md) |
-| treesitter | `plugins/treesitter.lua` | [`treesitter.md`](docs/plugins/treesitter.md) |
+| treesitter | `lua/plugins/treesitter.lua` (branche `main`) | [`treesitter.md`](docs/plugins/treesitter.md) |
 | trouble | `plugins/trouble.lua` | [`trouble.md`](docs/plugins/trouble.md) |
 | neogit | `plugins/neogit.lua` | [`neogit.md`](docs/plugins/neogit.md) |
 | markview | `lua/plugins/markview.lua` (spec) + submodule `plugins/markview.nvim/` | [`markview.md`](docs/plugins/markview.md) |
@@ -113,7 +113,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 
 Also loaded: aerial, auto-pairs, fidget, hover, illuminate, indent-blankline, lsp-endhints, navic, satellite, schemastore, which-key, wezterm-types, vim-suda.
 
-Disabled: neo-tree (replaced by snacks explorer), telescope (replaced by snacks picker), avante, copilot-chat (replaced by codecompanion), copilot.lua + copilot-lsp + blink-cmp-copilot (replaced by minuet-ai / DeepSeek).
+Disabled: neo-tree (replaced by snacks explorer), telescope (replaced by snacks picker), avante, copilot-chat (replaced by codecompanion), copilot.lua + copilot-lsp + blink-cmp-copilot (replaced by minuet-ai / DeepSeek), tree-sitter-manager.nvim (replaced by nvim-treesitter `main`).
 
 # Documentation Maintenance
 
