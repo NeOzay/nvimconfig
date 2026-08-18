@@ -18,4 +18,8 @@ end
 vim.opt.rtp:prepend(mini_test_path)
 vim.opt.rtp:prepend(vim.fn.getcwd())
 
+-- Les plugins tenus par cette configuration vivent sous plugins/<nom>/ et ne sont donc pas
+-- résolus par le lua/ de la racine : les ajouter explicitement au runtimepath.
+vim.opt.rtp:prepend(vim.fn.getcwd() .. "/plugins/tts.nvim")
+
 require("mini.test").setup()

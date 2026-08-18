@@ -116,6 +116,7 @@ require("lazy").setup({
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.treesitter-textobjects" },
 	{ import = "plugins.trouble" },
+	{ import = "plugins.tts" },
 	{ import = "plugins.lualine" },
 	{ import = "plugins.snacks.init" },
 	{ import = "plugins.ufo.init" },

@@ -24,7 +24,8 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
     Écrire dedans **uniquement avec accord explicite** ; un commit dans un submodule est un
     commit dans un autre dépôt, et le SHA doit être poussé avant d'être référencé ici.
   - **Suivis directement par ce repo** (pas d'upstream) : `bookmarks`, `hover-translator`,
-    `docstring-highlight.nvim`.
+    `docstring-highlight.nvim`, `tts.nvim` (clone de `johannww/tts.nvim` dont le dépôt git a été
+    supprimé, divergence assumée).
 - Après clone : `git submodule update --init --recursive`.
 
 ## LSP Architecture (Neovim 0.11+ native API)
@@ -102,6 +103,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | conform | `plugins/conform.lua` | [`conform.md`](docs/plugins/conform.md) |
 | treesitter | `lua/plugins/treesitter.lua` (branche `main`) | [`treesitter.md`](docs/plugins/treesitter.md) |
 | trouble | `plugins/trouble.lua` | [`trouble.md`](docs/plugins/trouble.md) |
+| tts | `lua/plugins/tts.lua` (spec) + `plugins/tts.nvim/` (code) | [`tts.md`](docs/plugins/tts.md) |
 | neogit | `plugins/neogit.lua` | [`neogit.md`](docs/plugins/neogit.md) |
 | markview | `lua/plugins/markview.lua` (spec) + submodule `plugins/markview.nvim/` | [`markview.md`](docs/plugins/markview.md) |
 | minuet-ai | `lua/plugins/minuet.lua` | [`minuet.md`](docs/plugins/minuet.md) |
