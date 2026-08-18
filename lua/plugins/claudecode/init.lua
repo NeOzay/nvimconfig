@@ -60,7 +60,7 @@ return {
 			mode = "n",
 			desc = "Reset Claude Code window size",
 		},
-		{ "<leader>ac", "<cmd>ClaudeCode --continue<cr>", mode = { "n", "t" }, desc = "Toggle Claude Code" },
+		{ "<leader>ac", "<cmd>ClaudeCode --continue<cr>", mode = { "n" }, desc = "Toggle Claude Code" },
 		-- { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
 		-- { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
 		-- { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },

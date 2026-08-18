@@ -55,19 +55,19 @@ local opts = {
 ---@type LazyKeysSpec[]
 local keys = {
 	{
-		"<C-ù>",
+		"ù",
 		function()
 			Snacks.terminal(nil, {
 				env = { PROMPT_EOL_MARK = "" },
 				win = {
 					keys = {
-						close = {
-							"<C-ù>",
-							function(self)
-								self:hide()
-							end,
-							mode = "t",
-						},
+						-- close = {
+						-- 	"<C-ù>",
+						-- 	function(self)
+						-- 		self:hide()
+						-- 	end,
+						-- 	mode = "t",
+						-- },
 					},
 				},
 			})
