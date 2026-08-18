@@ -77,6 +77,40 @@ même machine c'est transparent ; depuis deux machines différentes, le son sort
 
 ```bash
 printf '{"op":"voices"}\n' | nc 127.0.0.1 7788
+printf '{"op":"speak","text":"bonjour","voice":"fr_FR-siwis-medium","speed":1.0,"volume":1.0}\n' | nc 127.0.0.1 7788
+```
+
+## 7. Aucun son alors que le démon répond `{"ok":true}`
+
+`speak` rend la main avant que la synthèse ait commencé : la réponse dit que la requête est
+acceptée, pas que le son est sorti. Tout ce qui échoue ensuite part au journal.
+
+```bash
+journalctl --user -u tts-piperd -f
+```
+
+Puis, dans l'ordre :
+
+```bash
+# 1. PipeWire répond-il, et l'option --volume existe-t-elle ?
+pw-play --help
+
+# 2. Le son sort-il hors du démon ?
+pw-play /usr/share/sounds/freedesktop/stereo/bell.oga
+
+# 3. Le démon voit-il la même session PipeWire que ta session graphique ?
+systemctl --user show-environment | grep -E "XDG_RUNTIME_DIR|WAYLAND_DISPLAY|DISPLAY"
+```
+
+Un service `--user` hérite de `XDG_RUNTIME_DIR`, ce qui suffit à joindre PipeWire. Si le socket
+n'est pas visible, `systemctl --user import-environment` depuis la session graphique le corrige.
+
+Pour voir le démon travailler en direct, l'arrêter et le lancer à la main :
+
+```bash
+systemctl --user stop tts-piperd
+~/.local/share/tts-piperd/venv/bin/python \
+    ~/.config/nvim/plugins/tts.nvim/daemon/tts-piperd.py --verbose
 ```
 
 ## Options

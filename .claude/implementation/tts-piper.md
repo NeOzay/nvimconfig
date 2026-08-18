@@ -58,9 +58,16 @@ l'entrée dans `.gitmodules`.
 
 ## État courant
 
-**Prochaine action** : toutes les étapes sont faites et vérifiées (`make test` : 53 cas, 0 échec).
-Reste la validation à l'oreille sur Bazzite — installation du démon, puis `:TTS` en local, via SSH
-avec tunnel, et sans tunnel. Rien n'est encore commité.
+**Prochaine action** : la validation se poursuit **sur le client Bazzite**. État constaté au
+2026-08-18 :
+- démon installé, une voix disponible (`fr_FR-siwis-medium`), il répond à `voices` en local ;
+- tunnel SSH monté, `:TTS` depuis le VPS n'affiche plus d'erreur — le démon accepte la requête ;
+- **mais aucun son n'est joué**. `speak` rend la main avant la synthèse : `{"ok":true}` atteste de
+  la réception, pas de la sortie audio.
+
+Suite du diagnostic : `journalctl --user -u tts-piperd -f`, puis la section 7 de
+`plugins/tts.nvim/daemon/README.md`. Suspect principal : l'option `--volume` de `pw-play`, qui
+n'a jamais pu être vérifiée depuis le VPS (incertitude reportée du brief).
 
 **Vérification** : `make test`
 
@@ -91,3 +98,10 @@ seule vérification de présence.
   la spec Lazy s'en trouve sans dépendance. *Rejeté* : conserver `plenary.job` pour pandoc seul.
 - **2026-08-18** — Une requête = une connexion TCP, jamais de connexion maintenue. *Pourquoi* :
   une coupure du tunnel SSH laisserait sinon un client persuadé d'être connecté.
+- **2026-08-18** — `util.getAndProcessText` référençait encore `config.opts`, supprimé lors de
+  l'élagage : `:TTS` levait sur toute sélection. *Pourquoi noté* : la suite ne couvrait pas le
+  chemin sélection → texte, c'est désormais le cas (`tests/tts/test_selection.lua`).
+- **2026-08-18** — Le démon journalise via `logging` : stderr de `pw-play` remonté et code de
+  retour contrôlé, exceptions du thread de lecture capturées. *Pourquoi* : la synthèse étant
+  paresseuse, ses erreurs surviennent hors de la requête ; avec `stderr=DEVNULL` le seul symptôme
+  était « aucun son ». *Rejeté* : laisser le diagnostic au seul client.

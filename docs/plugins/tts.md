@@ -9,7 +9,8 @@ pas forcément celle où tourne Neovim.
 - Code : `plugins/tts.nvim/` (clone de `johannww/tts.nvim` sans son dépôt git, **suivi
   directement par ce dépôt** — pas de submodule, pas d'upstream à suivre)
 - Démon : `plugins/tts.nvim/daemon/` (`tts-piperd.py`, `tts-piperd.service`, `README.md`)
-- Tests : `tests/tts/test_protocol.lua`, `tests/tts/test_daemon_io.lua`
+- Tests : `tests/tts/test_protocol.lua`, `tests/tts/test_daemon_io.lua`,
+  `tests/tts/test_selection.lua`
 
 ## Key Behaviors
 
@@ -58,6 +59,9 @@ Aucune. Le plugin se charge sur ses commandes (`cmd` dans la spec) — `<leader>
   connecte mais rien ne sort. `ServerAliveInterval 30` l'évite dans la plupart des cas.
 - **Deux sessions SSH simultanées** vers le même hôte : seule la première obtient le port.
 - **Le démon refuse toute adresse hors boucle locale** : le forward SSH est le seul chemin d'accès.
+- **`config.opts` n'existe plus** : le module de configuration expose ses champs à plat
+  (`config.speed`, pas `config.opts.speed`). Un vestige de l'API upstream avait survécu dans
+  `util.getAndProcessText` et faisait échouer `:TTS` sur une sélection.
 - `tests/minimal_init.lua` doit prépendre `plugins/tts.nvim` au runtimepath — le `lua/` de la
   racine ne résout pas les plugins tenus sous `plugins/`.
 
@@ -65,3 +69,7 @@ Aucune. Le plugin se charge sur ses commandes (`cmd` dans la spec) — `<leader>
 - 2026-08-18 : création. Clone de l'upstream élagué vers Piper seul, transport déporté vers un
   démon côté client, réglages runtime et picker Snacks, tests mini.test contre le démon en
   `--dry-run`. Chantier `tts-piper`.
+- 2026-08-18 : `util.getAndProcessText` passait `config.opts`, disparu à l'élagage — `:TTS`
+  levait une erreur sur toute sélection. Corrigé, et le chemin sélection → texte est désormais
+  couvert par `tests/tts/test_selection.lua`. Au passage, les lignes d'une sélection multi-lignes
+  sont jointes par une espace : l'upstream les soudait.

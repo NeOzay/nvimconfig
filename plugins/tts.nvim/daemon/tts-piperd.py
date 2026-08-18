@@ -18,6 +18,7 @@ le démon testable sur une machine sans audio.
 
 import argparse
 import json
+import logging
 import os
 import socketserver
 import subprocess
@@ -25,6 +26,8 @@ import sys
 import threading
 import wave
 from pathlib import Path
+
+log = logging.getLogger("tts-piperd")
 
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 7788
@@ -74,7 +77,7 @@ class Player:
             ],
             stdin=subprocess.PIPE,
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
         )
         with self._lock:
             self._process = process
@@ -94,6 +97,15 @@ class Player:
                     process.stdin.close()
                 except BrokenPipeError:
                     pass
+
+            # Sans ceci, un pw-play qui refuse ses arguments échoue en silence et le symptôme
+            # se réduit à « aucun son ».
+            code = process.wait()
+            stderr = process.stderr.read().decode("utf-8", "replace").strip() if process.stderr else ""
+            if code not in (0, -15):  # -15 = interrompu par une nouvelle demande
+                log.error("pw-play a quitté avec le code %s%s", code, f" : {stderr}" if stderr else "")
+            elif stderr:
+                log.warning("pw-play : %s", stderr)
 
 
 class Synthesizer:
@@ -175,6 +187,7 @@ class Handler(socketserver.StreamRequestHandler):
         try:
             self.respond(self.server.dispatch(request))
         except Exception as exc:  # remonter au client plutôt que mourir en silence
+            log.exception("échec du traitement de la requête")
             self.respond({"ok": False, "error": str(exc)})
 
     def respond(self, payload: dict) -> None:
@@ -221,12 +234,18 @@ class Server(socketserver.ThreadingTCPServer):
 
             volume = float(request.get("volume") if request.get("volume") is not None else 1.0)
             chunks, sample_rate, channels = self.synthesizer.synthesize(text, voice, speed)
+            log.info("speak : %s, %d Hz, %d canal/aux, volume %.2f", voice, sample_rate, channels, volume)
+
+            def play() -> None:
+                # La synthèse est paresseuse : ses erreurs surviennent ici, hors de la requête.
+                # Sans ce filet elles disparaîtraient avec le thread.
+                try:
+                    self.player.play(chunks, sample_rate, channels, volume)
+                except Exception:
+                    log.exception("échec de la lecture")
+
             # Rendre la main tout de suite : la synthèse dure plus longtemps que la requête.
-            threading.Thread(
-                target=self.player.play,
-                args=(chunks, sample_rate, channels, volume),
-                daemon=True,
-            ).start()
+            threading.Thread(target=play, daemon=True).start()
             return {"ok": True}
 
         return {"ok": False, "error": f"opération inconnue : {op!r}"}
@@ -248,6 +267,7 @@ def main(argv: list[str] | None = None) -> int:
         default=Path.home() / "tts-nvim",
         help="répertoire d'écriture pour l'opération save (défaut : %(default)s)",
     )
+    parser.add_argument("--verbose", action="store_true", help="journalisation détaillée")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -258,12 +278,18 @@ def main(argv: list[str] | None = None) -> int:
     if args.host not in ("127.0.0.1", "::1", "localhost"):
         parser.error("le démon ne s'écoute que sur la boucle locale")
 
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(levelname)s %(message)s",
+        stream=sys.stderr,
+    )
+
     synthesizer = Synthesizer(args.voices_dir, dry_run=args.dry_run)
     player = Player(dry_run=args.dry_run)
 
     with Server((args.host, args.port), synthesizer, player, args.output_dir) as server:
         host, port = server.socket.getsockname()[:2]
-        print(f"tts-piperd écoute sur {host}:{port}", file=sys.stderr, flush=True)
+        log.info("écoute sur %s:%s (voix : %s)", host, port, args.voices_dir)
         try:
             server.serve_forever()
         except KeyboardInterrupt:
