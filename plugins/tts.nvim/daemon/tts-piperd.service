@@ -1,0 +1,18 @@
+[Unit]
+Description=Démon de synthèse vocale Piper pour tts.nvim
+Documentation=file:%h/.config/nvim/plugins/tts.nvim/daemon/README.md
+After=pipewire.service
+Wants=pipewire.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/share/tts-piperd/venv/bin/python %h/.config/nvim/plugins/tts.nvim/daemon/tts-piperd.py
+Restart=on-failure
+RestartSec=2
+
+# Le port n'est lié qu'à la boucle locale ; le démon n'a besoin de rien d'autre.
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target
