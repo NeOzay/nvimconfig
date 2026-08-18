@@ -89,10 +89,18 @@ acceptée, pas que le son est sorti. Tout ce qui échoue ensuite part au journal
 journalctl --user -u tts-piperd -f
 ```
 
+**Le démon tourne-t-il sur le code du dépôt ?** Systemd exécute le script en place : une
+modification ne prend effet qu'au redémarrage du service. Le message d'écoute le trahit — il doit
+commencer par `INFO`.
+
+```bash
+systemctl --user restart tts-piperd
+```
+
 Puis, dans l'ordre :
 
 ```bash
-# 1. PipeWire répond-il, et l'option --volume existe-t-elle ?
+# 1. PipeWire répond-il, et pw-play accepte-t-il ses options ?
 pw-play --help
 
 # 2. Le son sort-il hors du démon ?
@@ -104,6 +112,11 @@ systemctl --user show-environment | grep -E "XDG_RUNTIME_DIR|WAYLAND_DISPLAY|DIS
 
 Un service `--user` hérite de `XDG_RUNTIME_DIR`, ce qui suffit à joindre PipeWire. Si le socket
 n'est pas visible, `systemctl --user import-environment` depuis la session graphique le corrige.
+
+### `sndfile: failed to open audio file "-": Format not recognised`
+
+`pw-play` lit stdin via libsndfile et y cherche un en-tête de conteneur ; le PCM nu de Piper n'en a
+pas. L'option `--raw` est donc obligatoire, et `--format`/`--rate`/`--channels` ne la remplacent pas.
 
 Pour voir le démon travailler en direct, l'arrêter et le lancer à la main :
 

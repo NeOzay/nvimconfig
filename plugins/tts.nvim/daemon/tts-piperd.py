@@ -65,6 +65,9 @@ class Player:
         process = subprocess.Popen(
             [
                 "pw-play",
+                # Sans --raw, pw-play passe par libsndfile et cherche un en-tête de conteneur
+                # sur stdin : le PCM nu de Piper échoue en « Format not recognised ».
+                "--raw",
                 "--format",
                 "s16",
                 "--rate",

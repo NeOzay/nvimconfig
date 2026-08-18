@@ -4,7 +4,7 @@ titre: TTS Piper avec démon côté client, pilotable depuis Neovim
 branche: tts-piper
 base: master
 statut: en-cours
-session: 1
+session: 2
 execution: direct
 plan: .claude/plans/linear-scribbling-papert.md
 brief: .claude/implementation/tts-piper.brief.md
@@ -58,18 +58,18 @@ l'entrée dans `.gitmodules`.
 
 ## État courant
 
-**Prochaine action** : la validation se poursuit **sur le client Bazzite**. État constaté au
-2026-08-18 :
-- démon installé, une voix disponible (`fr_FR-siwis-medium`), il répond à `voices` en local ;
-- tunnel SSH monté, `:TTS` depuis le VPS n'affiche plus d'erreur — le démon accepte la requête ;
-- **mais aucun son n'est joué**. `speak` rend la main avant la synthèse : `{"ok":true}` atteste de
-  la réception, pas de la sortie audio.
+**Prochaine action** : validation à l'oreille sur Bazzite, puis depuis le VPS à travers le tunnel.
 
-Suite du diagnostic : `journalctl --user -u tts-piperd -f`, puis la section 7 de
-`plugins/tts.nvim/daemon/README.md`. Suspect principal : l'option `--volume` de `pw-play`, qui
-n'a jamais pu être vérifiée depuis le VPS (incertitude reportée du brief).
+État constaté au 2026-08-18 (session 2, sur Bazzite) :
+- le démon tournait sur du code antérieur à la journalisation — systemd exécute le script en place,
+  une modification ne prend effet qu'au `restart`. Redémarré ;
+- le journal a livré la cause du silence : `pw-play` quittait en code 1 avec
+  `sndfile: failed to open audio file "-": Format not recognised` ;
+- `--raw` ajouté à l'appel `pw-play` ; après redémarrage, `speak` ne journalise plus aucune erreur ;
+- `--volume` existe bien dans `pw-play` : l'incertitude reportée du brief est levée, ce n'était pas
+  le suspect.
 
-**Vérification** : `make test`
+**Vérification** : `make test` — 58 cas, 0 échec (rejoué en session 2)
 
 **Dernier audit** : aucun
 
@@ -77,6 +77,9 @@ n'a jamais pu être vérifiée depuis le VPS (incertitude reportée du brief).
 devra passer par `git add -f`, comme les autres plugins suivis directement. Réserve du
 `plan-reviewer` toujours ouverte : l'étape 4 est large (démon + unit systemd + doc) pour une
 seule vérification de présence.
+
+Modifications non commitées étrangères au chantier présentes dans l'arbre en début de session 2
+(`codediff`, `trouble`, `cokeline`, `lualine`, un plan) : à ne jamais stager avec ce chantier.
 
 ## Journal de décisions
 
@@ -105,3 +108,6 @@ seule vérification de présence.
   retour contrôlé, exceptions du thread de lecture capturées. *Pourquoi* : la synthèse étant
   paresseuse, ses erreurs surviennent hors de la requête ; avec `stderr=DEVNULL` le seul symptôme
   était « aucun son ». *Rejeté* : laisser le diagnostic au seul client.
+- **2026-08-18** — `pw-play` reçoit `--raw` : sans lui il cherche un en-tête de conteneur sur stdin
+  et refuse le PCM nu de Piper. *Pourquoi noté* : `--format`/`--rate`/`--channels` ne suppléent pas
+  `--raw`, et l'échec était silencieux avant la journalisation.
