@@ -183,7 +183,7 @@ local opts = {
 							end
 
 							vim.api.nvim_buf_set_lines(out_buf, 0, -1, false, {})
-							running_jobs[scratch_buf] = vim.fn.jobstart({ "python", "-u", file }, {
+							running_jobs[scratch_buf] = vim.fn.jobstart({ "python3", "-u", file }, {
 								cwd = cwd,
 								env = next(env) and env or nil,
 								stdout_buffered = false,
