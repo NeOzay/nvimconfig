@@ -17,9 +17,27 @@ return {
 	cmd = "CodeDiff",
 	-- dir = vim.fn.stdpath("config") .. "/plugins/codediff.nvim",
 	keys = {
-		{ "<leader>gd", "<cmd>CodeDiff<cr>", desc = "Open CodeDiff" },
-		{ "<leader>gh", "<cmd>CodeDiff history HEAD~50 %<cr>", desc = "File History (current)" },
-		{ "<leader>gH", "<cmd>CodeDiff history<cr>", desc = "File History (all)" },
+		{
+			"<leader>gd",
+			function()
+				vim.cmd("CodeDiff" .. (vim.o.columns < 100 and " --inline" or ""))
+			end,
+			desc = "Open CodeDiff",
+		},
+		{
+			"<leader>gh",
+			function()
+				vim.cmd("CodeDiff" .. (vim.o.columns < 100 and " --inline" or "") .. " history HEAD~50 %")
+			end,
+			desc = "File History (current)",
+		},
+		{
+			"<leader>gH",
+			function()
+				vim.cmd("CodeDiff" .. (vim.o.columns < 100 and " --inline" or "") .. " history")
+			end,
+			desc = "File History (all)",
+		},
 	},
 	opts = {
 		disable_inlay_hints = true,
@@ -149,4 +167,24 @@ return {
 			},
 		},
 	},
+	config = function(_, opts)
+		require("codediff").setup(opts)
+
+		-- Ferme automatiquement l'explorer quand un fichier est sélectionné
+		-- (pratique sur petit écran/terminal, ex. Neovim sur téléphone).
+		Userautocmd("User", {
+			pattern = "CodeDiffFileSelect",
+			callback = function(args)
+				local tabpage = args.data and args.data.tabpage
+				if not tabpage then
+					return
+				end
+				local lifecycle = require("codediff.ui.lifecycle")
+				local explorer = lifecycle.get_explorer(tabpage)
+				if explorer and not explorer.is_hidden then
+					require("codediff.ui.explorer").toggle_visibility(explorer)
+				end
+			end,
+		})
+	end,
 }
