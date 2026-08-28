@@ -23,8 +23,11 @@ Visualisation des diffs git avec explorer de fichiers, remplace diffview.
   `codediff.ui.explorer.render` (`data = { tabpage, path, status }`). Le handler récupère
   l'explorer avec `codediff.ui.lifecycle.get_explorer(tabpage)` et appelle
   `codediff.ui.explorer.toggle_visibility(explorer)` s'il n'est pas déjà masqué (champ
-  `explorer.is_hidden`). Pratique sur petit écran ; se re-rouvre avec `<leader>E`
-  (`toggle_explorer`).
+  `explorer.is_hidden`). La fermeture est différée (`vim.defer_fn`, 50 ms) et ne se produit
+  que si le buffer courant est bien le buffer modifié de la session
+  (`lifecycle.get_buffers(tabpage)` vs `vim.api.nvim_get_current_buf()`) — navigation `]f`/`[f`
+  sans quitter l'explorer laisse la fenêtre ouverte. Pratique sur petit écran ; se re-rouvre
+  avec `<leader>E` (`toggle_explorer`).
 - Chaque diff ouvre un tab dédié, une session par tabpage dans `active_diffs` (`codediff.ui.lifecycle.session`), accessible via `codediff.ui.lifecycle.accessors` (`get_paths(tabnr)`, `get_git_context(tabnr)`, etc.). `mode` vaut `"standalone"` (un seul fichier) ou `"explorer"` (navigation git-root) ; dans les deux cas `modified_path`/`original_path` pointent vers le fichier affiché à l'instant.
 - `lua/tabpage.lua` (`default_name`) détecte ces sessions via `accessors.get_paths(tabnr)` et nomme automatiquement le tab d'après le basename du fichier affiché — pas de renommage manuel nécessaire tant que l'utilisateur n'a pas fixé de nom custom (`tabname` var de tabpage).
 

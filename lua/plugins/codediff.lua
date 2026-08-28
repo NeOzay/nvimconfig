@@ -48,11 +48,13 @@ return {
 			width = 30,
 			view_mode = "tree",
 			initial_focus = "explorer",
+			auto_open_on_cursor = true,
+			focus_on_select = true,
 			formatters = { -- Optional function(ctx) -> line layout callbacks; omit to use the built-ins
 				file = function(ctx)
 					return {
 						left = {
-							{ segments = prefix(ctx, "file") },
+							{ segments = prefix(ctx) },
 							{
 								segments = { { text = ctx.filename, hl = "Normal" } },
 								truncate_priority = 1,
@@ -75,7 +77,7 @@ return {
 				folder = function(ctx)
 					return {
 						left = {
-							{ segments = prefix(ctx, "directory") },
+							{ segments = prefix(ctx) },
 							{
 								segments = {
 									{
@@ -179,11 +181,15 @@ return {
 				if not tabpage then
 					return
 				end
-				local lifecycle = require("codediff.ui.lifecycle")
-				local explorer = lifecycle.get_explorer(tabpage)
-				if explorer and not explorer.is_hidden then
-					require("codediff.ui.explorer").toggle_visibility(explorer)
-				end
+				vim.defer_fn(function()
+					local lifecycle = require("codediff.ui.lifecycle")
+					local explorer = lifecycle.get_explorer(tabpage)
+					local _, modified_bufnr = lifecycle.get_buffers(tabpage)
+					local still_focused = modified_bufnr and modified_bufnr == vim.api.nvim_get_current_buf()
+					if explorer and not explorer.is_hidden and still_focused then
+						require("codediff.ui.explorer").toggle_visibility(explorer)
+					end
+				end, 50)
 			end,
 		})
 	end,
