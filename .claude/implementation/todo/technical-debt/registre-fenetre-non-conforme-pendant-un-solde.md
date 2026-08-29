@@ -3,8 +3,8 @@ id = "registre-fenetre-non-conforme-pendant-un-solde"
 title = "Un solde laisse la liste de destination non conforme entre ses deux commits"
 date = 2026-08-29
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat

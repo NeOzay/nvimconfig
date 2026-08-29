@@ -3,8 +3,8 @@ id = "license-mentionne-edge-tts"
 title = "Le LICENSE du plugin mentionne une dépendance supprimée"
 date = 2026-08-18
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat

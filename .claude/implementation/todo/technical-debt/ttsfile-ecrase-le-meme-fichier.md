@@ -3,8 +3,8 @@ id = "ttsfile-ecrase-le-meme-fichier"
 title = "`:TTSFile` écrase toujours le même fichier"
 date = 2026-08-18
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat

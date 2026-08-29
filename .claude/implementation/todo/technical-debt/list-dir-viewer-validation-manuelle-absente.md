@@ -3,8 +3,8 @@ id = "list-dir-viewer-validation-manuelle-absente"
 title = "La validation manuelle du chantier `list-dir-viewer` n'a jamais été faite"
 date = 2026-08-29
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "inverifiable"
 +++
 
 ## Constat

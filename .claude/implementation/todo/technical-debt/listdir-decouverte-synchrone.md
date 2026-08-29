@@ -3,8 +3,8 @@ id = "listdir-decouverte-synchrone"
 title = "La découverte des répertoires-listes bloque l'interface une seconde"
 date = 2026-08-29
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat

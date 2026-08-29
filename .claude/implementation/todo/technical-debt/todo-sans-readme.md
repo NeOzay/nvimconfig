@@ -3,8 +3,8 @@ id = "todo-sans-readme"
 title = "`todo/README.md`, annoncé par l'arborescence du pipeline, n'existe pas"
 date = 2026-08-29
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat

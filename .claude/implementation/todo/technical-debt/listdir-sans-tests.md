@@ -3,8 +3,8 @@ id = "listdir-sans-tests"
 title = "Le plugin `listdir` ne livre aucun test, dans un dépôt qui en a le cadre"
 date = 2026-08-29
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat
@@ -13,7 +13,7 @@ category = "<OPTIONNEL>"
 `Makefile` porte une cible `test` (`nvim --headless -u tests/minimal_init.lua -c "lua
 MiniTest.run()"`), et `tests/` contient `minimal_init.lua`, `tests/lsp/` et `tests/tts/`. Le plan du
 chantier affirmait « aucune infrastructure de test ajoutée au dépôt (il n'en a pas) » — c'est faux,
-et le plan a été validé ainsi. `contract.read`, `item.parse`, `document.render` et `shifted` sont
+et le plan a été validé ainsi. `contract.read`, `item.read`, `document.render` et `shifted` sont
 pures et conçues pour être vérifiables.
 
 ## Pourquoi c'est gênant
@@ -26,10 +26,14 @@ adaptées pendant l'audit.
 ## Pour solder
 
 Un `tests/listdir/` couvrant au minimum `contract.read` (métadonnées bornées au premier `[`),
-`item.parse` (front matter absent, présent, non refermé), `document.render` (décalage des titres
+`item.read` (front matter absent, présent, non refermé), `document.render` (décalage des titres
 hors blocs de code, forme `<…>` des liens à parenthèses).
 
 *Identifié par `implementation-auditor`, R5 du rapport d'audit `list-dir-viewer`.*
+
+> **Revue 2026-08-29** — l'entrée nommait `item.parse`, qui n'est pas exporté ; corrigé en
+> `item.read`. Établi par : `grep -n '^function M\.' plugins/listdir/lua/listdir/item.lua` →
+> `M.read`, `M.title`, `M.clear`, `parse` restant une fonction locale.
 
 ## Assumé
 

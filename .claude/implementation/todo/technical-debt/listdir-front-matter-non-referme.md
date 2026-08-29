@@ -3,8 +3,8 @@ id = "listdir-front-matter-non-referme"
 title = "`listdir` lit un front matter non refermé sans le signaler"
 date = 2026-08-29
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat

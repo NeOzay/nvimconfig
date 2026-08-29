@@ -3,8 +3,8 @@ id = "listdir-cache-document-homonyme"
 title = "Deux répertoires-listes homonymes partagent le document concaténé de `listdir`"
 date = 2026-08-29
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat

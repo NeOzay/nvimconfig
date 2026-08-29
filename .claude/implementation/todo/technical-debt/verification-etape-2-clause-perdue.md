@@ -3,8 +3,8 @@ id = "verification-etape-2-clause-perdue"
 title = "La vérification de l'étape 2 a perdu une clause du plan"
 date = 2026-08-18
 source = "<OPTIONNEL>"
-reviewed = "<OPTIONNEL>"
-category = "<OPTIONNEL>"
+reviewed = 2026-08-29
+category = "pertinent"
 +++
 
 ## Constat
