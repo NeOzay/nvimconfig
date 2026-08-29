@@ -1,0 +1,35 @@
+name = "technical-debt-ecarte"
+description = "Ce qui est sorti du registre sans avoir été payé, avec son motif et sa preuve."
+
+[fields.id]
+type = "slug"
+
+[fields.title]
+type = "text"
+required = true
+description = "l'énoncé de la dette"
+
+[fields.date]
+type = "date"
+required = true
+description = "date du constat, jamais modifiée"
+
+[fields.source]
+type = "text"
+required = false
+description = "le chantier qui l'a identifiée, et où il l'a écrit"
+
+[fields.reviewed]
+type = "date"
+required = false
+description = "date de la dernière revue qui a statué"
+
+[fields.category]
+type = "enum"
+required = false
+values = ["a-solder", "non-pertinent", "doublon", "pas-une-dette", "aggravee", "pertinent", "inverifiable"]
+description = "verdict de la dernière revue"
+
+[sections]
+required = ["Constat", "Écartée le"]
+optional = ["Pourquoi c'est gênant", "Pour solder", "Assumé"]
