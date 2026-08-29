@@ -11,7 +11,7 @@ ne porte.
 Une entrée soldée est **retirée** d'ici et déplacée dans `technical-debt-solde.md`, avec la
 commande qui l'établit.
 
-> Dernière vérification : 2026-08-18 (chantier `tts-piper`)
+> Dernière vérification : 2026-08-29 (chantier `list-dir-viewer`)
 
 ## 2026-08-18 — `:TTSVoice` rend `:TTSSetLanguage` définitivement sans effet
 
@@ -129,3 +129,85 @@ sur un `current_voice()` retombé sur le repli, c'est-à-dire dans le cas qu'il 
 diffère explicitement de `piper_model`.
 
 *Identifié par `implementation-auditor`, R13 du rapport d'audit `tts-piper`.*
+
+## 2026-08-29 — Le plugin `listdir` ne livre aucun test, dans un dépôt qui en a le cadre
+
+**Constat** — `plugins/listdir/` n'a pas une ligne de test alors que le dépôt fait tourner
+60 cas MiniTest (`Makefile`, cible `test` ; `tests/minimal_init.lua`, `tests/lsp/`, `tests/tts/`).
+Le plan du chantier affirmait « aucune infrastructure de test ajoutée au dépôt (il n'en a pas) » —
+c'est faux, et le plan a été validé ainsi. `contract.read`, `item.parse`, `document.render` et
+`shifted` sont pures et conçues pour être vérifiables.
+
+**Pourquoi c'est gênant** — chaque évolution du parseur de contrat, du décalage de titres ou de la
+forme des liens se revérifiera à la main, par des commandes headless jetables qui ne survivent pas
+à la session. Deux de ces commandes, celles des étapes 7 et 8 du plan, sont d'ailleurs déjà
+périmées et ont dû être adaptées pendant l'audit.
+
+**Pour solder** — un `tests/listdir/` couvrant au minimum `contract.read` (métadonnées bornées au
+premier `[`), `item.parse` (front matter absent, présent, non refermé), `document.render`
+(décalage des titres hors blocs de code, forme `<…>` des liens à parenthèses).
+
+*Identifié par `implementation-auditor`, R5 du rapport d'audit `list-dir-viewer`.*
+
+## 2026-08-29 — Deux répertoires-listes homonymes partagent le document concaténé de `listdir`
+
+**Constat** — `plugins/listdir/lua/listdir/document.lua`, `M.path` ne dérive le nom du fichier de
+cache que de `contract.name`. Ouvrir le document de deux listes `demo` distinctes rend le même
+`bufnr` et le même `~/.cache/nvim/listdir/demo.md` (vérifié pendant l'audit).
+
+**Pourquoi c'est gênant** — le contenu est régénéré à chaque ouverture, donc jamais faux dans la
+fenêtre active ; mais une fenêtre restée sur le premier document affiche silencieusement le second.
+Le chemin d'origine écrit en tête du document atténue sans lever l'ambiguïté.
+
+**Pour solder** — faire entrer le chemin du répertoire-liste dans le nom du fichier de cache, par
+exemple un condensé court suffixant le nom déclaré au contrat.
+
+*Identifié par `implementation-auditor`, R6 du rapport d'audit `list-dir-viewer`.*
+
+## 2026-08-29 — `listdir` lit un front matter non refermé sans le signaler
+
+**Constat** — `plugins/listdir/lua/listdir/item.lua` : si le second `+++` manque, tout le fichier
+est consommé comme front matter et `body` ressort vide, sans `err` (vérifié : `title` lu, `body`
+vide). Les autres chemins d'erreur du plugin sont corrects — `cli.list` distingue le code non nul
+de l'exception `vim.system`, et le finder `notify` puis rend une liste vide.
+
+**Pourquoi c'est gênant** — l'élément apparaît normalement dans le picker, avec son titre, et sa
+section disparaît du document concaténé sans un mot. C'est le seul échec muet restant du plugin, et
+il ressemble à un élément au corps vide.
+
+**Pour solder** — rendre une erreur quand le délimiteur fermant manque, et la remonter comme les
+autres (`notify`), ou à défaut marquer l'élément dans le document.
+
+*Identifié par `implementation-auditor`, R7 du rapport d'audit `list-dir-viewer`.*
+
+## 2026-08-29 — La validation manuelle du chantier `list-dir-viewer` n'a jamais été faite
+
+**Constat** — le contrôle 3 de la « Vérification d'ensemble » du plan (session Neovim interactive :
+`:ListDir`, tri, `<A-o>`, `<CR>` sur un lien) n'a été exécuté à aucun moment, ni pendant le
+chantier ni lors des deux audits, qui l'ont tous deux marqué non exécutable en headless.
+L'utilisateur a choisi de clore sans.
+
+**Pourquoi c'est gênant** — tout ce qui touche au rendu et aux fenêtres n'a été vérifié que par
+appel direct des fonctions : l'attache de markview au document, l'affichage réel de la preview du
+picker de listes et le comportement des mappings sous Snacks reposent sur du raisonnement, pas sur
+une observation.
+
+**Pour solder** — passer une fois la chaîne complète dans une session interactive, sur une vraie
+liste.
+
+*Identifié par `implementation-auditor`, R8 du rapport d'audit `list-dir-viewer`.*
+
+## 2026-08-29 — La découverte des répertoires-listes bloque l'interface une seconde
+
+**Constat** — `plugins/listdir/lua/listdir/discover.lua`, `M.find` parcourt l'arborescence de façon
+synchrone. Après l'ajout de l'option `ignore` et la suppression du double scan, `depth = 10` sur
+`$HOME` mesure encore ~1 s (32 ms sur ce dépôt). La spec livrée, `lua/plugins/listdir.lua`, pose
+`depth = 10`.
+
+**Pourquoi c'est gênant** — l'ouverture du picker fige Neovim d'autant, sur un geste qu'on répète.
+Le coût est proportionnel à la taille de l'arborescence, pas au nombre de listes.
+
+**Pour solder** — passer la découverte au finder asynchrone de Snacks (`function(cb)`), ou mémoriser
+le résultat du scan avec une invalidation explicite.
+
+*Identifié par `implementation-auditor`, R3 du rapport d'audit `list-dir-viewer`.*

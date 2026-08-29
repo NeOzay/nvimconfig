@@ -24,7 +24,7 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
     Écrire dedans **uniquement avec accord explicite** ; un commit dans un submodule est un
     commit dans un autre dépôt, et le SHA doit être poussé avant d'être référencé ici.
   - **Suivis directement par ce repo** (pas d'upstream) : `bookmarks`, `hover-translator`,
-    `docstring-highlight.nvim`, `tts.nvim` (clone de `johannww/tts.nvim` dont le dépôt git a été
+    `docstring-highlight.nvim`, `listdir`, `tts.nvim` (clone de `johannww/tts.nvim` dont le dépôt git a été
     supprimé, divergence assumée).
 - Après clone : `git submodule update --init --recursive`.
 
@@ -111,6 +111,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | java | `plugins/java.lua` | [`java.md`](docs/plugins/java.md) |
 | lsp | `lsp/init.lua` + `lua/lsp/` | [`lsp.md`](docs/plugins/lsp.md) |
 | hover-translator | `lua/plugins/hover-translator.lua` (spec) + `plugins/hover-translator/` (code) | Traduction FR des hovers, suivi direct |
+| listdir | `lua/plugins/listdir.lua` (spec) + `plugins/listdir/` (code) | [`listdir.md`](docs/plugins/listdir.md) |
 | docstring-highlight | `lua/plugins/docstring-highlight.lua` (spec) + `plugins/docstring-highlight.nvim/` (code) | Docstrings Python, suivi direct |
 
 Also loaded: aerial, auto-pairs, fidget, hover, illuminate, indent-blankline, lsp-endhints, navic, satellite, schemastore, which-key, wezterm-types, vim-suda.

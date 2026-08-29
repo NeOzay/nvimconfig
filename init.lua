@@ -98,6 +98,7 @@ require("lazy").setup({
 	{ import = "plugins.hover-translator" },
 	{ import = "plugins.nvim-unception" },
 	{ import = "plugins.indent-blankline" },
+	{ import = "plugins.listdir" },
 	{ import = "plugins.lspconfig" },
 	{ import = "plugins.lsp-endhints" },
 	{ import = "plugins.which-key" },
