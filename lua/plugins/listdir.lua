@@ -5,13 +5,6 @@ return {
 	config = function()
 		require("listdir").setup({
 			depth = 10,
-			pickers = {
-				items = {
-					layout = {
-						preset = "ivy_2",
-					},
-				},
-			},
 		})
 	end,
 	cmd = { "ListDir" },
