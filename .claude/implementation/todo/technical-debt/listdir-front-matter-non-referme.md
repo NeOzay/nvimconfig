@@ -9,7 +9,8 @@ category = "pertinent"
 
 ## Constat
 
-`plugins/listdir/lua/listdir/item.lua` : si le second délimiteur `+++` manque, tout le fichier est
+`lua/frontmatter.lua`, `parse` (déplacé depuis `plugins/listdir/lua/listdir/item.lua` par le
+chantier `chantier-docs-commands`, 2026-09-21 ; `listdir.item` et `lua/chantier.lua` en héritent) : si le second délimiteur `+++` manque, tout le fichier est
 consommé comme front matter et `body` ressort vide, sans `err` (vérifié : `title` lu, `body` vide).
 Les autres chemins d'erreur du plugin sont corrects — `cli.list` distingue le code non nul de
 l'exception `vim.system`, et le finder `notify` puis rend une liste vide.
@@ -26,6 +27,8 @@ Rendre une erreur quand le délimiteur fermant manque, et la remonter comme les 
 à défaut marquer l'élément dans le document.
 
 *Identifié par `implementation-auditor`, R7 du rapport d'audit `list-dir-viewer`.*
+
+*Emplacement corrigé le 2026-09-21. Établi par : `require('frontmatter').read()` sur `+++\ntitle = "x"\n\nbody` → `{ body = "", title = "x" }`, sans `err`.*
 
 ## Assumé
 

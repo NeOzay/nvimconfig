@@ -32,3 +32,9 @@ cmd("StlToggle", function()
 		vim.notify("Statusline : lualine", vim.log.levels.INFO)
 	end
 end, { desc = "Basculer la statusline lualine on/off" })
+
+for name, field in pairs({ Suivi = false, Brief = "brief", Plan = "plan", Audit = "audit" }) do
+	cmd(name, function()
+		require("chantier").open(field or nil)
+	end, { desc = ("Ouvrir le document « %s » du chantier en cours"):format(name:lower()) })
+end

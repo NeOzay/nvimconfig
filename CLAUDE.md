@@ -40,6 +40,8 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 ## Global Helpers (init.lua)
 - `pRequire(mod)` — Protected require, returns nil on failure
 - `Userautocmd(event, opts)` — Creates autocmd in group `UserAutocmds`
+- `lua/frontmatter.lua` — lecture d'un front matter TOML `+++` (clés à plat), cache sur `mtime` ; utilisé par listdir et `lua/chantier.lua`
+- `:Suivi`, `:Brief`, `:Plan`, `:Audit` (`lua/cmd.lua` → `lua/chantier.lua`) — ouvrent le document du chantier implementation-tracker dont `branche` = branche git courante (dépôt du cwd)
 
 ## API Preferences
 - Préférer `vim.api.*` et `vim.fs.*` à `vim.fn.*` — les fonctions `vim.fn` sont des wrappers Vimscript plus lents et moins idiomatiques en Lua.

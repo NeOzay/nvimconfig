@@ -13,7 +13,8 @@ sont concaténés.
   - `config.lua` — options et valeurs par défaut
   - `contract.lua` — lecture de `<liste>/.list/contract.toml`
   - `discover.lua` — recherche des répertoires-listes sous les chemins configurés
-  - `item.lua` — lecture d'un élément (front matter + corps), cache sur `mtime`
+  - `item.lua` — lecture d'un élément (front matter + corps) : façade sur le module commun
+    `lua/frontmatter.lua` de la config, qui porte le parseur et le cache sur `mtime`
   - `cli.lua` — appel de `list-dir.py list`
   - `document.lua` — document concaténé, écrit sous le cache
   - `picker/lists.lua`, `picker/items.lua` — les deux pickers Snacks
@@ -133,3 +134,7 @@ require("listdir").setup({
   depuis le passage au fichier de cache).
 - 2026-08-29 : audit (2e passe) — un seul scan par ouverture du picker des listes, et option
   `ignore` coupant `.git` / `node_modules` et consorts pendant la descente.
+- 2026-09-21 : le parseur de front matter et son cache sortent de `item.lua` vers
+  `lua/frontmatter.lua`, partagé avec les commandes `:Suivi`/`:Brief`/`:Plan`/`:Audit`
+  (`lua/chantier.lua`). `item.lua` garde son API ; listdir dépend désormais de la config.
+  Chantier `chantier-docs-commands`.
