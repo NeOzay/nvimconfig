@@ -7,3 +7,6 @@ deps
 
 # clés d'API locales (minuet/DeepSeek, codecompanion)
 .env
+
+# Copies de sûreté écrites par « list-dir reseed » ; la base de fusion est semence/.
+**/.list/backup/
