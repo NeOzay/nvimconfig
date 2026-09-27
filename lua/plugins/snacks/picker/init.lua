@@ -197,6 +197,13 @@ local keys = {
 		desc = "picker live grep",
 	},
 	{
+		"<leader>fL",
+		function()
+			require("plugins.snacks.picker.sources.lexique")()
+		end,
+		desc = "picker lexique",
+	},
+	{
 		"<leader>fb",
 		function()
 			Snacks.picker.buffers()

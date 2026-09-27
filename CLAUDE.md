@@ -42,6 +42,7 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 - `Userautocmd(event, opts)` — Creates autocmd in group `UserAutocmds`
 - `lua/frontmatter.lua` — lecture d'un front matter TOML `+++` (clés à plat), cache sur `mtime` ; utilisé par listdir et `lua/chantier.lua`
 - `:Suivi`, `:Brief`, `:Plan`, `:Audit` (`lua/cmd.lua` → `lua/chantier.lua`) — ouvrent le document du chantier implementation-tracker dont `branche` = branche git courante (dépôt du cwd)
+- `:Lexique[!] [terme]` (`lua/cmd.lua` → `lua/lexique.lua`) — ouvre le lexique local (`!` : global) ou affiche la définition d'un terme ; tout vient de la commande `lexique` (skill lexique de `~/.claude`), aucun `LEXIQUE.md` n'est lu par Neovim. `<leader>L` : définition du terme sous le curseur ou de la sélection ; `:LexiquePicker` / `<leader>fL` : picker Snacks des termes. Tests : `tests/lexique/`
 
 ## API Preferences
 - Préférer `vim.api.*` et `vim.fs.*` à `vim.fn.*` — les fonctions `vim.fn` sont des wrappers Vimscript plus lents et moins idiomatiques en Lua.

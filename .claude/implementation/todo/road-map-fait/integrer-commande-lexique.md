@@ -25,6 +25,11 @@ quitter Neovim en relisant un diff :
   qu'un mot : un terme composé demande une sélection visuelle, ou de chercher parmi les termes
   celui qui couvre le curseur.
 
+## Fait le
+
+**2026-09-27**, chantier `integrer-commande-lexique` — archive
+`.claude/implementation/done/2026-09-27-integrer-commande-lexique.md`.
+
 ## Références
 
 - prototype : `~/.claude/skills/lexique/nvim/lexique.lua` (se source à la main), et ses

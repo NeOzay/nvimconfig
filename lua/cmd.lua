@@ -33,6 +33,31 @@ cmd("StlToggle", function()
 	end
 end, { desc = "Basculer la statusline lualine on/off" })
 
+cmd("Lexique", function(opts)
+	if opts.args == "" then
+		return require("lexique").open(opts.bang)
+	end
+	if opts.bang then
+		return vim.notify(
+			"`!` ouvre le lexique global et ne prend pas de terme",
+			vim.log.levels.ERROR,
+			{ title = "Lexique" }
+		)
+	end
+	require("lexique").define(opts.args)
+end, {
+	nargs = "?",
+	bang = true,
+	complete = function(arglead, cmdline)
+		return require("lexique").complete(arglead, cmdline)
+	end,
+	desc = "Ouvrir le lexique local (! : global), ou afficher la définition d'un terme",
+})
+
+cmd("LexiquePicker", function()
+	require("plugins.snacks.picker.sources.lexique")()
+end, { desc = "Picker des termes du lexique et de leur définition" })
+
 for name, field in pairs({ Suivi = false, Brief = "brief", Plan = "plan", Audit = "audit" }) do
 	cmd(name, function()
 		require("chantier").open(field or nil)

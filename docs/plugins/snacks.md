@@ -5,7 +5,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 
 ## Files
 - Config picker (générique + agrégation keys): `lua/plugins/snacks/picker/init.lua`
-- Pickers custom autonomes: `lua/plugins/snacks/picker/sources/tabpages.lua`, `lua/plugins/snacks/picker/sources/harpoon.lua`
+- Pickers custom autonomes: `lua/plugins/snacks/picker/sources/tabpages.lua`, `lua/plugins/snacks/picker/sources/harpoon.lua`, `lua/plugins/snacks/picker/sources/lexique.lua` (termes du lexique, données de `lua/lexique.lua`)
 - Config explorer: `lua/plugins/snacks/explorer.lua`
 - Config notifier: `lua/plugins/snacks/notifier.lua`
 - Config terminal: `lua/plugins/snacks/terminal.lua`
@@ -64,6 +64,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 | `<leader>fh` | Help |
 | `<leader>fj` | Jumplist |
 | `<leader>fr` | Resume dernier picker |
+| `<leader>fL` | Termes du lexique et leur définition (aussi `:LexiquePicker`) |
 | `<leader>ma` | Marks |
 | `<leader>cm` | Git log |
 | `<leader>gt` | Git status |
@@ -118,6 +119,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 ## Commandes
 - `:Pickers` → liste tous les pickers disponibles.
 - `:Notifi` → ouvre le picker notifications.
+- `:LexiquePicker` → picker des termes du lexique (`<CR>` affiche la définition colorée).
 
 ## Gotchas
 - **ANSI du terminal non rechargées à chaud** : `g:terminal_color_0..15` (posées depuis `term_theme`, voir `theme-highlights.md`) ne sont lues par Neovim qu'au moment de `TermOpen` (`:h terminal_color_x`). `:Base46Reload` met à jour la variable globale mais un terminal déjà ouvert garde son ancienne palette ANSI. Or `q` et le toggle `<C-ù>` (`terminal.lua`) ne font que `self:hide()` — jamais de vrai `close()` — donc le job shell reste vivant et `TermOpen` ne se redéclenche jamais tant qu'on ne tue pas vraiment le terminal. **Pour voir un changement d'ANSI** : `exit` dans le shell (ou `:bd!` sur le buffer terminal) puis rouvrir avec `<C-ù>`. Le fond/texte (`TerminalNormal`/`TerminalNormalNC`) n'a pas ce problème : ce sont des groupes de highlight classiques, résolus par `winhighlight` à chaque redraw, donc rechargés à chaud normalement.
@@ -126,9 +128,11 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - La statuscolumn de statuscol s'affiche dans la preview car c'est un float et l'autocmd statuscol ignore les floats (`conditions.lua` → `cfg.relative ~= ""`). On la neutralise via `win.preview.wo.statuscolumn = ""`.
 - Le picker est configuré en mode `SnacksSubmodule` (retourne `{ opts, keys }`) — pas un `LazyPluginSpec` direct.
 - La vue "buffers seulement" dans l'explorer utilise `include`/`exclude` de snacks explorer, pas un filtre standard.
+- **En headless, un picker ouvert par `-c` disparaît au démarrage** : `-c` s'exécute avant `VimEnter`, et le picker n'existe plus ensuite (`Snacks.picker.get()` vide, parfois segfault). Pour un contrôle headless, l'ouvrir à `VimEnter` : `nvim --headless -c 'autocmd VimEnter * ++once LexiquePicker' -c 'lua vim.defer_fn(function() print(#Snacks.picker.get()[1]:items()) vim.cmd("qa!") end, 1500)'`.
 - `ivy_2_tall` modifie le layout via `config` (fonction qui itère `layout.layout`) car les presets héritent via `preset =` et ne peuvent pas surcharger directement une clé d'un sous-box.
 
 ## Changelog
+- 2026-09-27 : picker `sources/lexique.lua` (`<leader>fL`, `:LexiquePicker`), preset `ivy` sans preview ; les données viennent de `lexique definitions` via `lua/lexique.lua`. Gotcha headless (`-c` avant `VimEnter`) documenté.
 - 2026-07-27 : fork migré en submodule git sous `plugins/snacks.nvim/` ; la spec Lazy utilise `dir = vim.fn.stdpath("config") .. "/plugins/snacks.nvim"` (plus de `dev = true`, `dev.path` supprimé de `lazy-conf.lua`).
 - 2026-07-22 : terminal — thème distinct de l'éditeur via `term_theme` (`base46/config.lua`), groupes `TerminalNormal`/`TerminalNormalNC` appliqués par `win.wo.winhighlight`. Gotcha documenté : ANSI non rechargées à chaud (`TermOpen`-only, terminal jamais vraiment fermé par `q`/toggle).
 - 2026-07-09 : hauteur de la box du picker tabpages ajustée au nombre de tabs (`item_count + 3`, bornée par `min/max_height` de `bottom_compact`). Calculée une fois à l'ouverture — un `tab_close` pendant que le picker est ouvert ne rétrécit pas la box (le contenu de la list se met à jour via `refresh()`, pas le conteneur).

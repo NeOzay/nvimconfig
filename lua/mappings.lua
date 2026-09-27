@@ -20,6 +20,13 @@ map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
 map({ "n", "x" }, "Y", '"+y', { desc = "yank vers le presse-papier système" })
 
+map("n", "<leader>L", function()
+	require("lexique").at_cursor()
+end, { desc = "Lexique : définition du terme sous le curseur" })
+map("x", "<leader>L", function()
+	require("lexique").selection()
+end, { desc = "Lexique : définition de la sélection" })
+
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
 -- map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
 
