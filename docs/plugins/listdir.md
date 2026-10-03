@@ -15,7 +15,7 @@ sont concaténés.
   - `discover.lua` — recherche des répertoires-listes sous les chemins configurés
   - `item.lua` — lecture d'un élément (front matter + corps) : façade sur le module commun
     `lua/frontmatter.lua` de la config, qui porte le parseur et le cache sur `mtime`
-  - `cli.lua` — appel de `list-dir.py list`
+  - `cli.lua` — appel de `list-dir list`
   - `document.lua` — document concaténé, écrit sous le cache
   - `picker/lists.lua`, `picker/items.lua` — les deux pickers Snacks
 - Related : `docs/plugins/snacks-picker-custom.md`, skill `~/.claude/skills/list-dir/`
@@ -45,8 +45,7 @@ require("listdir").setup({
   paths  = { vim.fn.getcwd },  -- string ou fonction rendant un string
   depth  = 4,
   ignore = { ".git", "node_modules", ".venv", "__pycache__", "dist", "build", "target" },
-  cli    = vim.fs.joinpath(vim.env.HOME, ".claude/skills/list-dir/scripts/list-dir.py"),
-  python = "python3",
+  cli    = "list-dir",  -- résolue par le PATH ; sinon, son chemin
   timeout = 5000,
 
   -- Réglages Snacks ajoutés à chaque picker, appliqués **après** les nôtres :

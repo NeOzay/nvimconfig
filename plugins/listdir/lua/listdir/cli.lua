@@ -26,7 +26,7 @@ local M = {}
 ---@nodiscard
 function M.list(dir, field, reverse)
 	local opts = config.options
-	local cmd = { opts.python, opts.cli, "list", dir, "--sort", field }
+	local cmd = { opts.cli, "list", dir, "--sort", field }
 
 	local ok, result = pcall(function()
 		return vim.system(cmd, { text = true }):wait(opts.timeout)
