@@ -21,5 +21,10 @@ vim.opt.rtp:prepend(vim.fn.getcwd())
 -- Les plugins tenus par cette configuration vivent sous plugins/<nom>/ et ne sont donc pas
 -- résolus par le lua/ de la racine : les ajouter explicitement au runtimepath.
 vim.opt.rtp:prepend(vim.fn.getcwd() .. "/plugins/tts.nvim")
+vim.opt.rtp:prepend(vim.fn.getcwd() .. "/plugins/listdir")
+vim.opt.rtp:prepend(vim.fn.getcwd() .. "/plugins/snacks.nvim")
 
 require("mini.test").setup()
+
+-- Les pickers de listdir passent par `Snacks.picker`.
+require("snacks").setup({ picker = {} })

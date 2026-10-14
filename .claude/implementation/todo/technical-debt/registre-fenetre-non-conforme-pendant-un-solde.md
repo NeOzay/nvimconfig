@@ -2,6 +2,10 @@
 id = "registre-fenetre-non-conforme-pendant-un-solde"
 title = "Un solde laisse la liste de destination non conforme entre ses deux commits"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "debt-registry-migration"
+reference = "R3"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

@@ -2,8 +2,12 @@
 id = "listdir-depend-module-config"
 title = "Le plugin local `listdir` dépend du module `frontmatter` de la config"
 date = 2026-09-21
+severite = "inconnue"
+chantier = "chantier-docs-commands"
+reference = "R3"
+pin = false
 source = "chantier-docs-commands, rapport .claude/implementation/done/2026-09-21-chantier-docs-commands.audit.md"
-reviewed = "<OPTIONNEL>"
+reviewed = "<OPTIONNEL date>"
 category = "<OPTIONNEL>"
 +++
 

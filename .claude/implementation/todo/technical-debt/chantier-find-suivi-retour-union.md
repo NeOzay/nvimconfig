@@ -2,8 +2,12 @@
 id = "chantier-find-suivi-retour-union"
 title = "`find_suivi` rend les données du suivi ou la liste d'erreurs dans le même retour"
 date = 2026-09-21
+severite = "inconnue"
+chantier = "chantier-docs-commands"
+reference = "R5"
+pin = false
 source = "chantier-docs-commands, rapport .claude/implementation/done/2026-09-21-chantier-docs-commands.audit.md"
-reviewed = "<OPTIONNEL>"
+reviewed = "<OPTIONNEL date>"
 category = "<OPTIONNEL>"
 +++
 

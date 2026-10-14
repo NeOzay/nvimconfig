@@ -2,6 +2,10 @@
 id = "listdir-decouverte-synchrone"
 title = "La découverte des répertoires-listes bloque l'interface une seconde"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "list-dir-viewer"
+reference = "R3"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

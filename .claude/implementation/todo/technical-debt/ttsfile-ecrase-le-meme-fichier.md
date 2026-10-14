@@ -2,6 +2,10 @@
 id = "ttsfile-ecrase-le-meme-fichier"
 title = "`:TTSFile` écrase toujours le même fichier"
 date = 2026-08-18
+severite = "inconnue"
+chantier = "tts-piper"
+reference = "R5"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

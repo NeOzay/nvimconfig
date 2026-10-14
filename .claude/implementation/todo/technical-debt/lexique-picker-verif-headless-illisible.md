@@ -2,8 +2,12 @@
 id = "lexique-picker-verif-headless-illisible"
 title = "La vérification headless du picker lexique mêle son décompte au log ClaudeCode"
 date = 2026-09-27
+severite = "inconnue"
+chantier = "integrer-commande-lexique"
+reference = "R8"
+pin = false
 source = "integrer-commande-lexique, R8 du rapport .claude/implementation/done/2026-09-27-integrer-commande-lexique.audit.md"
-reviewed = "<OPTIONNEL>"
+reviewed = "<OPTIONNEL date>"
 category = "<OPTIONNEL>"
 +++
 

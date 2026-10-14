@@ -2,6 +2,10 @@
 id = "license-mentionne-edge-tts"
 title = "Le LICENSE du plugin mentionne une dépendance supprimée"
 date = 2026-08-18
+severite = "inconnue"
+chantier = "tts-piper"
+reference = "R6"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

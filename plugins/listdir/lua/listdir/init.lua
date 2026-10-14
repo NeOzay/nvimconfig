@@ -1,11 +1,11 @@
----Visualisation des répertoires-listes du skill `list-dir`, en lecture seule.
+---Visualisation des répertoires-listes du skill `list-dir`.
 ---
 ---Trois vues enchaînées : un picker des listes trouvées sous les chemins configurés,
 ---un picker des éléments de la liste choisie, et un buffer `nofile` où les éléments
 ---sont concaténés en Markdown.
 ---
----Aucune commande d'écriture de `list-dir` n'est appelée, et `show` non plus : le
----contenu des éléments est lu directement par Neovim.
+---Une seule commande d'écriture de `list-dir` est appelée, `toggle`, pour le pin de `:Dettes` ;
+---`show` jamais : le contenu des éléments est lu directement par Neovim.
 
 ---@class Ozay.ListDir
 local M = {}

@@ -2,8 +2,12 @@
 id = "lexique-curseur-casse-change-longueur"
 title = "`<leader>L` rate le terme sous le curseur quand la mise en minuscules change la longueur de la ligne"
 date = 2026-09-27
+severite = "inconnue"
+chantier = "integrer-commande-lexique"
+reference = "R9"
+pin = false
 source = "integrer-commande-lexique, R9 du rapport .claude/implementation/done/2026-09-27-integrer-commande-lexique.audit.md"
-reviewed = "<OPTIONNEL>"
+reviewed = "<OPTIONNEL date>"
 category = "<OPTIONNEL>"
 +++
 

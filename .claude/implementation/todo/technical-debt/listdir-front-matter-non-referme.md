@@ -2,6 +2,10 @@
 id = "listdir-front-matter-non-referme"
 title = "`listdir` lit un front matter non refermé sans le signaler"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "list-dir-viewer"
+reference = "R7"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

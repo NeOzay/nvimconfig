@@ -2,6 +2,10 @@
 id = "text-processor-defauts-upstream"
 title = "`text_processor.lua` porte deux défauts hérités de l'upstream"
 date = 2026-08-18
+severite = "inconnue"
+chantier = "tts-piper"
+reference = "R4"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

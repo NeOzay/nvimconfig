@@ -2,8 +2,12 @@
 id = "frontmatter-cache-masque-illisible"
 title = "Le cache de `frontmatter.read` sert encore un fichier devenu illisible"
 date = 2026-09-21
+severite = "inconnue"
+chantier = "chantier-docs-commands"
+reference = "R6"
+pin = false
 source = "chantier-docs-commands, rapport .claude/implementation/done/2026-09-21-chantier-docs-commands.audit.md"
-reviewed = "<OPTIONNEL>"
+reviewed = "<OPTIONNEL date>"
 category = "<OPTIONNEL>"
 +++
 

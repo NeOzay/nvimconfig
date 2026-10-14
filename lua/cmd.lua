@@ -58,6 +58,14 @@ cmd("LexiquePicker", function()
 	require("plugins.snacks.picker.sources.lexique")()
 end, { desc = "Picker des termes du lexique et de leur définition" })
 
+cmd("Dettes", function()
+	require("registres").dettes()
+end, { desc = "Picker de la dette technique du dépôt, pins en tête" })
+
+cmd("Roadmap", function()
+	require("registres").roadmap()
+end, { desc = "Picker des entrées de la road-map du dépôt" })
+
 for name, field in pairs({ Suivi = false, Brief = "brief", Plan = "plan", Audit = "audit" }) do
 	cmd(name, function()
 		require("chantier").open(field or nil)

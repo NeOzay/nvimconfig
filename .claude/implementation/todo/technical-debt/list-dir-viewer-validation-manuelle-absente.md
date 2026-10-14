@@ -2,6 +2,10 @@
 id = "list-dir-viewer-validation-manuelle-absente"
 title = "La validation manuelle du chantier `list-dir-viewer` n'a jamais été faite"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "list-dir-viewer"
+reference = "R8"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "inverifiable"

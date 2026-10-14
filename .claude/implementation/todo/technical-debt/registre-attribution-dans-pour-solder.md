@@ -2,6 +2,10 @@
 id = "registre-attribution-dans-pour-solder"
 title = "La ligne d'attribution des entrées est avalée par la section « Pour solder »"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "debt-registry-migration"
+reference = "R2"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

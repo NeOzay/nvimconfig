@@ -2,6 +2,10 @@
 id = "listdir-sans-tests"
 title = "Le plugin `listdir` ne livre aucun test, dans un dépôt qui en a le cadre"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "list-dir-viewer"
+reference = "R5"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

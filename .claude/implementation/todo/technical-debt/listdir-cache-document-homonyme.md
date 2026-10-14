@@ -2,6 +2,10 @@
 id = "listdir-cache-document-homonyme"
 title = "Deux répertoires-listes homonymes partagent le document concaténé de `listdir`"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "list-dir-viewer"
+reference = "R6"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

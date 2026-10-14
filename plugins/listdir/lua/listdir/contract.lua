@@ -1,14 +1,15 @@
 ---Lecture de `.list/contract.toml`.
 ---
----Pas de parseur TOML : seuls les noms de champs, leur type et leur caractère requis
----sont nécessaires, et ils se lisent au motif. La lecture des méta-données de la liste
+---Pas de parseur TOML : seuls les noms de champs, leur type, leur caractère requis et leur
+---dépréciation sont nécessaires, et ils se lisent au motif. La lecture des méta-données de la liste
 ---(`name`, `description`) s'arrête à la première ligne commençant par `[` — sans cette
 ---borne, les `description` internes aux blocs `[fields.X]` écraseraient celle de la liste.
 
 ---@class Ozay.ListDir.Field
 ---@field name string
----@field type string `slug` | `text` | `date` | `enum` | `list`
+---@field type string `slug` | `text` | `date` | `enum` | `list` | `bool` | `int`
 ---@field required boolean
+---@field deprecated? string message de dépréciation : le champ ne s'écrit plus
 
 ---@class Ozay.ListDir.Contract
 ---@field name string
@@ -67,6 +68,8 @@ function M.read(dir)
 				current.type = ftype
 			elseif line:match("^%s*required%s*=%s*true%s*$") then
 				current.required = true
+			else
+				current.deprecated = line:match('^%s*deprecated%s*=%s*"(.*)"%s*$') or current.deprecated
 			end
 		end
 	end

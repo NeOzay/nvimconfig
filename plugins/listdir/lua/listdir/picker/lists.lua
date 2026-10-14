@@ -38,7 +38,8 @@ local function preview(entry)
 	lines[#lines + 1] = "| champ | type | requis |"
 	lines[#lines + 1] = "|---|---|---|"
 	for _, field in ipairs(entry.fields) do
-		lines[#lines + 1] = ("| %s | %s | %s |"):format(field.name, field.type, field.required and "oui" or "")
+		local name = field.deprecated and ("~~%s~~ (déprécié)"):format(field.name) or field.name
+		lines[#lines + 1] = ("| %s | %s | %s |"):format(name, field.type, field.required and "oui" or "")
 	end
 	return table.concat(lines, "\n")
 end

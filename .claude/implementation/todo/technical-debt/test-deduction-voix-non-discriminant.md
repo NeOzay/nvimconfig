@@ -2,6 +2,10 @@
 id = "test-deduction-voix-non-discriminant"
 title = "Le test de déduction de voix ne discrimine que par coïncidence"
 date = 2026-08-18
+severite = "inconnue"
+chantier = "tts-piper"
+reference = "R13"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

@@ -2,6 +2,10 @@
 id = "client-tts-timer-non-arme"
 title = "Le délai de garde du client TTS n'est pas armé si `uv.new_timer()` échoue"
 date = 2026-08-18
+severite = "inconnue"
+chantier = "tts-piper"
+reference = "R8"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

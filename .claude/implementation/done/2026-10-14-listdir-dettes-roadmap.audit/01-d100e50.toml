@@ -1,0 +1,301 @@
+# Posé par `audit new`. L'auditeur remplit chaque <À REMPLIR>, range chaque dette précédente
+# par `audit range`, ajoute les siennes par `audit dette`, et écrit le verdict en dernier.
+slug = "listdir-dettes-roadmap"
+audit = "01-d100e50"
+rang = 1
+type = "clôture"
+date = 2026-10-14
+base = "master"
+commit = "d100e50"
+brief = ".claude/implementation/listdir-dettes-roadmap.brief.md"
+suivi = ".claude/implementation/listdir-dettes-roadmap.md"
+plan = ".claude/plans/jaunty-strolling-micali.md"
+
+[[verification]]
+origine = "Étape 1"
+commande = "`list-dir validate` des trois listes sans « périmé », comptes `severite=inconnue` égaux (plan, étape 1)"
+statut = "passée"
+sortie = """Rejouée par l'auditeur, commandes du plan (étape 1), sur l'arbre au commit audité :
+for l in technical-debt technical-debt-solde technical-debt-ecarte; do list-dir validate .claude/implementation/todo/$l; done 2>&1 | grep -c 'périmé'
+0
+list=22 inconnue=22
+versions : technical-debt 3, patron review 2, -solde 2, -ecarte 2"""
+
+[[verification]]
+origine = "Étape 2"
+commande = "garde de `migrations/3.md` en 0, `list-dir validate --filled` des trois listes (plan, étape 2)"
+statut = "passée"
+sortie = """Rejouée par l'auditeur. Garde de migrations/3.md, STRUCTURE = 3e71f51 (commit E1) :
+garde : 22 entrées, 44 valeurs posées, conformes
+code=0
+list-dir validate --filled des trois listes : code 0 chacune, aucun « périmé »
+(technical-debt : 22 élément(s) remplis et conformes ; -solde, -ecarte : 0 élément(s)).
+Les 22 entrées gardent `source`, signalé « déprécié » : attendu, la v3 ne fait que cesser de l'écrire."""
+
+[[verification]]
+origine = "Étape 3"
+commande = "`make test-file FILE=tests/listdir/test_frontmatter.lua` et les grep du plan (étape 3)"
+statut = "passée"
+sortie = """Rejouée par l'auditeur.
+make test-file FILE=tests/listdir/test_frontmatter.lua
+tests/listdir/test_frontmatter.lua: ooooooooooooo
+Fails (0) and Notes (0)
+grep -n 'OPTIONNEL' lua/frontmatter.lua
+98:	return value:match("^<À REMPLIR[> ]") ~= nil or value:match("^<OPTIONNEL[> ]") ~= nil
+grep -n 'OPTIONNEL\\|PLACEHOLDERS\\|EMPTY = {' lua/chantier.lua plugins/listdir/lua/listdir/picker/items.lua
+(aucune ligne, code 1 : plus de table de chaînes exactes, attendu)"""
+
+[[verification]]
+origine = "Étape 4"
+commande = "make test-file FILE=tests/listdir/test_cli.lua"
+statut = "passée"
+sortie = """nvim --headless -u tests/minimal_init.lua -c "lua MiniTest.run_file('tests/listdir/test_cli.lua')"
+Total number of cases: 9
+Total number of groups: 1
+
+tests/listdir/test_cli.lua: ooooooooo
+
+Fails (0) and Notes (0)"""
+
+[[verification]]
+origine = "Étape 5"
+commande = "make test-file FILE=tests/listdir/test_items.lua"
+statut = "passée"
+sortie = """nvim --headless -u tests/minimal_init.lua -c "lua MiniTest.run_file('tests/listdir/test_items.lua')"
+Total number of cases: 5
+Total number of groups: 1
+
+tests/listdir/test_items.lua: ooooo
+
+Fails (0) and Notes (0)"""
+
+[[verification]]
+origine = "Étape 6"
+commande = "`make test-file FILE=tests/listdir/test_items.lua` et le titre headless de `:Roadmap` (plan, étape 6)"
+statut = "passée"
+sortie = """Rejouée par l'auditeur.
+make test-file FILE=tests/listdir/test_items.lua
+tests/listdir/test_items.lua: ooooo
+Fails (0) and Notes (0)
+nvim --headless -c 'autocmd VimEnter * ++once Roadmap' -c 'lua vim.defer_fn(function() … print(p.title) … end, 1500)'
+road-map  ↑ title
+code=0"""
+
+[[verification]]
+origine = "Étape 7"
+commande = "`make test-file FILE=tests/listdir/test_registres.lua` et le décompte headless de `:Dettes`"
+statut = "passée"
+sortie = """Rejouée par l'auditeur.
+make test-file FILE=tests/listdir/test_registres.lua
+tests/listdir/test_registres.lua: ooooooooooo
+Fails (0) and Notes (0)
+nvim --headless, :Dettes au VimEnter, titre et nombre d'items après 2 s :
+technical-debt  ↑ title 22·0 pin
+22
+Touches posées dans l'input et la liste (nvim_buf_get_keymap) :
+n <M-N> ld_toggle_pin | n <M-n> ld_pins | i <M-N> ld_toggle_pin | i <M-n> ld_pins
+ListDirPinned et ListDirSeverity* définis après l'ouverture (nvim_get_hl)."""
+
+[[verification]]
+origine = "Étape 8"
+commande = "make test-file FILE=tests/chantier/test_chantier.lua"
+statut = "passée"
+sortie = """nvim --headless -u tests/minimal_init.lua -c "lua MiniTest.run_file('tests/chantier/test_chantier.lua')"
+Total number of cases: 5
+Total number of groups: 1
+
+tests/chantier/test_chantier.lua: ooooo
+
+Fails (0) and Notes (0)"""
+
+[[verification]]
+origine = "Étape 9"
+commande = "`make test`, grep des nouvelles entrées (plan, étape 9)"
+statut = "passée"
+sortie = """Rejouée par l'auditeur.
+make test : Total number of cases: 121, groups: 10 — Fails (0) and Notes (0)
+grep -n 'Dettes\\|Roadmap\\|<A-n>' docs/plugins/listdir.md CLAUDE.md → 14 lignes, code 0
+(dont docs/plugins/listdir.md:116 « | `<A-t>` | `:Dettes` | épingle / désépingle … » et CLAUDE.md:45
+« `<A-t>` bascule le pin » : ajoutés à l'Étape 10, la touche réelle est `<A-N>`, cf. R1)"""
+
+[[verification]]
+origine = "Étape 10"
+commande = "`make test-file FILE=tests/listdir/test_registres.lua`, `make test`"
+statut = "passée"
+sortie = """Rejouée par l'auditeur.
+make test-file FILE=tests/listdir/test_registres.lua
+tests/listdir/test_registres.lua: ooooooooooo
+Fails (0) and Notes (0)
+make test : 121 cas, Fails (0) and Notes (0)
+Réserve : le test « <A-t> dans le picker » déclenche l'action par son nom
+(`picker:action("ld_toggle_pin")`, tests/listdir/test_registres.lua:192), pas la touche ;
+il ne prouve donc pas la touche promise par l'étape, posée `<A-N>` (lua/registres.lua:183), cf. R1."""
+
+[[verification]]
+origine = "C1"
+commande = "for l in technical-debt technical-debt-solde technical-debt-ecarte; do list-dir validate .claude/implementation/todo/$l --filled; echo \"code=$?\"; done 2>&1"
+statut = "passée"
+sortie = """(22 lignes « champ « source » — déprécié : Remplacé par chantier et reference ; ne plus l'écrire. », une par entrée)
+.claude/implementation/todo/technical-debt : 22 élément(s) remplis et conformes au contrat
+code=0
+.claude/implementation/todo/technical-debt-solde : 0 élément(s) remplis et conformes au contrat
+code=0
+.claude/implementation/todo/technical-debt-ecarte : 0 élément(s) remplis et conformes au contrat
+code=0
+Aucun avertissement « périmé » (péremption de contrat) sur stdout ni stderr."""
+
+[[verification]]
+origine = "C2"
+commande = "grep -n 'OPTIONNEL' lua/frontmatter.lua && make test-file FILE=tests/listdir/test_frontmatter.lua"
+statut = "passée"
+sortie = """Preuve déplacée sur lua/frontmatter.lua par le Suivi (arbitrage Q1 du Plan) ; le grep littéral du Brief sur
+lua/chantier.lua et picker/items.lua rend 0 ligne (code 1), comme l'arbitrage le prévoit : les deux appellent
+frontmatter.is_marker (lua/chantier.lua:25, picker/items.lua:21).
+89:---Vrai pour un Marqueur des semences : (les deux Marqueurs génériques), ou leur forme typée
+90:---(…). Seule définition des Marqueurs côté Neovim.   [lignes 89-90 abrégées par l'auditeur]
+98:	return value:match("^<À REMPLIR[> ]") ~= nil or value:match("^<OPTIONNEL[> ]") ~= nil
+tests/listdir/test_frontmatter.lua: ooooooooooooo
+Fails (0) and Notes (0)"""
+
+[[verification]]
+origine = "C9"
+commande = "make test"
+statut = "passée"
+sortie = """Total number of cases: 121
+Total number of groups: 10
+tests/chantier/test_chantier.lua: ooooo
+tests/lexique/test_lexique.lua: oooooooooooooooooo
+tests/listdir/test_cli.lua: ooooooooo
+tests/listdir/test_frontmatter.lua: ooooooooooooo
+tests/listdir/test_items.lua: ooooo
+tests/listdir/test_registres.lua: ooooooooooo
+tests/lsp/hover/test_format.lua: (31 o)
+tests/tts/…: tous o
+Fails (0) and Notes (0)"""
+
+[[conformite.critere]]
+id = "C1"
+critere = "Registre local en v3 : `list-dir validate .claude/implementation/todo/technical-debt --filled` sort en 0 sans avertissement de péremption, de même pour `-solde` et `-ecarte`."
+etat = "atteint"
+constat = "Vérification C1 : les trois `validate --filled` sortent en 0, sans « périmé » ; contrats en version 3 (registre), 2 (patron review, -solde, -ecarte). Les 22 avertissements restants disent `source` déprécié, que la v3 garde en lecture : ce n'est pas une péremption. Garde de migrations/3.md rejouée depuis 3e71f51 : 22 entrées, 44 valeurs, conformes."
+
+[[conformite.critere]]
+id = "C2"
+critere = "Marqueurs typés : `grep -n 'OPTIONNEL' lua/chantier.lua plugins/listdir/lua/listdir/picker/items.lua` montre que les deux reconnaissent la forme typée (`^<OPTIONNEL`, `^<À REMPLIR`) ; un `reviewed = <OPTIONNEL date>` s'affiche en retrait."
+etat = "atteint"
+constat = "Preuve déplacée par le Suivi (arbitrage Q1) : `frontmatter.is_marker` (lua/frontmatter.lua:94-99) reconnaît `^<À REMPLIR[> ]` et `^<OPTIONNEL[> ]`, seule définition ; lua/chantier.lua:25 (`filled`) et picker/items.lua:21 (`empty`) l'appellent, plus de table de chaînes exactes. Le test « un Marqueur typé reste en retrait » (tests/listdir/test_frontmatter.lua:49) vérifie que `<OPTIONNEL date>` n'est pas rendu en colonne. Vérification C2 passée."
+
+[[conformite.critere]]
+id = "C3"
+critere = "Tri : avec le sens inversé (`<A-v>`), les éléments au Marqueur ou sans valeur restent en fin ; les champs `deprecated` sortent du cycle de tri."
+etat = "atteint"
+constat = "L'inversion Lua a disparu de cli.lua ; `items.keys` (picker/items.lua:99-110) passe le sens en `-champ` à la CLI, qui range Marqueurs et valeurs absentes en fin dans les deux sens. tests/listdir/test_cli.lua « décroissant : le Marqueur reste en fin » (`-date` → recente, ancienne, sans-date) et « le sens inversé passe à la CLI ». `contract.lua` lit `deprecated` (l. 71-72), `items.state` filtre les dépréciés (l. 75-77) ; test « source sort du cycle de tri ». Tests verts (Étape 4, C9)."
+
+[[conformite.critere]]
+id = "C4"
+critere = "`:Dettes` : pins en tête, dans une couleur propre ; dans chaque groupe, ordre du champ du cycle, puis `date` décroissante, puis `severite` décroissante, sans clé répétée ; sévérité colorée par niveau ; une touche restreint aux pins ; le titre donne le nombre de dettes et de pins."
+etat = "atteint"
+constat = "lua/registres.lua:147-187 : `before = { \"-pin\" }`, `after = { \"-date\", \"-severite\" }`, `skip = { \"pin\" }` ; une clé fixe égale au champ courant est omise (picker/items.lua:102-106). L'enum `severite` est déclaré de la moindre à la pire gravité (contrat, l. 26-29) : `-severite` met la plus grave d'abord. `decorate` pose `ListDirPinned` sur le libellé et un glyphe `ListDirSeverity<Niveau>` ; groupes définis dans lua/highlights/listdir.lua et appliqués à l'ouverture (nvim_get_hl, vérif. Étape 7). `<A-n>` (`ld_pins`) restreint par `--where pin=true`. Titre « technical-debt  ↑ title 22·0 pin » en headless. tests/listdir/test_registres.lua couvre ordre, clé non répétée, filtre, compteurs et groupes."
+
+[[conformite.critere]]
+id = "C5"
+critere = "Toggle du pin : la touche appelle `list-dir set` ; le diff de l'entrée ne touche que la ligne `pin` ; le picker se rafraîchit en place."
+etat = "atteint"
+constat = "Lu selon le journal de décisions du Suivi (2026-10-14) : `set` s'entend de `list-dir toggle <liste> pin --id <id>`. `cli.toggle` (plugins/listdir/lua/listdir/cli.lua:66-77) est la seule écriture ; `toggle_pin` (lua/registres.lua:112-139) oublie l'entrée du cache, relance le finder, garde le curseur et rafraîchit la preview. Tests « toggle ne change que la ligne pin, et revient » et « <A-t> dans le picker : épinglée, en tête, curseur gardé » verts. Une touche le déclenche bien, `<A-N>` (vérif. Étape 7) ; qu'elle ne soit pas celle que la doc annonce relève de C9 (R1)."
+
+[[conformite.critere]]
+id = "C6"
+critere = "`:Roadmap` ouvre le picker d'éléments de listdir directement sur `.claude/implementation/todo/road-map`."
+etat = "atteint"
+constat = "`:Roadmap` (lua/cmd.lua) → `registres.roadmap()` → `items.open(<racine>/.claude/implementation/todo/road-map, ct)` sans option (lua/registres.lua:49-64). Rejoué en headless avec la configuration réelle : le picker s'ouvre, titre « road-map  ↑ title » (vérif. Étape 6)."
+
+[[conformite.critere]]
+id = "C7"
+critere = "`:Brief` sur `master` : un brief hors chantier → ouvert ; plusieurs → picker ; aucun → message. Sur une branche de chantier, inchangé."
+etat = "atteint"
+constat = "lua/chantier.lua : `scan` collecte suivis et briefs hors `done/`, `orphan_briefs` écarte ceux qu'un suivi cite en `brief` (chemins normalisés), `open_brief` ouvre l'unique ou un picker `chantier_briefs` ; aucun → « …, ni de brief hors chantier ». Le chemin d'une branche de chantier garde sa logique (`find_suivi` puis `resolve`). tests/chantier/test_chantier.lua couvre les cinq cas (un, cité écarté, plusieurs, aucun, branche de chantier) : vert (vérif. Étape 8, rejouée par `make test`)."
+
+[[conformite.critere]]
+id = "C8"
+critere = "Après un changement de tri, `<leader>fr` rouvre le picker avec un indicateur (« ↑ date ») conforme au tri en cours."
+etat = "atteint"
+constat = "`<leader>fr` est `Snacks.picker.resume()` (lua/plugins/snacks/picker/init.lua:292-296), qui rejoue `init_opts` ; `on_show` (picker/items.lua:305-308) recalcule le titre depuis `state` à chaque ouverture, resume compris. Test « l'indicateur suit le tri en cours » (tests/listdir/test_items.lua:44-66) : tri changé, fermeture, resume, titre égal au tri courant — vert."
+
+[[conformite.critere]]
+id = "C9"
+critere = "Tests mini.test du listdir et de `chantier.lua` verts ; `docs/plugins/listdir.md` décrit les nouvelles commandes et touches."
+etat = "non-atteint"
+constat = "Tests verts (vérification C9 : 121 cas, 0 échec). Mais la doc décrit une touche qui n'existe pas : docs/plugins/listdir.md:64, :116, :148 et :204, et CLAUDE.md:45, annoncent `<A-t>` pour basculer le pin ; le code pose `<A-N>` (lua/registres.lua:183), confirmé en headless par nvim_buf_get_keymap (`<M-N> ld_toggle_pin`, aucun `<M-t>`). La touche réelle n'est décrite nulle part : l'utilisateur qui suit la doc presse `<A-t>` et rien ne se passe."
+dette = "R1"
+
+[[conformite.hors_perimetre]]
+exclusion = "L'écriture de la commande `set` de `list-dir` : elle relève d'un chantier préalable, dans `~/.claude`, ouvert par une entrée de road-map."
+etat = "respecté"
+constat = "`git diff master...d100e50 --stat` : aucun fichier hors de ce dépôt. `toggle` et `fill --override` viennent du commit 89c5571 de `~/.claude` (« feat(list-dir): fill --override et toggle »), hors du diff du Chantier ; le journal de décisions adopte `toggle` au lieu de `set`."
+
+[[conformite.hors_perimetre]]
+exclusion = "Toute écriture directe de Neovim dans une entrée de liste."
+etat = "respecté"
+constat = "La seule écriture passe par `vim.system({ cli, \"toggle\", … })` (plugins/listdir/lua/listdir/cli.lua:74-77). Aucun `io.open` en écriture, `writefile` ni `nvim_buf_set_lines` dans le code ajouté ; le seul `writefile` du diff est dans tests/chantier/test_chantier.lua:21, sur un dépôt temporaire, pas une entrée de liste. Les entrées du registre migrées aux Étapes 1-2 l'ont été par la CLI et l'agent Claude, pas par Neovim."
+
+[[conformite.hors_perimetre]]
+exclusion = "Une touche qui ouvrirait le suivi archivé du chantier d'origine d'une dette : proposée, non retenue."
+etat = "respecté"
+constat = "Les actions de `:Dettes` sont `ld_pins` et `ld_toggle_pin` (lua/registres.lua:171-184), plus celles du picker d'éléments ; aucune n'ouvre un suivi archivé."
+
+[[conformite.signal]]
+id = "S1"
+signal = "Un `io.open(…, \"w\")`, `vim.fn.writefile` ou `nvim_buf_set_lines` visant un `.md` de liste dans le diff : Neovim écrit dans une entrée."
+etat = "absent"
+constat = "`git diff master...d100e50 -- '*.lua' | grep '^+.*\\(io.open\\|writefile\\|nvim_buf_set_lines\\)'` : une seule ligne, tests/chantier/test_chantier.lua:21, qui pose un suivi ou un brief dans un dépôt temporaire, pas un `.md` de liste."
+
+[[conformite.signal]]
+id = "S2"
+signal = "Le diff touche `~/.claude/skills/list-dir/` : c'est le travail de `set`, chantier préalable."
+etat = "absent"
+constat = "Le diff du Chantier ne contient que des chemins de ce dépôt ; `~/.claude/skills/list-dir/` n'y figure pas. Le `toggle` employé vient d'un commit distinct de `~/.claude` (89c5571)."
+
+[[conformite.signal]]
+id = "S3"
+signal = "Un appel `list` à plusieurs colonnes de `--sort` dont la sortie est découpée par position."
+etat = "absent"
+constat = "`cli.list` passe plusieurs clés à `--sort` mais ne lit que le premier token, l'id (`line:match(\"^(%S+)\")`, cli.lua:59) ; toute valeur affichée vient de `item.read`. Le Suivi a ratifié qu'un tel appel n'est pas S3 (arbitrage Q7)."
+
+[[conformite.signal]]
+id = "S4"
+signal = "Un appel `list-dir` par élément au lieu d'un par ouverture ou changement de tri."
+etat = "absent"
+constat = "`cli.list` n'est appelé qu'en `items.finder` et `items.document` (picker/items.lua:136, :203), une fois par run. Les compteurs de `:Dettes` se lisent en Lua sur le front matter caché (`registres.counts`), sans appel `list-dir`. Le toggle fait un appel `toggle` puis un run du finder."
+
+[[conformite.signal]]
+id = "S5"
+signal = "`:Dettes` ou `:Roadmap` réimplémentent un picker au lieu de réutiliser `picker/items.lua`."
+etat = "absent"
+constat = "lua/registres.lua n'appelle aucun `Snacks.picker.pick` : `open` délègue à `require(\"listdir.picker.items\").open(dir, ct, opts)` (l. 58), réglé par les options `before`/`after`/`skip`/`where`/`decorate`/`title`/`actions`/`keys`."
+
+[conformite.symptome]
+symptome = "« l'implémentation List-dir a subi des mises à jour ; il faut vérifier que l'intégration de Nvim est encore entièrement compatible » ; `:Brief` « ne fonctionne pas si le chantier n'est pas encore créé » ; l'indicateur de tri (« ↑ date ») reste à l'état initial quand le picker est rouvert par `<leader>fr`."
+etat = "disparu"
+constat = "Les trois volets : (1) compatibilité avec le list-dir actuel — Marqueurs typés (C2), tri typé et `deprecated` (C3), registre v3 (C1), le tout exercé contre la CLI réelle par tests/listdir/ ; (2) `:Brief` sans chantier créé ouvre le brief orphelin ou un picker (C7, tests/chantier/) ; (3) l'indicateur suit le tri au resume (C8, tests/listdir/test_items.lua). `:Dettes` et `:Roadmap` s'ouvrent avec la configuration réelle en headless."
+
+[[dette.actuelle]]
+id = "R1"
+nature = "alignement"
+emplacement = "Brief, C9 ; lua/registres.lua:183 ; docs/plugins/listdir.md:64,116,148,204 ; CLAUDE.md:45 ; tests/listdir/test_registres.lua:168"
+constat = "La bascule du pin est posée sur `<A-N>` (lua/registres.lua:183), alors que la doc du plugin (4 endroits), CLAUDE.md et le nom du test annoncent `<A-t>`, comme le Plan (Étape 10). Tout est entré dans le même commit d100e50, et le journal de décisions ne dit aucun changement de touche. Vérifié en headless : `<M-N>` mappé sur `ld_toggle_pin`, `<M-t>` non mappé. Le test déclenche l'action par son nom (`picker:action(\"ld_toggle_pin\")`), d'où un écart qu'aucune vérification n'a vu. C9 n'est pas atteint : la doc ne décrit pas la touche réelle."
+trouvee = "01-d100e50"
+solution = "Aligner code et doc sur une seule touche. Soit `<A-t>` dans lua/registres.lua:183, ce qui suit le Plan et la doc (aucune collision chez Snacks ni dans la config : grep vide) ; soit `<A-N>` dans docs/plugins/listdir.md (l. 64, 116, 148, 204), CLAUDE.md:45 et le nom du test. Faire passer le test par la touche (`child.type_keys`) plutôt que par `picker:action`, pour que la touche documentée soit celle qu'on vérifie."
+severite = "bloquant"
+
+[[dette.actuelle]]
+id = "R2"
+nature = "qualité"
+emplacement = "plugins/listdir/lua/listdir/picker/items.lua:38,288-295 ; lua/registres.lua:181-184"
+constat = "`Ozay.ListDir.ItemsOpts.keys` est déclaré `table<string, string>` (touche → nom d'action), et `items.open` l'enveloppe lui-même en `{ name, mode = { \"i\", \"n\" } }`. `:Dettes` lui passe pourtant des tables `{ \"ld_pins\", mode = { \"n\", \"i\" } }`, ce qui donne dans l'input un spec imbriqué `{ { \"ld_pins\", mode = … }, mode = … }`. Ça marche par accident : `snacks.win:action` accepte une table d'actions et l'itère par `ipairs`. Coût : un appel hors du type annoncé, qu'emmylua_ls signale, et une dépendance silencieuse à un détail interne de Snacks. Le `mode` passé par l'appelant est redondant avec celui que pose `items.open`."
+trouvee = "01-d100e50"
+solution = "Passer des noms d'action dans lua/registres.lua : `keys = { [\"<A-n>\"] = \"ld_pins\", [\"<A-…>\"] = \"ld_toggle_pin\" }`, conformes à `table<string, string>` ; `items.open` pose déjà les modes."
+severite = "avertissement"
+
+[verdict]
+valeur = "DÉFAVORABLE"
+justification = "Une dette bloquant, R1. C9 n'est pas atteint : la touche de bascule du pin est `<A-N>` dans le code, `<A-t>` dans la doc, CLAUDE.md et le nom du test. Le reste du Chantier est conforme : C1 à C8 atteints, les exclusions du Hors-périmètre respectées, aucun Signal de dérive, le symptôme disparu, 121 tests verts, registre v3 conforme et garde de migration en 0. La correction tient en une ligne d'un côté ou de l'autre, plus un test qui passe par la touche. R2, un avertissement sur le type de `keys`, ne pèserait pas seul au-delà de FAVORABLE."

@@ -86,6 +86,25 @@ function M.read(path)
 	return data
 end
 
+---Vrai pour un Marqueur des semences : `<À REMPLIR>`, `<OPTIONNEL>`, ou leur forme typée
+---(`<OPTIONNEL date>`). Seule définition des Marqueurs côté Neovim.
+---@param value string?
+---@return boolean
+---@nodiscard
+function M.is_marker(value)
+	if not value then
+		return false
+	end
+	return value:match("^<À REMPLIR[> ]") ~= nil or value:match("^<OPTIONNEL[> ]") ~= nil
+end
+
+---Oublie un fichier du cache. Le cache se fie à `mtime` à la seconde : un fichier réécrit deux
+---fois dans la même seconde servirait l'ancienne valeur.
+---@param path string
+function M.forget(path)
+	cache[path] = nil
+end
+
 ---Vide le cache. Utile en test, et après une modification faite hors de Neovim.
 function M.clear()
 	cache = {}

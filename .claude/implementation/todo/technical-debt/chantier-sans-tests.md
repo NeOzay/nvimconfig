@@ -2,8 +2,12 @@
 id = "chantier-sans-tests"
 title = "`:Suivi`, `:Brief`, `:Plan`, `:Audit` n'ont aucun test persistant"
 date = 2026-09-21
+severite = "inconnue"
+chantier = "chantier-docs-commands"
+reference = "R4"
+pin = false
 source = "chantier-docs-commands, rapport .claude/implementation/done/2026-09-21-chantier-docs-commands.audit.md"
-reviewed = "<OPTIONNEL>"
+reviewed = "<OPTIONNEL date>"
 category = "<OPTIONNEL>"
 +++
 

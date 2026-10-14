@@ -2,6 +2,10 @@
 id = "speak-coupe-avant-synthese"
 title = "`speak` coupe la lecture en cours avant de savoir si la nouvelle aboutira"
 date = 2026-08-18
+severite = "inconnue"
+chantier = "tts-piper"
+reference = "R11"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

@@ -2,6 +2,10 @@
 id = "todo-sans-readme"
 title = "`todo/README.md`, annoncé par l'arborescence du pipeline, n'existe pas"
 date = 2026-08-29
+severite = "inconnue"
+chantier = "debt-registry-migration"
+reference = "Hors-périmètre du Brief"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

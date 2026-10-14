@@ -2,6 +2,10 @@
 id = "ttsvoice-fige-la-deduction-par-langue"
 title = "`:TTSVoice` rend `:TTSSetLanguage` définitivement sans effet"
 date = 2026-08-18
+severite = "inconnue"
+chantier = "tts-piper"
+reference = "R3"
+pin = false
 source = "<OPTIONNEL>"
 reviewed = 2026-08-29
 category = "pertinent"

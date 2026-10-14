@@ -40,8 +40,9 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 ## Global Helpers (init.lua)
 - `pRequire(mod)` — Protected require, returns nil on failure
 - `Userautocmd(event, opts)` — Creates autocmd in group `UserAutocmds`
-- `lua/frontmatter.lua` — lecture d'un front matter TOML `+++` (clés à plat), cache sur `mtime` ; utilisé par listdir et `lua/chantier.lua`
-- `:Suivi`, `:Brief`, `:Plan`, `:Audit` (`lua/cmd.lua` → `lua/chantier.lua`) — ouvrent le document du chantier implementation-tracker dont `branche` = branche git courante (dépôt du cwd)
+- `lua/frontmatter.lua` — lecture d'un front matter TOML `+++` (clés à plat), cache sur `mtime` ; `is_marker` reconnaît les Marqueurs, génériques et typés (`<OPTIONNEL date>`) ; utilisé par listdir et `lua/chantier.lua`
+- `:Suivi`, `:Brief`, `:Plan`, `:Audit` (`lua/cmd.lua` → `lua/chantier.lua`) — ouvrent le document du chantier implementation-tracker dont `branche` = branche git courante (dépôt du cwd) ; hors chantier, `:Brief` ouvre le brief qu'aucun suivi ne cite (picker s'il y en a plusieurs). Tests : `tests/chantier/`
+- `:Dettes`, `:Roadmap` (`lua/cmd.lua` → `lua/registres.lua`) — picker d'éléments de listdir sur `.claude/implementation/todo/{technical-debt,road-map}` ; `:Dettes` met les pins en tête et colorés, `<A-n>` restreint aux pins, `<A-N>` bascule le pin par `list-dir toggle`. Doc : [`docs/plugins/listdir.md`](docs/plugins/listdir.md)
 - `:Lexique[!] [terme]` (`lua/cmd.lua` → `lua/lexique.lua`) — ouvre le lexique local (`!` : global) ou affiche la définition d'un terme ; tout vient de la commande `lexique` (skill lexique de `~/.claude`), aucun `LEXIQUE.md` n'est lu par Neovim. `<leader>L` : définition du terme sous le curseur ou de la sélection ; `:LexiquePicker` / `<leader>fL` : picker Snacks des termes. Tests : `tests/lexique/`
 
 ## API Preferences
