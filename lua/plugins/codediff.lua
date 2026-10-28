@@ -20,21 +20,21 @@ return {
 		{
 			"<leader>gd",
 			function()
-				vim.cmd("CodeDiff" .. (vim.o.columns < 100 and " --inline" or ""))
+				vim.cmd("CodeDiff")
 			end,
 			desc = "Open CodeDiff",
 		},
 		{
 			"<leader>gh",
 			function()
-				vim.cmd("CodeDiff" .. (vim.o.columns < 100 and " --inline" or "") .. " history HEAD~50 %")
+				vim.cmd("CodeDiff history HEAD~50 %")
 			end,
 			desc = "File History (current)",
 		},
 		{
 			"<leader>gH",
 			function()
-				vim.cmd("CodeDiff" .. (vim.o.columns < 100 and " --inline" or "") .. " history")
+				vim.cmd("CodeDiff history")
 			end,
 			desc = "File History (all)",
 		},
@@ -124,6 +124,7 @@ return {
 			height = 16,
 		},
 		diff = {
+			layout = "inline",
 			compact_context_lines = 20, -- Number of context lines around hunks in compact mode
 			compact_sync_folds = true, -- Sync fold open/close across panes (mirrors Vim diff mode behavior)
 			-- compact = true, -- Open diffs in compact mode by default (fold unchanged regions; toggle with gc)
@@ -174,23 +175,23 @@ return {
 
 		-- Ferme automatiquement l'explorer quand un fichier est sélectionné
 		-- (pratique sur petit écran/terminal, ex. Neovim sur téléphone).
-		Userautocmd("User", {
-			pattern = "CodeDiffFileSelect",
-			callback = function(args)
-				local tabpage = args.data and args.data.tabpage
-				if not tabpage then
-					return
-				end
-				vim.defer_fn(function()
-					local lifecycle = require("codediff.ui.lifecycle")
-					local explorer = lifecycle.get_explorer(tabpage)
-					local _, modified_bufnr = lifecycle.get_buffers(tabpage)
-					local still_focused = modified_bufnr and modified_bufnr == vim.api.nvim_get_current_buf()
-					if explorer and not explorer.is_hidden and still_focused then
-						require("codediff.ui.explorer").toggle_visibility(explorer)
-					end
-				end, 50)
-			end,
-		})
+		-- Userautocmd("User", {
+		-- 	pattern = "CodeDiffFileSelect",
+		-- 	callback = function(args)
+		-- 		local tabpage = args.data and args.data.tabpage
+		-- 		if not tabpage then
+		-- 			return
+		-- 		end
+		-- 		vim.defer_fn(function()
+		-- 			local lifecycle = require("codediff.ui.lifecycle")
+		-- 			local explorer = lifecycle.get_explorer(tabpage)
+		-- 			local _, modified_bufnr = lifecycle.get_buffers(tabpage)
+		-- 			local still_focused = modified_bufnr and modified_bufnr == vim.api.nvim_get_current_buf()
+		-- 			if explorer and not explorer.is_hidden and still_focused then
+		-- 				require("codediff.ui.explorer").toggle_visibility(explorer)
+		-- 			end
+		-- 		end, 50)
+		-- 	end,
+		-- })
 	end,
 }
