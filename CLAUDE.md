@@ -93,7 +93,7 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | blink.cmp | `plugins/blink-cmp.lua` | [`blink-cmp.md`](docs/plugins/blink-cmp.md) |
 | bookmarks | `lua/plugins/bookmarks.lua` (spec) + `plugins/bookmarks/` (code) | [`bookmarks.md`](docs/plugins/bookmarks.md) |
 | cokeline | `lua/plugins/cokeline.lua` (spec) + submodule `plugins/nvim-cokeline/` | [`cokeline.md`](docs/plugins/cokeline.md) |
-| codediff | `lua/plugins/codediff.lua` (spec) + submodule `plugins/codediff.nvim/` | [`codediff.md`](docs/plugins/codediff.md) |
+| codediff | `lua/plugins/codediff/` (spec `init.lua` + `explorer.lua`) ; upstream lazy, fork `plugins/codediff.nvim/` non chargé | [`codediff.md`](docs/plugins/codediff.md) |
 | dap | `plugins/dap/` | [`dap.md`](docs/plugins/dap.md) |
 | gitsigns | `plugins/gitsigns.lua` | [`gitsigns.md`](docs/plugins/gitsigns.md) |
 | harpoon | `lua/plugins/harpoon.lua` (spec) + submodule `plugins/harpoon/` | [`harpoon.md`](docs/plugins/harpoon.md) |

@@ -1,0 +1,201 @@
+# Posé par `audit new`. L'auditeur remplit chaque <À REMPLIR>, range chaque dette précédente
+# par `audit range`, ajoute les siennes par `audit dette`, et écrit le verdict en dernier.
+slug = "codediff-explorer"
+audit = "01-de69218"
+rang = 1
+type = "clôture"
+date = 2026-10-31
+base = "master"
+commit = "de69218"
+brief = ".claude/implementation/codediff-explorer.brief.md"
+suivi = ".claude/implementation/codediff-explorer.md"
+plan = ".claude/plans/warm-strolling-zephyr.md"
+
+[[verification]]
+origine = "Étape 1"
+commande = "headless `require(\"plugins.codediff.explorer\").setup()` à code de sortie, puis à la main (plan, Étape 1)"
+statut = "passée"
+sortie = "Rejouée par l'auditeur : `nvim --headless -c 'lua local ok, e = pcall(function() require(\"plugins.codediff.explorer\").setup() end); if not ok then io.stderr:write(e) vim.cmd(\"cq\") end' -c 'qa!'` → rc=0, sortie « [ClaudeCode] [init] [INFO] Claude Code integration stopped » seule. Partie « à la main » menée sous tmux (Neovim --listen, état lu par --remote-expr) : voir les vérifications C4."
+
+[[verification]]
+origine = "Étape 2"
+commande = "headless, clics réels sous tmux, puis à la main (plan, Étape 2)"
+statut = "passée"
+sortie = "Rejouée par l'auditeur sous tmux (séquences SGR `\\e[<0;col;rowM`/`m` par `tmux send-keys -l`), dans un dépôt jetable, layouts inline puis side-by-side (`t`) : clic fichier, clic dossier, Entrée fichier/dossier, double-clic fichier/dossier, `j`/`k` en auto-ouverture, gros fichier (150 000 lignes) dont le chargement prend le focus puis le rend. Détail : vérifications C1, C2, C3."
+
+[[verification]]
+origine = "Étape 3"
+commande = "headless, clics réels sous tmux, puis à la main (plan, Étape 3)"
+statut = "passée"
+sortie = "Rejouée par l'auditeur sous tmux : curseur sur la première lettre du nom après `<leader>e`, `<C-w>h`, clic (depuis l'explorateur et depuis le diff), bascule de pli, en vue arbre et en vue liste (`i`), nom tronqué « very_long_file_nam… » → colonne de « ver », ligne de groupe → colonne 0. Détail : vérification C5."
+
+[[verification]]
+origine = "Étape 4"
+commande = "`grep -nE '<leader>(b|E)\\b' docs/plugins/codediff.md` vide ; `grep -rn 'plugins/codediff\\.lua\\|codediff_explorer' CLAUDE.md docs/` vide"
+statut = "passée"
+sortie = "Rejouée par l'auditeur : `grep -nE '<leader>(b|E)\\b' docs/plugins/codediff.md` → rien, rc=1 ; `grep -n 'leader>e' docs/plugins/codediff.md` → lignes 33, 56, 103, 107, 126, rc=0 ; `grep -rn 'plugins/codediff\\.lua\\|codediff_explorer' CLAUDE.md docs/` → rien, rc=1."
+
+[[verification]]
+origine = "C1"
+commande = "tmux -L audit : nvim --listen <sock> top.txt dans un dépôt jetable, :CodeDiff, clic SGR sur une ligne de fichier, état lu par `nvim --server <sock> --remote-expr 'luaeval(\"AUD()\")'` (fenêtre courante, buffer modifié, curseur de l'explorateur)"
+statut = "passée"
+sortie = "inline, clic very_long… : focus=explorer hidden=false excur=4,16 char=\"ver\" modbuf=very_long_file_name_for_truncation_test.lua ; clic untracked.txt (simple face) : focus=explorer modbuf=untracked.txt ; side-by-side : idem (modbuf=very_long…, puis untracked.txt, focus=explorer) ; clic depuis le diff : focus=explorer modbuf=mid.lua ; gros fichier 150 000 lignes : à 0,3 s focus=modified (prise du plugin), à 3 s focus=explorer modbuf=big.lua."
+
+[[verification]]
+origine = "C2"
+commande = "même session tmux : deux clics SGR sur la ligne du dossier deep/inner, puis sur la ligne du groupe Changes ; capture-pane de l'explorateur"
+statut = "passée"
+sortie = "1er clic : deep/inner replié (very_long… disparaît), focus=explorer excur=3,12 char=\"dee\" ; 2e clic : déplié de nouveau ; clic sur Changes : groupe replié, excur=1,0 char=\"Cha\"."
+
+[[verification]]
+origine = "C3"
+commande = "même session tmux : `5G` + Entrée sur mid.lua ; `2G` + Entrée sur src ; double-clic SGR (deux paires espacées de 0,1 s) sur top.txt puis sur src ; clic suivi d'Entrée immédiate (course) sur un fichier léger puis sur le gros fichier"
+statut = "passée"
+sortie = "Entrée mid.lua : focus=modified hidden=true modbuf=mid.lua ; Entrée src : pli basculé, focus=explorer hidden=false ; double-clic top.txt : focus=modified hidden=true modbuf=top.txt ; double-clic src : une seule bascule (src replié), focus=explorer hidden=false ; clic+Entrée very_long… : focus=modified hidden=true modbuf=very_long… ; clic+Entrée big.lua (side-by-side) après 6 s : focus=modified hidden=true modbuf=big.lua."
+
+[[verification]]
+origine = "C4"
+commande = "même session tmux : `maparg(' e','n')` avant :CodeDiff ; `<leader>e` ×3 depuis le diff, `<C-w>l` puis `<leader>e` ; `maparg` de ` E` et ` b` ; sélection de top.txt (buffer 1, aussi affiché au tab 1), `gT` / `gt` en lisant `maparg(' e','n')` ; `q` puis `maparg` sur le buffer 1"
+statut = "passée"
+sortie = "avant :CodeDiff : maparg vide ; caché → focus=explorer hidden=false ; focus → focus=modified hidden=true ; caché → focus=explorer ; visible sans focus → focus=explorer ; map_E=non map_b=non partout ; buffer 1 au tab 2 : e=<Lua …slots.lua:123> ; au tab 1 : e= (vide) ; retour au tab 2 : e=<Lua …> ; après `q` : buffer 1, e= (vide), maparg('<CR>') vide."
+
+[[verification]]
+origine = "C5"
+commande = "même session tmux : curseur de l'explorateur lu après `<C-w>l` `<C-w>h`, `0` puis `<leader>e` ×2, clic, bascule de pli, en vue arbre puis liste (`i`)"
+statut = "passée"
+sortie = "<C-w>h : excur=5,12 char=\"mid\" ; après `0` (col 0) puis fermer/rouvrir par <leader>e : excur=5,12 char=\"mid\" ; nom tronqué : excur=4,16 char=\"ver\" ; dossier : char=\"dee\"/\"src\" ; groupe : col 0 ; vue liste : excur=2,6 char=\"ver\", 3,6 char=\"mid\"."
+
+[[verification]]
+origine = "C6"
+commande = "test -z \"$(git -C ~/.local/share/nvim/lazy/codediff.nvim status --short | grep -v '^ M doc/tags$')\" (commande du Brief, avec l'arbitrage ` M doc/tags` du Suivi)"
+statut = "passée"
+sortie = "rc=0 ; `git status --short` brut : « M doc/tags » seul (3 lignes ajoutées par lazy, mtime 2026-10-26, avant le Chantier) ; HEAD 09d9ebe, tag v4.0.6."
+
+[[verification]]
+origine = "C6"
+commande = "git -C plugins/codediff.nvim status --short ; git diff --name-only master...de69218 | grep codediff.nvim ; grep -n 'dir =' lua/plugins/codediff/init.lua"
+statut = "passée"
+sortie = "fork : sortie vide, rc=0 ; aucun fichier ni pointeur de submodule du plugin dans le diff (grep rc=1) ; ligne 18 : `-- dir = vim.fn.stdpath(\"config\") .. \"/plugins/codediff.nvim\",` (commentée)."
+
+[[verification]]
+origine = "C7"
+commande = "grep -nE '<leader>(b|E)\\b' docs/plugins/codediff.md ; grep -n 'leader>[bE]\\|upstream\\|fork' docs/plugins/codediff.md"
+statut = "passée"
+sortie = "1re commande : rien, rc=1 ; 2e : aucune occurrence de leader>b/leader>E ; ligne 11 « Plugin chargé : upstream `esmuellert/codediff.nvim` (v4.0.6), installé par lazy », fork « non chargé » (ligne 13)."
+
+[[conformite.critere]]
+id = "C1"
+critere = "Un clic simple sur un fichier affiche son diff ; le focus et le curseur restent dans l'explorateur."
+etat = "atteint"
+constat = "Vérification C1 (clics réels sous tmux, inline et side-by-side) : le buffer modifié devient le fichier cliqué, focus final sur l'explorateur, curseur sur la ligne cliquée, y compris pour un fichier simple face (`??`, grâce à l'enveloppe de `show_single_file`, explorer.lua:243-253) et pour un fichier de 150 000 lignes dont le chargement prend le focus avant de le rendre. Code : `vim.on_key` sur `<LeftRelease>` → `on_left_release` (explorer.lua:185-200, 257-262) → `explorer.on_file_select`. Un clic sous la dernière ligne agit aussi sur la dernière ligne : défaut de qualité, R1."
+
+[[conformite.critere]]
+id = "C2"
+critere = "Un clic simple sur un dossier bascule son pli."
+etat = "atteint"
+constat = "Vérification C2 : deux clics sur deep/inner le replient puis le déplient, un clic sur le groupe Changes le replie ; focus resté sur l'explorateur. Code : `toggle_fold` (explorer.lua:106-114), même séquence `is_expanded`/`collapse`/`expand`/`tree:render()` que le `<CR>` natif (ui/explorer/keymaps.lua:36-43 de l'upstream)."
+
+[[conformite.critere]]
+id = "C3"
+critere = "Entrée sur un fichier affiche son diff, met le focus sur le diff et ferme l'explorateur ; Entrée sur un dossier bascule son pli, l'explorateur reste ouvert. Le double-clic fait exactement la même chose qu'Entrée, sur un fichier comme sur un dossier."
+etat = "atteint"
+constat = "Vérification C3 : Entrée sur un fichier → focus=modified, explorateur caché, diff du fichier ; Entrée sur un dossier → une bascule, explorateur ouvert ; double-clic sur un fichier → même état qu'Entrée ; double-clic sur un dossier → une seule bascule au total. La course clic puis Entrée immédiate finit sur le diff, explorateur caché, y compris pour le gros fichier. Code : `open_file` cache et focus le diff avant `on_file_select` (explorer.lua:123-126), `<CR>` et `<2-LeftMouse>` réclamés au `CodeDiffOpen` (explorer.lua:156-168), conformes au journal de décisions."
+
+[[conformite.critere]]
+id = "C4"
+critere = "Dans un tab CodeDiff, `<leader>e` : explorateur caché → il s'ouvre et prend le focus ; visible sans le focus → il prend le focus ; focus → il se ferme. `<leader>E` ne fait plus rien dans la vue diff. Hors d'un tab CodeDiff, `:nmap <leader>e` ne montre rien."
+etat = "atteint"
+constat = "Vérification C4 : les trois transitions observées ; `<leader>E` et `<leader>b` non mappés (`toggle_explorer = false`, `focus_explorer = false`, init.lua:137-139) ; `maparg(' e')` vide avant la session, vide sur le vrai fichier affiché dans un autre tab pendant la session, présent au retour, vide après `q`. Code : `toggle_focus` (explorer.lua:39-50) réutilise `panes.focus_explorer`/`toggle_explorer` ; `claim_leader_e` (explorer.lua:211-235) passe par `set_buf_keymap` avec `suspendable = true`, comme le journal le décide."
+
+[[conformite.critere]]
+id = "C5"
+critere = "Chaque fois que l'explorateur prend le focus (`<leader>e`, changement de fenêtre, clic), le curseur se place sur la première lettre du nom."
+etat = "atteint"
+constat = "Vérification C5 : curseur sur la première lettre du nom après `<leader>e`, `<C-w>h`, clic depuis l'explorateur et depuis le diff, bascule de pli, en vue arbre et liste ; nom tronqué sur son début présent (« ver ») ; groupe en colonne 0. Code : `place_cursor`/`name_col` (explorer.lua:66-102), autocmd `WinEnter` local au buffer (explorer.lua:171-176), appel après clic (explorer.lua:199). Le repli du nom tronqué s'écarte du Plan, écart daté au journal de décisions."
+
+[[conformite.critere]]
+id = "C6"
+critere = "Le code source du plugin n'est pas touché : `git -C ~/.local/share/nvim/lazy/codediff.nvim status --short` et `git -C plugins/codediff.nvim status --short` ne renvoient rien, et la ligne `dir` reste commentée."
+etat = "atteint"
+constat = "Vérifications C6 : l'upstream ne renvoie que « M doc/tags », que le Suivi (critère C6, arbitrage du Plan Q1) accepte — index d'aide régénéré par lazy, modifié le 2026-10-26, avant le Chantier ; le fork renvoie rien ; aucun fichier ni pointeur de submodule du plugin dans `git diff master...de69218` ; ligne `dir` commentée (lua/plugins/codediff/init.lua:18)."
+
+[[conformite.critere]]
+id = "C7"
+critere = "`docs/plugins/codediff.md` décrit l'upstream réellement chargé, `<leader>e`, le clic, le double-clic et Entrée, et ne mentionne plus `<leader>b` ni `<leader>E`."
+etat = "atteint"
+constat = "Vérification C7 et lecture de docs/plugins/codediff.md : upstream v4.0.6 chargé par lazy et fork non chargé (lignes 7-14), clic, Entrée, double-clic, `<leader>e`, curseur (Key Behaviors, lignes 25-37 ; Keymaps, lignes 53-74) ; aucune mention de `<leader>b` ni `<leader>E`, Changelog compris. La table « Dans un tab CodeDiff » perd au passage `]f`/`[f`, toujours mappés : R3."
+
+[[conformite.hors_perimetre]]
+exclusion = "Toute modification du code source du plugin : ni l'upstream installé par lazy, ni le fork `plugins/codediff.nvim`."
+etat = "respecté"
+constat = "Vérifications C6 : arbres de l'upstream et du fork intacts (hors `doc/tags`, antérieur et accepté) ; `git diff --stat master...de69218` ne touche que la config (CLAUDE.md, docs, init.lua, lua/plugins/codediff/) et les documents du Chantier. L'enveloppe de `inline_view.show_single_file` remplace un champ de module à l'exécution, sans écrire dans le plugin : coût suivi en R2."
+
+[[conformite.hors_perimetre]]
+exclusion = "`<leader>e` hors d'un tab CodeDiff."
+etat = "respecté"
+constat = "Aucun `<leader>e` global posé (aucun `vim.keymap.set` dans lua/plugins/codediff/) ; `claim_leader_e` sort hors session explorateur et hors fenêtres de la session (explorer.lua:213-225) ; vérification C4 : `maparg(' e')` vide hors du tab CodeDiff."
+
+[[conformite.hors_perimetre]]
+exclusion = "La navigation `]f`/`[f` : l'utilisateur ne s'en sert pas, elle n'a pas de comportement à définir."
+etat = "respecté"
+constat = "Les `opts` gardent `next_file = \"]f\"`/`prev_file = \"[f\"` inchangés (lua/plugins/codediff/init.lua:142-143) et explorer.lua n'y touche pas ; seule la doc retire leur ligne de la table (R3, sans effet sur le comportement)."
+
+[[conformite.signal]]
+id = "S1"
+signal = "Le diff touche un fichier du plugin (upstream ou fork), ou réactive la ligne `dir`"
+etat = "absent"
+constat = "`git diff --name-only master...de69218 | grep codediff.nvim` vide ; pas de changement de pointeur sous plugins/ ; ligne `dir` toujours commentée (init.lua:18)."
+
+[[conformite.signal]]
+id = "S2"
+signal = "Un délai arbitraire (`vim.defer_fn(…, N)`) attend que le plugin se stabilise, comme le faisait l'ancienne fermeture"
+etat = "absent"
+constat = "`git diff master...de69218 -- lua init.lua | grep -E '^\\+.*(defer_fn|vim\\.wait|uv\\.new_timer|timer_start)'` vide ; l'ancienne autocmd différée de 50 ms est supprimée. Le seul report est `vim.schedule(on_left_release)` (explorer.lua:260), un tour de boucle pour laisser le clic natif placer focus et curseur, sans durée."
+
+[[conformite.signal]]
+id = "S3"
+signal = "`<leader>e` est mappé globalement au lieu d'être local au buffer d'un tab CodeDiff"
+etat = "absent"
+constat = "`<leader>e` passe uniquement par `lifecycle.set_buf_keymap(tabpage, bufnr, …)` (explorer.lua:226-234), mapping de buffer suspendu au `TabLeave` ; vérification C4 : absent du vrai fichier dans l'autre tab, et après `q`."
+
+[[conformite.signal]]
+id = "S4"
+signal = "Le code recopie une fonction interne du plugin (rendu, arbre) au lieu d'appeler son API ou de poser un mapping par-dessus"
+etat = "absent"
+constat = "explorer.lua appelle `panes.focus_explorer`/`toggle_explorer`, `explorer.on_file_select`, `tree:get_node`/`render`, `node:expand`/`collapse` et pose ses mappings par `set_buf_keymap` ; aucune logique de rendu ni d'arbre recopiée. La bascule de pli reprend les quatre appels du `<CR>` natif, qu'elle remplace. L'enveloppe de `show_single_file` appelle l'original sans le recopier (coût en R2)."
+
+[conformite.symptome]
+symptome = "l'explorateur de codediff ne se pilote pas comme voulu — un clic simple sur un fichier n'affiche rien (seul le double-clic ouvre), l'explorateur reste ouvert après Entrée, et l'ancienne fermeture automatique « ne fonctionnait pas bien »."
+etat = "disparu"
+constat = "Sous tmux, clics réels, inline et side-by-side : un clic simple affiche le diff (C1), Entrée et double-clic ferment l'explorateur en focalisant le diff (C3), y compris quand un chargement lancé par un clic est encore en cours ou qu'un gros fichier vole le focus pendant son chargement. La fermeture ne dépend plus d'un délai mais de l'ordre focus-puis-sélection (explorer.lua:116-126)."
+
+[[dette.actuelle]]
+id = "R1"
+nature = "qualité"
+emplacement = "lua/plugins/codediff/explorer.lua:194-198"
+constat = "Un clic dans la zone vide sous la dernière ligne de l'explorateur agit sur le nœud de la dernière ligne : `getmousepos().line` y vaut le numéro de la dernière ligne, pas 0, et la garde `pos.line == 0` ne l'écarte pas. Constaté sous tmux : un clic dans le vide a déplié le groupe « Staged Changes », le suivant a ouvert le diff de top.txt, dernière ligne. Un clic de reprise de focus dans le blanc ouvre un diff ou plie un dossier sans que l'utilisateur l'ait visé."
+trouvee = "01-de69218"
+solution = "Dans `on_left_release`, ignorer le clic quand il tombe sous la dernière ligne affichée, par exemple quand `pos.winrow` dépasse `vim.api.nvim_win_text_height(win, { start_row = topline - 1, end_row = pos.line - 1 }).all` (topline par `vim.fn.line('w0', win)`) ; vérifier sous tmux qu'un clic dans le vide ne change ni le diff ni les plis."
+severite = "avertissement"
+
+[[dette.actuelle]]
+id = "R2"
+nature = "dette induite"
+emplacement = "lua/plugins/codediff/explorer.lua:243-253"
+constat = "`restore_focus_after_single_file` remplace à l'exécution le champ interne `inline_view.show_single_file`, que `ui/view/init.lua:91` de l'upstream relit à chaque appel. Le plugin est l'upstream mis à jour par lazy : si ce champ change de nom ou si l'appel passe ailleurs, l'enveloppe ne s'applique plus sans rien signaler, et le focus volé par un fichier simple face (`??`, `A`, `D`) en inline revient en silence ; si le module disparaît, `setup()` échoue au chargement. L'enveloppe s'applique aussi hors des sessions explorateur (standalone, historique en inline). Décision consignée au journal et Gotcha documenté (« à revérifier à chaque mise à jour »), mais rien ne déclenche cette revérification."
+trouvee = "01-de69218"
+solution = "Rendre la casse visible : vérifier dans `setup()` que `inline_view.show_single_file` est une fonction et sinon le signaler par `vim.notify(…, WARN)` au lieu de poser l'enveloppe ; ou figer la version de l'upstream dans la spec (`version`/`commit`) pour que la mise à jour soit un geste conscient ; à terme, demander à l'upstream de rendre le focus dans `helpers.open_real_file`."
+severite = "avertissement"
+
+[[dette.actuelle]]
+id = "R3"
+nature = "style"
+emplacement = "docs/plugins/codediff.md:53-62"
+constat = "La table « Dans un tab CodeDiff » a perdu la ligne `]f` / `[f` (Fichier suivant/précédent), alors que `next_file`/`prev_file` sont des clés valides de l'upstream v4.0.6, toujours posées par les `opts` (init.lua:142-143) : la doc tait un mapping actif. Retrait non consigné au journal de décisions ; le Hors-périmètre dit seulement que leur comportement n'a pas à être défini."
+trouvee = "01-de69218"
+solution = "Rétablir la ligne `| `]f` / `[f` | Fichier suivant/précédent |` dans la table, ou consigner au Suivi la décision de ne plus documenter cette navigation."
+severite = "note"
+
+[verdict]
+valeur = "RÉSERVES"
+justification = "Les sept critères sont atteints et vérifiés par clics réels sous tmux, en inline et en side-by-side ; les exclusions sont respectées, aucun signal de dérive, le symptôme a disparu. Restent deux avertissements et une note, rien au-dessus. Le choix de RÉSERVES plutôt que FAVORABLE tient au poids de R1 : il touche le geste même que le Chantier livre, le clic, et cliquer dans le blanc de l'explorateur pour lui rendre le focus est un geste courant qui ouvre alors un diff ou plie un dossier sans que l'utilisateur l'ait visé ; la correction est locale (une garde dans `on_left_release`). R2 est un couplage assumé au journal, mais il casserait en silence à la prochaine mise à jour de l'upstream par lazy. R3 est une omission de documentation sans effet."

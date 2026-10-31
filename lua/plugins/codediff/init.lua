@@ -49,7 +49,6 @@ return {
 			view_mode = "tree",
 			initial_focus = "explorer",
 			auto_open_on_cursor = true,
-			focus_on_select = true,
 			formatters = { -- Optional function(ctx) -> line layout callbacks; omit to use the built-ins
 				file = function(ctx)
 					return {
@@ -135,7 +134,9 @@ return {
 		keymaps = {
 			view = {
 				close = "q",
-				toggle_explorer = "<leader>E",
+				-- `<leader>e` est posé par plugins.codediff.explorer, seul toggle
+				toggle_explorer = false,
+				focus_explorer = false,
 				next_hunk = "]c",
 				prev_hunk = "[c",
 				next_file = "]f",
@@ -172,26 +173,6 @@ return {
 	},
 	config = function(_, opts)
 		require("codediff").setup(opts)
-
-		-- Ferme automatiquement l'explorer quand un fichier est sélectionné
-		-- (pratique sur petit écran/terminal, ex. Neovim sur téléphone).
-		-- Userautocmd("User", {
-		-- 	pattern = "CodeDiffFileSelect",
-		-- 	callback = function(args)
-		-- 		local tabpage = args.data and args.data.tabpage
-		-- 		if not tabpage then
-		-- 			return
-		-- 		end
-		-- 		vim.defer_fn(function()
-		-- 			local lifecycle = require("codediff.ui.lifecycle")
-		-- 			local explorer = lifecycle.get_explorer(tabpage)
-		-- 			local _, modified_bufnr = lifecycle.get_buffers(tabpage)
-		-- 			local still_focused = modified_bufnr and modified_bufnr == vim.api.nvim_get_current_buf()
-		-- 			if explorer and not explorer.is_hidden and still_focused then
-		-- 				require("codediff.ui.explorer").toggle_visibility(explorer)
-		-- 			end
-		-- 		end, 50)
-		-- 	end,
-		-- })
+		require("plugins.codediff.explorer").setup()
 	end,
 }
