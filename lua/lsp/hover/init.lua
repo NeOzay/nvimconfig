@@ -145,9 +145,6 @@ lsp_hover.hover = function(error, result, context, _)
 			signcolumn = "no",
 			wrap = false,
 		},
-		b = {
-			markview = true,
-		},
 
 		max_height = config.max_height,
 		max_width = config.max_width,
@@ -178,17 +175,7 @@ lsp_hover.hover = function(error, result, context, _)
 	hover_hl.apply(lsp_hover.window.buf, REMOVE_FENCE)
 	lsp_hover.window:show()
 	lsp_hover.scrollbar:attach(lsp_hover.window.win)
-	if package.loaded["markview"] and package.loaded["markview"].render then
-		require("markview.actions").render(lsp_hover.window.buf, { enable = true, hybrid_mode = false }, {
-			markdown = {
-				block_quotes = { enable = false },
-				list_items = {
-					shift_width = 1,
-					indent_size = 1,
-				},
-			},
-		})
-	end
+	require("markdown_renderer").render_hover(lsp_hover.window.buf, lsp_hover.window.win)
 end
 
 --- Setup function.

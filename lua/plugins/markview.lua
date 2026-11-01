@@ -1,21 +1,25 @@
 ---@diagnostic disable: missing-fields, assign-type-mismatch
 
 -- Highlight escaped symbols in insert mode, otherwise do not highlight them.
-local previous_hi = nil
-Userautocmd("InsertEnter", {
-	callback = function(args)
-		if previous_hi then
-			vim.api.nvim_set_hl(0, "@string.escape.markdown_inline", previous_hi)
-		end
-	end,
-})
+-- Propre à markview : posé dans son `config`, donc absent quand render-markdown est actif.
+local function escape_highlights()
+	local previous_hi = nil
+	Userautocmd("InsertEnter", {
+		callback = function(args)
+			if previous_hi then
+				vim.api.nvim_set_hl(0, "@string.escape.markdown_inline", previous_hi)
+			end
+		end,
+	})
 
-Userautocmd({ "InsertLeave", "BufEnter" }, {
-	callback = function(args)
-		previous_hi = previous_hi or vim.api.nvim_get_hl(0, { name = "@string.escape.markdown_inline", link = false })
-		vim.api.nvim_set_hl(0, "@string.escape.markdown_inline", { fg = "None", bg = "None" })
-	end,
-})
+	Userautocmd({ "InsertLeave", "BufEnter" }, {
+		callback = function(args)
+			previous_hi = previous_hi
+				or vim.api.nvim_get_hl(0, { name = "@string.escape.markdown_inline", link = false })
+			vim.api.nvim_set_hl(0, "@string.escape.markdown_inline", { fg = "None", bg = "None" })
+		end,
+	})
+end
 
 local function hook_render(opts)
 	local buffer_configs = {}
@@ -56,12 +60,15 @@ return {
 	-- "OXY2DEV/markview.nvim",
 	"NeOzay/markview.nvim",
 	lazy = false,
+	cond = function()
+		return require("markdown_renderer").is_active("markview")
+	end,
 	dir = vim.fn.stdpath("config") .. "/plugins/markview.nvim",
 	ft = { "markdown", "codecompanion", "snacks_notif" },
 	---@type markview.config
 	opts = {
 		preview = {
-			filetypes = { "markdown", "Avante", "codecompanion", "snacks_notif" },
+			filetypes = require("markdown_renderer").FILETYPES,
 			ignore_buftypes = {},
 		},
 		experimental = { fancy_comments = true },
@@ -77,6 +84,7 @@ return {
 		markdown_inline = { inline_codes = { padding_left = "", padding_right = "" } },
 	},
 	config = function(_, opts)
+		escape_highlights()
 		hook_render(opts)
 		require("markview").setup(opts)
 	end,

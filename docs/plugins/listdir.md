@@ -45,8 +45,8 @@ sont concaténés.
   `lua/chantier.lua`.
 - **Le picker d'éléments s'ouvre même vide** (`show_empty`) : une liste vide dit son nom et son
   tri, et un filtre sans résultat doit pouvoir se défaire.
-- La preview des éléments est le previewer fichier de Snacks : markview s'y applique déjà via la
-  config globale (`lua/plugins/snacks/picker/init.lua`, `markview_fts`).
+- La preview des éléments est le previewer fichier de Snacks : le moteur markdown actif s'y applique
+  déjà via la config globale (`lua/plugins/snacks/picker/init.lua`, `FILETYPES` de `lua/markdown_renderer/`).
 
 ### Registres : `:Dettes` et `:Roadmap`
 

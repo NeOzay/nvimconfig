@@ -105,6 +105,7 @@ require("lazy").setup({
 	{ import = "plugins.navic" },
 	{ import = "plugins.neodim" },
 	{ import = "plugins.markview" },
+	{ import = "plugins.render-markdown" },
 	{ import = "plugins.mason" },
 	{ import = "plugins.minuet" },
 	-- { import = "plugins.neo-tree" },

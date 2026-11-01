@@ -10,7 +10,7 @@ Chat IA intégré via GitHub Copilot, remplace copilot-chat.
 - Adapter : Copilot avec modèle `gpt-5-codex`.
 - Toutes les stratégies (chat, inline, cmd) utilisent l'adapter copilot.
 - Action palette via snacks (`provider = "snacks"`).
-- markview s'attache automatiquement au buffer `codecompanion` via autocmd `FileType` (`:Markview attach`).
+- Le moteur markdown actif s'attache au buffer `codecompanion` via autocmd `FileType` (`markdown_renderer.attach` : `:Markview attach` pour markview, rien pour render-markdown qui s'attache par `file_types`).
 - Complétion dans le buffer codecompanion via source blink.cmp `codecompanion`.
 
 ## Keymaps

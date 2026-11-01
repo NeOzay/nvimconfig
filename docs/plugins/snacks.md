@@ -24,7 +24,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 - Win `list` : `number = false`, `relativenumber = false`, `foldcolumn = "0"`, `signcolumn = "no"`.
 - Action `trouble_open` : envoie les résultats dans Trouble (`<c-q>`).
 - Action `yank_text` / `yank` : copie le texte (`<c-y>`).
-- Preview avec debounce 10ms qui appelle `ibl.setup_buffer` + markview si le filetype est markdown.
+- Preview avec debounce 10ms qui appelle `ibl.setup_buffer` + le rendu markdown du moteur actif (`markdown_renderer.render_preview`) si le filetype est dans `FILETYPES`.
 - `EndOfBuffer` highlight = `SnacksNormal` dans preview et list.
 - `<c-j>` désactivé dans la list.
 - Live grep (`<leader>fw`) force le preset `ivy_2`.
@@ -47,7 +47,7 @@ Suite de micro-plugins : picker, explorer, notifier, terminal, scratch. Chaque s
 
 ### Notifier
 - Timeout 5000ms.
-- Notifications renduées avec markview (markdown inline dans les toasts).
+- Notifications rendues par le moteur markdown actif (`markdown_renderer.render_notification`, markview ou render-markdown ; markdown inline dans les toasts).
 - `on_win` hook : étend `winhighlight` pour couvrir `EndOfBuffer`, `StatusColumn`, `LineNr` avec la couleur de la notification.
 - `conceallevel = 2` + `concealcursor = "n"` dans les fenêtres de notification.
 - Picker `notifications` avec layout horizontal telescope + preview markdown avec wrap.

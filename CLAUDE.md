@@ -43,6 +43,7 @@ Personal Neovim configuration. No build/test/lint commands — changes are valid
 - `lua/frontmatter.lua` — lecture d'un front matter TOML `+++` (clés à plat), cache sur `mtime` ; `is_marker` reconnaît les Marqueurs, génériques et typés (`<OPTIONNEL date>`) ; utilisé par listdir et `lua/chantier.lua`
 - `:Suivi`, `:Brief`, `:Plan`, `:Audit` (`lua/cmd.lua` → `lua/chantier.lua`) — ouvrent le document du chantier implementation-tracker dont `branche` = branche git courante (dépôt du cwd) ; hors chantier, `:Brief` ouvre le brief qu'aucun suivi ne cite (picker s'il y en a plusieurs). Tests : `tests/chantier/`
 - `:Dettes`, `:Roadmap` (`lua/cmd.lua` → `lua/registres.lua`) — picker d'éléments de listdir sur `.claude/implementation/todo/{technical-debt,road-map}` ; `:Dettes` met les pins en tête et colorés, `<A-n>` restreint aux pins, `<A-N>` bascule le pin par `list-dir toggle`. Doc : [`docs/plugins/listdir.md`](docs/plugins/listdir.md)
+- `:MarkdownRenderer [markview|render-markdown]` (`lua/cmd.lua` → `lua/markdown_renderer/`) — choisit le moteur de rendu markdown du **prochain démarrage** (fichier d'état `stdpath("state")/markdown-renderer`, défaut `markview`), seul chargé ; sans argument, affiche l'actif et le prochain. Les intégrations (notifier, preview picker, hover, codecompanion) passent par `require("markdown_renderer")`, jamais par un moteur directement. Tests : `tests/markdown_renderer/`
 - `:Lexique[!] [terme]` (`lua/cmd.lua` → `lua/lexique.lua`) — ouvre le lexique local (`!` : global) ou affiche la définition d'un terme ; tout vient de la commande `lexique` (skill lexique de `~/.claude`), aucun `LEXIQUE.md` n'est lu par Neovim. `<leader>L` : définition du terme sous le curseur ou de la sélection ; `:LexiquePicker` / `<leader>fL` : picker Snacks des termes. Tests : `tests/lexique/`
 
 ## API Preferences
@@ -109,7 +110,8 @@ Guide pour créer un picker Snacks custom : [`docs/plugins/snacks-picker-custom.
 | trouble | `plugins/trouble.lua` | [`trouble.md`](docs/plugins/trouble.md) |
 | tts | `lua/plugins/tts.lua` (spec) + `plugins/tts.nvim/` (code) | [`tts.md`](docs/plugins/tts.md) |
 | neogit | `plugins/neogit.lua` | [`neogit.md`](docs/plugins/neogit.md) |
-| markview | `lua/plugins/markview.lua` (spec) + submodule `plugins/markview.nvim/` | [`markview.md`](docs/plugins/markview.md) |
+| markview | `lua/plugins/markview.lua` (spec) + submodule `plugins/markview.nvim/` ; chargé si moteur actif | [`markview.md`](docs/plugins/markview.md) |
+| render-markdown | `lua/plugins/render-markdown.lua` (spec) + `lua/markdown_renderer/render_markdown.lua` ; chargé si moteur actif | [`render-markdown.md`](docs/plugins/render-markdown.md) |
 | minuet-ai | `lua/plugins/minuet.lua` | [`minuet.md`](docs/plugins/minuet.md) |
 | persistence | `plugins/persistence.lua` | [`persistence.md`](docs/plugins/persistence.md) |
 | java | `plugins/java.lua` | [`java.md`](docs/plugins/java.md) |

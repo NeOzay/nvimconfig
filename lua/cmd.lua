@@ -58,6 +58,27 @@ cmd("LexiquePicker", function()
 	require("plugins.snacks.picker.sources.lexique")()
 end, { desc = "Picker des termes du lexique et de leur définition" })
 
+cmd("MarkdownRenderer", function(opts)
+	local renderer = require("markdown_renderer")
+	if opts.args == "" then
+		return vim.notify(
+			("actif : %s · prochain démarrage : %s"):format(renderer.active(), renderer.next()),
+			vim.log.levels.INFO,
+			{ title = "MarkdownRenderer" }
+		)
+	end
+	renderer.set_next(opts.args)
+	vim.notify(("prochain démarrage : %s"):format(opts.args), vim.log.levels.INFO, { title = "MarkdownRenderer" })
+end, {
+	nargs = "?",
+	complete = function(arglead)
+		return vim.tbl_filter(function(engine)
+			return vim.startswith(engine, arglead)
+		end, require("markdown_renderer").ENGINES)
+	end,
+	desc = "Choisir le moteur de rendu markdown du prochain démarrage (sans argument : l'état)",
+})
+
 cmd("Dettes", function()
 	require("registres").dettes()
 end, { desc = "Picker de la dette technique du dépôt, pins en tête" })

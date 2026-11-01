@@ -1,8 +1,8 @@
 Userautocmd("FileType", {
 	pattern = "codecompanion",
-	callback = function()
+	callback = function(args)
 		vim.defer_fn(function()
-			vim.cmd("Markvie attach")
+			require("markdown_renderer").attach(args.buf)
 		end, 10)
 	end,
 })

@@ -1,7 +1,5 @@
 ---@diagnostic disable: missing-fields
 
----@type string[]
-local markview_fts = { "markdown", "Avante", "codecompanion", "snacks_notif" }
 ---@type snacks.Config
 local opts = {
 	picker = {
@@ -59,10 +57,9 @@ local opts = {
 										require("ibl").setup_buffer(bufnb)
 									end)
 									local ft = vim.split(vim.bo[bufnb].filetype, ".", { plain = true })[1]
-									if vim.tbl_contains(markview_fts, ft) then
+									if vim.tbl_contains(require("markdown_renderer").FILETYPES, ft) then
 										vim.wo[self.win].conceallevel = 2
-										require("markview").render(bufnb)
-										require("markview.actions").set_query(bufnb)
+										require("markdown_renderer").render_preview(bufnb, self.win)
 									else
 										vim.wo[self.win].conceallevel = 0
 									end

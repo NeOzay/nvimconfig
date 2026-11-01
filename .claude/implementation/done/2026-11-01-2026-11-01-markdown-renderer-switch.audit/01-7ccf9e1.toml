@@ -1,0 +1,239 @@
+# Posé par `audit new`. L'auditeur remplit chaque <À REMPLIR>, range chaque dette précédente
+# par `audit range`, ajoute les siennes par `audit dette`, et écrit le verdict en dernier.
+slug = "2026-11-01-markdown-renderer-switch"
+audit = "01-7ccf9e1"
+rang = 1
+type = "clôture"
+date = 2026-11-01
+base = "master"
+commit = "7ccf9e1"
+brief = ".claude/implementation/2026-11-01-markdown-renderer-switch.brief.md"
+suivi = ".claude/implementation/2026-11-01-markdown-renderer-switch.md"
+plan = ".claude/plans/cozy-gliding-beacon.md"
+
+[[verification]]
+origine = "Étape 1"
+commande = "make test-file FILE=tests/markdown_renderer/test_markdown_renderer.lua"
+statut = "passée"
+sortie = """nvim --headless -u tests/minimal_init.lua -c "lua MiniTest.run_file('tests/markdown_renderer/test_markdown_renderer.lua')"
+Total number of cases: 28
+Total number of groups: 1
+
+tests/markdown_renderer/test_markdown_renderer.lua: oooooooooooooooooooooooooooo
+
+Fails (0) and Notes (0)"""
+
+[[verification]]
+origine = "Étape 2"
+commande = "make test-file FILE=tests/markdown_renderer/test_markdown_renderer.lua"
+statut = "passée"
+sortie = """nvim --headless -u tests/minimal_init.lua -c "lua MiniTest.run_file('tests/markdown_renderer/test_markdown_renderer.lua')"
+Total number of cases: 28
+Total number of groups: 1
+
+tests/markdown_renderer/test_markdown_renderer.lua: oooooooooooooooooooooooooooo
+
+Fails (0) and Notes (0)"""
+
+[[verification]]
+origine = "Étape 3"
+commande = "grep C5 de l'Étape 3 du Plan vide, puis `XDG_STATE_HOME=$(mktemp -d) nvim --headless docs/plugins/markview.md -c 'lua io.write(tostring(package.loaded.markview ~= nil))' -c qa` → `true`"
+statut = "passée"
+sortie = '''Rejouée par l'auditeur sur 7ccf9e1 (arbre de travail = commit).
+$ grep -rni 'markvie' lua/ init.lua | grep -v -e '^lua/plugins/markview.lua:' -e '^lua/markdown_renderer/' -e '^lua/highlights/markview.lua:' -e '^init.lua:[0-9]*:.*import = "plugins.markview"'
+(sortie vide, grep sans correspondance)
+$ XDG_STATE_HOME=$(mktemp -d) nvim --headless docs/plugins/markview.md -c 'lua io.write(tostring(package.loaded.markview ~= nil), " ", tostring(package.loaded["render-markdown"]))' -c qa
+true nil'''
+
+[[verification]]
+origine = "Étape 4"
+commande = "headless C2 de l'Étape 4 du Plan → `nil true`, puis contrôle manuel C4 dans les deux moteurs"
+statut = "passée"
+sortie = '''Rejouée par l'auditeur. Partie headless :
+$ S=$(mktemp -d); mkdir -p $S/nvim; echo render-markdown > $S/nvim/markdown-renderer; XDG_STATE_HOME=$S nvim --headless docs/plugins/markview.md -c 'lua io.write(tostring(package.loaded.markview), " ", tostring(package.loaded["render-markdown"] ~= nil))' -c qa
+nil true
+Le contrôle manuel C4 est remplacé par des sondes headless, consignées sous C4. La vérification ne dit rien des options de rendu posées dans la spec : voir R1.'''
+
+[[verification]]
+origine = "Étape 5"
+commande = "grep de l'Étape 5 du Plan"
+statut = "passée"
+sortie = '''Rejouée par l'auditeur (comptes par fichier de grep -c 'MarkdownRenderer\|render-markdown\|markdown_renderer') :
+CLAUDE.md: 2
+docs/plugins/markview.md: 5
+docs/plugins/render-markdown.md: 13
+docs/plugins/snacks.md: 2
+docs/plugins/listdir.md: 1
+docs/plugins/codecompanion.md: 1
+$ grep -n 'markview_fts' docs/plugins/listdir.md
+(sortie vide, code 1)'''
+
+[[verification]]
+origine = "C1"
+commande = '''nvim --headless -u tests/minimal_init.lua -c "lua MiniTest.run()"'''
+statut = "passée"
+sortie = '''Total number of cases: 149
+Total number of groups: 11
+[...]
+tests/markdown_renderer/test_markdown_renderer.lua: oooooooooooooooooooooooooooo
+[...]
+Fails (0) and Notes (0)
+EXIT=0'''
+
+[[verification]]
+origine = "C2"
+commande = '''cd /tmp; export XDG_STATE_HOME=$(mktemp -d); nvim --headless -c 'MarkdownRenderer render-markdown' -c qa; cat $XDG_STATE_HOME/nvim/markdown-renderer; nvim --headless x.md -c 'lua io.write(tostring(package.loaded.markview), " ", tostring(package.loaded["render-markdown"] ~= nil))' -c qa; nvim --headless -c 'MarkdownRenderer markview' -c qa; cat $XDG_STATE_HOME/nvim/markdown-renderer; nvim --headless x.md -c 'lua io.write(tostring(package.loaded.markview ~= nil), " ", tostring(package.loaded["render-markdown"]))' -c qa'''
+statut = "passée"
+sortie = '''render-markdown
+nil true
+markview
+true nil
+(chaque nvim sort en 0 ; seule autre sortie : le message d'arrêt de ClaudeCode)'''
+
+[[verification]]
+origine = "C3"
+commande = '''S=$(mktemp -d); mkdir -p $S/nvim; echo markview > $S/nvim/markdown-renderer; XDG_STATE_HOME=$S nvim --headless x.md -c 'lua local n=0; for _,a in ipairs(vim.api.nvim_get_autocmds({group="UserAutocmds", event={"InsertEnter","InsertLeave"}})) do if debug.getinfo(a.callback or function() end,"S").source:match("markview") then n=n+1 end end; io.write("autocmds markview=",n, " rm=", tostring(package.loaded["render-markdown"]~=nil), " mv=", tostring(package.loaded.markview~=nil))' -c qa'''
+statut = "passée"
+sortie = '''autocmds markview=2 rm=false mv=true
+(fichier d'état markview ; sans fichier d'état, la sonde de l'Étape 3 donne « true nil ». Avec render-markdown actif, la même sonde donne autocmds markview=0 rm=true mv=false)'''
+
+[[verification]]
+origine = "C4"
+commande = '''Sondes headless sous XDG_STATE_HOME temporaire avec render-markdown actif (scripts du scratchpad de l'audit) : (a) ouvrir un .md, compter les extmarks des namespaces render-markdown, puis vim.notify(markdown, { ft = "markdown" }) et compter sur le buffer snacks_notif ; (b) Snacks.picker.files sur t.md, render_preview espionné, extmarks du buffer de preview après 3 s ; (c) require("lsp.hover").hover(nil, { contents = { kind = "markdown", value = ... } }, { bufnr = 0, client_id = 0 }) puis extmarks du buffer du hover ; :messages lu à chaque fois'''
+statut = "passée"
+sortie = '''(a) md extmarks=23 / notif extmarks=8 / messages=""
+(b) render_preview called 3 1003 (x2) / win 1003 ft=markdown.snacks_picker_preview marks=23 / messages=""
+(c) hover win=1002 marks=13 b.markview=nil / messages=""
+Témoin markview actif, (c) : marks=10 b.markview=true / messages=""
+Limite : le hover est nourri d'un résultat LSP injecté, pas d'un serveur réel ; le rendu visuel n'est pas jugé.'''
+
+[[verification]]
+origine = "C5"
+commande = '''test -z "$(grep -rni 'markvie' lua/ init.lua | grep -v -e '^lua/plugins/markview.lua:' -e '^lua/markdown_renderer/' -e '^lua/highlights/markview.lua:' -e '^init.lua:[0-9]*:.*import = "plugins.markview"')"'''
+statut = "passée"
+sortie = '''(sortie vide, code 0)
+Lecture élargie du Journal de décisions. Le grep strict du Brief (grep -rn 'markview' lua/ init.lua) remonte, hors de la spec et de l'adaptateur, seulement lua/markdown_renderer/state.lua:3,10,13,27 et lua/markdown_renderer/init.lua:3 (le nom comme donnée) et init.lua:107 (l'import), tous admis par cette lecture.'''
+
+[[verification]]
+origine = "C6"
+commande = '''export XDG_STATE_HOME=$(mktemp -d); mkdir -p $XDG_STATE_HOME/nvim; echo render-markdown > $XDG_STATE_HOME/nvim/markdown-renderer; nvim --headless -c 'lua local ok=pcall(vim.cmd,"MarkdownRenderer xyz"); io.write(tostring(ok),"\n")' -c qa; cat $XDG_STATE_HOME/nvim/markdown-renderer; nvim --headless -c 'lua _G.N={}; vim.notify=function(m) table.insert(_G.N,m) end' -c 'MarkdownRenderer' -c 'lua io.write(vim.inspect(_G.N))' -c qa'''
+statut = "passée"
+sortie = '''false
+render-markdown
+{ "actif : render-markdown · prochain démarrage : render-markdown" }'''
+
+[[conformite.critere]]
+id = "C1"
+critere = "Les tests mini.test du fichier d'état et du routage de l'abstraction passent : `nvim --headless -u tests/minimal_init.lua -c \"lua MiniTest.run()\"` (ou ciblé sur leur dossier)."
+etat = "atteint"
+constat = """Vérification C1 : `MiniTest.run()` complet, 149 cas dont les 28 de tests/markdown_renderer/, 0 échec. Les tests couvrent l'état (absent, inconnu, vide, écriture, répertoire parent, refus), l'abstraction (actif figé, _reset, set_next) et le routage des quatre fonctions vers l'adaptateur actif seul, sur fichier temporaire."""
+
+[[conformite.critere]]
+id = "C2"
+critere = "Après `:MarkdownRenderer render-markdown` puis redémarrage, `:lua =package.loaded.markview, package.loaded[\"render-markdown\"] ~= nil` donne `nil true` ; l'inverse après `:MarkdownRenderer markview`."
+etat = "atteint"
+constat = """Vérification C2 : `:MarkdownRenderer render-markdown` écrit le fichier, le démarrage suivant donne `nil true` ; `:MarkdownRenderer markview` puis redémarrage donne `true nil`. Exécuté sous XDG_STATE_HOME temporaire avec la config complète."""
+
+[[conformite.critere]]
+id = "C3"
+critere = "Sans fichier d'état, markview est chargé et le comportement est celui d'aujourd'hui."
+etat = "atteint"
+constat = """Vérifications Étape 3 et C3 : sans fichier d'état, `true nil` (markview seul), et ses autocmds d'escape sont posées. Le code markview des intégrations est déplacé à l'identique dans lua/markdown_renderer/markview.lua (configs de render, set_query, garde `.render` du hover). Seul écart : le `language.register` du notifier n'est plus conditionné à markview. Le Plan le prévoit, et cela ne change rien quand markview est actif."""
+
+[[conformite.critere]]
+id = "C4"
+critere = "Avec render-markdown actif : un `.md`, une notification snacks en markdown, la preview du picker sur un `.md` et un hover LSP sont rendus par render-markdown, sans erreur dans `:messages`."
+etat = "atteint"
+constat = """Vérification C4 : avec render-markdown actif, extmarks render-markdown posés sur un .md (23), une notification snacks (8), la preview du picker (23, render_preview appelé) et le buffer du hover (13), `:messages` vide à chaque fois. Limite : le hover a reçu un résultat LSP injecté, pas une réponse de serveur ; le rendu visuel n'est pas jugé."""
+
+[[conformite.critere]]
+id = "C5"
+critere = "`grep -rn 'markview' lua/ init.lua` ne remonte plus rien hors de la spec et de l'adaptateur markview."
+etat = "atteint"
+constat = """Vérification C5 : le grep de la lecture élargie (Journal de décisions, arbitrage du Plan) est vide. Hors spec et adaptateur, le grep strict ne remonte que le nom comme donnée dans lua/markdown_renderer/{state,init}.lua et l'import de init.lua:107, admis par cette lecture."""
+
+[[conformite.critere]]
+id = "C6"
+critere = "`:MarkdownRenderer xyz` lève une erreur et laisse le fichier d'état inchangé ; sans argument, la commande affiche le moteur actif et celui du prochain démarrage."
+etat = "atteint"
+constat = """Vérification C6 : `:MarkdownRenderer xyz` lève (pcall → false) et le fichier garde `render-markdown` ; sans argument, notification « actif : … · prochain démarrage : … ». Couvert aussi par les cas « commande » des tests (Neovim enfant), complétion comprise."""
+
+[[conformite.hors_perimetre]]
+exclusion = "La configuration du rendu de render-markdown (puces, blocs de code, paddings…) : ses défauts suffisent, l'utilisateur la réglera lui-même."
+etat = "entamé"
+dette = "R1"
+constat = """lua/plugins/render-markdown.lua:20-131 règle `anti_conceal`, `bullet.left_pad`, `checkbox` (icônes, paddings, état custom), `heading` (icônes, padding, largeur), `code` (position, bordure, largeur, paddings) et `dash`. Comparées aux défauts du plugin installé (8e87953, `resolve_config({})`), une vingtaine de valeurs diffèrent : anti_conceal.enabled false au lieu de true, code.position right au lieu de left, code.border thin au lieu de hide, heading.icons… Rien dans le Journal de décisions n'élargit ce point. Voir R1."""
+
+[[conformite.hors_perimetre]]
+exclusion = "Une bascule à chaud, sans redémarrage."
+etat = "respecté"
+constat = """Aucun déchargement de module ni setup relancé : la commande n'appelle que `set_next` (lua/cmd.lua:61-80), `active()` est figé au premier appel (lua/markdown_renderer/init.lua:24-30), et les deux specs ne lisent l'état que dans `cond`."""
+
+[[conformite.hors_perimetre]]
+exclusion = "Un fork ou un submodule de render-markdown."
+etat = "respecté"
+constat = """render-markdown vient de l'upstream `MeanderingProgrammer/render-markdown.nvim`, installé par lazy dans ~/.local/share/nvim/lazy ; ni `dir`, ni fork, ni entrée de submodule : le diff ne touche pas plugins/."""
+
+[[conformite.signal]]
+id = "S1"
+signal = "Le diff règle des options de rendu de render-markdown (puces, blocs de code, paddings…) au-delà des filetypes et des highlights."
+etat = "matérialisé"
+dette = "R1"
+constat = """Même constat que pour la première exclusion : la spec de render-markdown règle puces, cases à cocher, titres, blocs de code (position, bordure, paddings) et séparateurs, au-delà de `file_types` et des highlights. Le commentaire d'en-tête de la spec affirme pourtant « Rendu laissé aux défauts : seuls les filetypes sont réglés ». Voir R1."""
+
+[[conformite.signal]]
+id = "S2"
+signal = "Une intégration (notifier, picker, hover) appelle encore `require(\"markview…\")` ou teste `package.loaded.markview` hors de l'abstraction. (dit)"
+etat = "absent"
+constat = """lua/plugins/snacks/notifier.lua, lua/plugins/snacks/picker/init.lua, lua/lsp/hover/init.lua et lua/plugins/codecompanion.lua n'appellent plus que `require("markdown_renderer")` ; le grep élargi de C5 est vide."""
+
+[[conformite.signal]]
+id = "S3"
+signal = "Le moteur inactif laisse une trace au démarrage : `setup` appelé, spec sans `cond` lié à l'état, ou les `Userautocmd` d'escape au niveau module, exécutés à l'import même avec `cond = false`. (dit)"
+etat = "absent"
+constat = """Les deux specs portent `cond = is_active(...)` ; les autocmds d'escape sont dans `escape_highlights()`, appelée par `config` (lua/plugins/markview.lua:5-22,86). Sonde C3 : avec render-markdown actif, markview n'est pas chargé et aucune autocmd d'escape n'existe ; avec markview actif, render-markdown n'est pas chargé."""
+
+[[conformite.signal]]
+id = "S4"
+signal = "Un mécanisme de bascule à chaud apparaît : déchargement de module, `setup` relancé par la commande."
+etat = "absent"
+constat = """Aucune fonction ne décharge `package.loaded` ni ne relance un `setup` ; le seul `package.loaded[...] = nil` est dans le fichier de tests."""
+
+[[conformite.signal]]
+id = "S5"
+signal = "Un commit touche le submodule `plugins/markview.nvim`. (dit)"
+etat = "absent"
+constat = """`git ls-tree` donne le même SHA 29127de pour plugins/markview.nvim sur master et sur 7ccf9e1 ; `git diff --stat master...7ccf9e1 -- plugins/` est vide."""
+
+[[conformite.signal]]
+id = "S6"
+signal = "Le comportement de markview change quand il est actif : `hook_render`, `set_query` ou la config du hover modifiés au lieu d'être déplacés. (dit)"
+etat = "absent"
+constat = """hook_render est inchangé (lua/plugins/markview.lua:24-56) ; les configs de render du notifier et du hover et le `set_query` du notifier et du picker sont reportés à l'identique dans lua/markdown_renderer/markview.lua. Le `b = { markview = true }` du hover devient `vim.b[buf].markview = true` dans l'adaptateur, comme le Plan l'arbitre ; aucun code du dépôt ni du submodule ne lit cette variable."""
+
+[conformite.symptome]
+symptome = "je veux tester render-markdown.nvim et comparer ses rendus et comportements à ceux de markview, ce que la config ne permet pas aujourd'hui — markview y est câblé en dur."
+etat = "disparu"
+constat = """La bascule existe et tient : vérification C2 dans les deux sens, C4 avec render-markdown actif sans erreur. Une réserve sur la comparaison que vise le symptôme : le render-markdown comparé n'est pas celui des défauts mais une config réglée (R1)."""
+
+[[dette.actuelle]]
+id = "R1"
+nature = "alignement"
+emplacement = "lua/plugins/render-markdown.lua:17-132"
+constat = """La spec règle le rendu de render-markdown bien au-delà de `file_types` : `anti_conceal.enabled = false`, `bullet.left_pad`, `checkbox` (icônes, paddings, `scope_highlight`, état custom `[>]`), `heading` (icônes, `left_pad`, `width`), `code` (`position = "right"`, `border = "thin"`, `width = "block"`, paddings, `highlight_language`), `dash`. Comparées à `resolve_config({})` du plugin installé (8e87953), une vingtaine de valeurs diffèrent des défauts. Cela entame la première exclusion du Hors-périmètre (« ses défauts suffisent, l'utilisateur la réglera lui-même ») et matérialise S1. Le Plan (Étape 4 : `opts = { file_types = FILETYPES }, rien d'autre (S1)`) et le Journal de décisions ne disent rien de cet élargissement ; les entrées du Journal sur l'étiquette de langage et docs/plugins/render-markdown.md (Gotchas, `position = "right"`) montrent que ces réglages ont été travaillés pendant le Chantier, sans que la décision soit consignée. Conséquence directe sur l'intention : la comparaison avec markview se fait contre un render-markdown réglé, pas contre ses défauts."""
+trouvee = "01-7ccf9e1"
+solution = """Deux issues, au choix de l'utilisateur. (a) Ramener `opts` à `{ file_types = require("markdown_renderer").FILETYPES }`, garder les highlights de lua/highlights/render-markdown.lua, retirer de docs/plugins/render-markdown.md les Gotchas qui supposent ces options. (b) Si ces réglages sont voulus, consigner dans le Journal de décisions du Suivi, datée, la décision qui élargit le périmètre (Hors-périmètre 1 et S1), ou écrire R1 en `## Dettes écartées` avec son justificatif, puis relancer l'audit."""
+severite = "bloquant"
+
+[[dette.actuelle]]
+id = "R2"
+nature = "qualité"
+emplacement = "lua/plugins/render-markdown.lua:1-3 ; docs/plugins/render-markdown.md (Key Behaviors)"
+constat = """Le commentaire d'en-tête de la spec affirme « Rendu laissé aux défauts : seuls les filetypes sont réglés », que les 110 lignes d'options qui suivent démentent. La doc du plugin ne mentionne que `file_types` dans ses Key Behaviors et ne dit rien de `anti_conceal` désactivé, des icônes de titres ni de la position des étiquettes de code. Un lecteur qui compare les deux moteurs, ou qui règle render-markdown lui-même, part d'une description fausse de ce qui est chargé. Le défaut subsiste quelle que soit l'issue de R1, si les options sont gardées."""
+trouvee = "01-7ccf9e1"
+solution = """Si les options restent : réécrire l'en-tête de lua/plugins/render-markdown.lua (rendu réglé, pas les défauts) et lister dans docs/plugins/render-markdown.md, Key Behaviors, les écarts aux défauts qui changent le comportement (anti_conceal désactivé, étiquettes de code à droite, icônes de titres, paddings). Si elles sont retirées (R1, issue a), le commentaire redevient exact et R2 se solde avec R1."""
+severite = "avertissement"
+
+[verdict]
+valeur = "DÉFAVORABLE"
+justification = """R1 est bloquant d'office : la spec de render-markdown règle son rendu (puces, titres, blocs de code, anti_conceal), ce que le Hors-périmètre exclut et que S1 désigne, sans décision consignée au Journal. Le reste est solide : les six critères sont atteints et vérifiés par exécution (149 tests verts, bascule dans les deux sens au redémarrage, rendu render-markdown sur .md, notification, preview et hover sans erreur, grep C5 élargi vide, refus de `xyz` fichier intact). Aucun autre signal ne se matérialise, et le code markview est déplacé à l'identique. R2 (avertissement) suit le sort de R1. Lever R1, en retirant les options ou en consignant la décision, suffit à rouvrir un verdict favorable."""
